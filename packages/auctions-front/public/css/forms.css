@@ -101,6 +101,10 @@
     resize: none;
 }
 
+.invalid {
+    border: 1px solid #FF2200;
+}
+
 .form__input:hover {
     border: 1px solid #616161;
 }
@@ -125,7 +129,7 @@
 }
 
 .form__btn.disable {
-    opacity: 0.5;
+    opacity: 0.2;
     pointer-events: none;
 }
 

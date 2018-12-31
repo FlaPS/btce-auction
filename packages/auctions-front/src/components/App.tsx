@@ -3,14 +3,14 @@ import {Provider} from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router' // react-router v4
 import {ConnectedRouter} from 'connected-react-router'
 import { configureFrontendStore, nav } from '../store/'
-import {createBrowserHistory} from 'history'
+
 import {StoreProvider} from '../hooks'
 import { HistoryContext } from '../contexts'
 import { AuctionPage } from './auction/AuctionPage'
 import { styled } from '../styles'
 import { Menu } from './auction/Menu'
+import {history} from '../history'
 
-const history = createBrowserHistory()
 const store = configureFrontendStore(history)
 
 const routes = [
@@ -41,7 +41,7 @@ const Layout = styled.div`
   display: flex;
   flex-direction: row;
   .content {
-    width: 100%
+     width: calc(100%);
   }
 `
 
@@ -59,9 +59,10 @@ const App = () =>
             <ConnectedRouter history={history}>
               <Switch>
                 {
-                  [...reactRoutes,
-                    <Redirect from='/' to='/auction/home' />
-                    ]
+                  [
+                    ...reactRoutes,
+                    <Redirect from='/' to='/auction/home' />,
+                  ]
                 }
               </Switch>
             </ConnectedRouter>

@@ -1,5 +1,5 @@
 import { nav } from '../../store'
-import { Route, Switch } from 'react-router'
+import { Redirect, Route, Switch } from 'react-router'
 import * as React from 'react'
 import { styled } from '../../styles'
 import { ConnectedRouter } from 'connected-react-router'
@@ -11,27 +11,29 @@ import { useMappedState } from '../../hooks'
 import { SellPane } from './sellPane/SellPane'
 import { BuyPane } from './buyPane/BuyPane'
 import { HomePane } from './home/HomePane'
+import { MyAuctionsPane } from './myAuctions/MyAuctionsPane'
 
 const routes = [
   {
     nav: nav.auctionHome,
     label: 'home',
-    Component: () => <HomePane/>,
+    Component: HomePane,
   },
   {
     nav: nav.auctionBuyName,
     label: 'Buy name',
-    Component: () => <BuyPane />,
+    Component: BuyPane ,
   },
   {
     nav: nav.auctionSellName,
     label: 'sell name',
-    Component: () => <SellPane/>,
+    Component: SellPane,
   },
   {
-    nav: nav.auctionMyAuctions,
+    nav: nav.auctionMyAuctionsBids,
     label: 'my auctions',
-    Component: () => <div>My auctions</div>,
+    Component: MyAuctionsPane,
+    exact: false,
   },
   {
     nav: nav.auctionHouseRules,
@@ -42,17 +44,17 @@ const routes = [
 
 const reactRoutes =
   routes
-    .map(({Component, nav}) =>
+    .map(({Component, nav, exact = true}) =>
       <Route
-        exact
+        exact={exact}
         key={nav.pattern}
-        path={nav.pattern}
+        path={nav.pattern.startsWith('/auction/myAuctions') ? '/auction/myAuctions' : nav.pattern}
         render={props =>
           // @ts-ignore
           <Component {...props.match.params as any} />
         }
       />,
-    )
+    ).concat(<Redirect from={'auction/myAuctions'} from={'auction/myAuctions/bids'}/>)
 
 const Layout = styled.div`
   display: flex;
@@ -63,6 +65,10 @@ const Layout = styled.div`
     display: flex;
     flex-direction: column;
     margin-right: 0.4em;
+    margin-top: 0.4em;
+    border: 1px solid #2B2B2B;
+    box-sizing: border-box;
+    border-radius: 6px;
   }
   .sidebar {
     width: 37em;
@@ -80,7 +86,7 @@ const Header1 = styled.div`
   text-transform: uppercase;
   label {
       width: 100%;
-      font-size: 4.8em;
+      font-size: 3.2em;
   }
 `
 
@@ -93,7 +99,9 @@ const Header2 = styled(Header1)`
 `
 
 const getSelectedTabIndex = (pathname: string) =>
-  routes.findIndex( r => r.nav.match(pathname) !== null)
+  pathname.includes('/auction/myAuctions')
+    ? 3
+    : routes.findIndex( r => r.nav.match(pathname) !== null)
 
 const pathnameSelector = state => state.router.location.pathname
 
@@ -107,10 +115,11 @@ const AuctionPageRaw = () => {
         <AuctionTabs
           data={routes.map( r => r.label)}
           value={getSelectedTabIndex(useMappedState(pathnameSelector))}
-          onValueChange={ index => history.push(routes[index].nav())}
+          onValueChange={ index => history.push(routes[index].nav({}))}
         />
         <ConnectedRouter history={useSubscribe(HistoryContext)}>
-          <Switch>{reactRoutes}</Switch>
+          <Switch>{
+            reactRoutes}</Switch>
         </ConnectedRouter>
       </div>
       <SideBar className={'sidebar'}/>

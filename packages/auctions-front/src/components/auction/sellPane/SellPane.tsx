@@ -9,8 +9,8 @@ const isValid = (value: any) =>
   value !== undefined && String(value).trim().length > 0
 
 const isStateValid = (state: SellModel) =>
-  isValid(state.salePrice) &&
-  isValid(state.EOSname) &&
+  isValid(state.ask) &&
+  isValid(state.name) &&
   isValid(state.receivingAccount) &&
   isValid(state.email)
 
@@ -60,7 +60,7 @@ export const SellPane = (props: DivProps) => {
                   <input
                     className='form__input'
                     type='text'
-                    {...bindField('salePrice')(state)}
+                    {...bindField('ask')(state)}
                   />
               </span>
             </label>
@@ -72,7 +72,7 @@ export const SellPane = (props: DivProps) => {
                   <input
                     className='form__input'
                     type='text'
-                    {...bindField('EOSname')(state)}
+                    {...bindField('name')(state)}
                   />
               </span>
             </label>
@@ -167,7 +167,7 @@ export const SellPane = (props: DivProps) => {
               </div>
             </div>
             <div className='main-tab__block-info'>
-              <div className='main-tab__block-info_text'>abcde.one</div>
+              <div className='main-tab__block-info_text'>{state.name}.eosio</div>
             </div>
           </div>
         </div>

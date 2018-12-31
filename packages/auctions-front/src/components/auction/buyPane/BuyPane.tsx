@@ -1,7 +1,10 @@
 import React from 'react'
 import { DivProps } from '@sha/react-fp'
-import { auctionDuck, defaultPlaceBidModel, PlaceBidModel } from '../../../store/btce/auctionDuck'
-import { useDispatch } from '../../../hooks'
+import { auctionDuck, AuctionRow, defaultPlaceBidModel, PlaceBidModel } from '../../../store/btce/auctionDuck'
+import { useDispatch, useMappedState } from '../../../hooks'
+import { FrontState } from '../../../store/reducer'
+import StringInput from '../../inputs/StringInput'
+import NumberInput from '../../inputs/NumberInput'
 
 
 const isValid = (value: any) =>
@@ -11,23 +14,34 @@ const isStateValid = (state: PlaceBidModel) =>
   isValid(state.bidAmount) &&
   isValid(state.EOSAccountName)
 
-export const BuyPane = (props: DivProps) => {
+const appSelector = (state: FrontState) => state.app
 
+export const BuyPane = ({fullName, ...props}: DivProps & {fullName?: string}) => {
+  const app = useMappedState(appSelector)
+  const testAuction = app.auction.auctions.find((auction) =>
+    auction.name + '.' + auction.suffix === fullName
+  )
 
-  const [state, setState] = React.useState(defaultPlaceBidModel())
-  const stateIsValid = isStateValid(state)
+  const [EOSAccountName, setEOSAccountName] = React.useState(testAuction ? fullName : '')
 
+  const auction: AuctionRow = app.auction.auctions.find((auction) =>
+      auction.name + '.' + auction.suffix === EOSAccountName,
+  )
 
-  const bindField = (field: keyof PlaceBidModel) => (state: PlaceBidModel) =>
-    ({
-      value: state[field],
-      onChange: (event) => setState({...state, [field]: event.target.value})
-    })
+  const [bidAmount, setBidAmount] = React.useState(0)
+
+  const accoutnIsValid = auction != undefined
+
+  const scatter = app.auction.scatter
+
+  const bidIsValid = auction && bidAmount > (auction.bestBid || auction.ask) && scatter.freeEOS >= bidAmount
+
+  const stateIsValid = accoutnIsValid && bidIsValid
 
   const dispatch = useDispatch()
   const doPlaceBid = React.useCallback(() =>
-      dispatch(auctionDuck.actions.placeBid(state)),
-    [state],
+      dispatch(auctionDuck.actions.placeBid({bidAmount, EOSAccountName})),
+    [bidAmount, EOSAccountName]
   )
 
   return (
@@ -51,7 +65,7 @@ export const BuyPane = (props: DivProps) => {
           <label className='form__label'>
             <span className='form__label-text'>EOS Account Name*</span>
             <span className='form__item'>
-                            <input className='form__input' type='text'  {...bindField('EOSAccountName')(state)}/>
+                            <StringInput className={'form__input ' + (accoutnIsValid ? '' : 'invalid')} type='text'   value={EOSAccountName} onValueChange={setEOSAccountName}/>
                         </span>
           </label>
         </div>
@@ -59,36 +73,36 @@ export const BuyPane = (props: DivProps) => {
           <label className='form__label'>
             <span className='form__label-text'>Bid Amount*</span>
             <span className='form__item'>
-                            <input className='form__input' type='text'   {...bindField('bidAmount')(state)}/>
+                            <NumberInput className={'form__input ' + (bidIsValid ? '' : 'invalid')} type='text'   value={bidAmount} onValueChange={setBidAmount}/>
                         </span>
           </label>
         </div>
         <div className='form__item-wrap'>
           <div className='form__item' style={stateIsValid ? {} : {pointerEvents: 'none'}}>
-            <button className='form__btn' onClick={doPlaceBid}>
+            <button className={'form__btn'} disabled={!stateIsValid} onClick={doPlaceBid}>
               <span className='form__btn-text'>Submit Your Bid</span>
             </button>
           </div>
         </div>
       </div>
       <div className='main-tab__block-wrap'>
-        <div className='main-tab__block-title'>Account Information</div>
+        <div className='main-tab__block-title'>Auction Information</div>
         <div className='main-tab__block-body'>
           <div className='account-table double-block'>
             <div className='account-table_block'>
               <div className='account-table_row'>
                 <div className='account-table_cell'>Ask Price</div>
                 <div className='account-table_cell'>
-                  <a href='#'>10.4500 EOS</a>
+                  <a href='#'>{auction && auction.ask} </a>
                 </div>
               </div>
               <div className='account-table_row'>
-                <div className='account-table_cell'>Latest Bid</div>
-                <div className='account-table_cell'>7.55</div>
+                <div className='account-table_cell'>Best Bid</div>
+                <div className='account-table_cell'>{auction && auction.bestBid}</div>
               </div>
               <div className='account-table_row'>
                 <div className='account-table_cell'>Latest Bid %</div>
-                <div className='account-table_cell'>50%</div>
+                <div className='account-table_cell'>{auction && auction.bestBidPercent}</div>
               </div>
               <div className='account-table_row'>
                 <div className='account-table_cell'>Time Remaining</div>
@@ -98,16 +112,16 @@ export const BuyPane = (props: DivProps) => {
             <div className='account-table_block'>
               <div className='account-table_row'>
                 <div className='account-table_cell'>Number of Bids</div>
-                <div className='account-table_cell'>12</div>
+                <div className='account-table_cell'>N/A</div>
               </div>
               <div className='account-table_row'>
                 <div className='account-table_cell'>Length</div>
-                <div className='account-table_cell'>12</div>
+                <div className='account-table_cell'>{auction && ((auction.name + auction.suffix).length + 1)}</div>
               </div>
               <div className='account-table_row'>
                 <div className='account-table_cell'>Dislikes</div>
                 <div className='account-table_cell dislike'>
-                  <span className='dislike-value'>543</span>
+                  <span className='dislike-value'>{auction ? auction.dislikes : 'N/A'}</span>
                   <svg width='15' height='13' viewBox='0 0 15 13' fill='none' xmlns='http://www.w3.org/2000/svg'>
                     <path
                       d='M13.9609 1.77343C14.3984 2.21093 14.6992 2.73046 14.8633 3.33203C15.0273 3.93359 15.0273 4.53515 14.918 5.13671C14.7812 5.73828 14.5352 6.28515 14.1523 6.75L8.35546 12.7383C8.24609 12.8477 8.10937 12.875 7.97265 12.875C7.83593 12.875 7.72656 12.8477 7.64453 12.7383L1.84765 6.75C1.46484 6.28515 1.1914 5.73828 1.08202 5.13671C0.945304 4.53515 0.972648 3.93359 1.13671 3.33203C1.30077 2.73046 1.60155 2.21093 2.03905 1.77343L2.12109 1.6914C2.72265 1.06249 3.48827 0.707024 4.36327 0.652337C5.23828 0.597649 6.05859 0.816399 6.76953 1.30859L7.5625 3.68749L4.93749 5.4375L8.875 9.375L7.5625 5.875L10.1875 4.125L9.25781 1.30859C9.96875 0.816399 10.7617 0.597649 11.6367 0.652337C12.5117 0.707024 13.25 1.06249 13.8789 1.6914L13.9609 1.77343Z'/>
@@ -121,11 +135,11 @@ export const BuyPane = (props: DivProps) => {
       </div>
 
       <div className='main-tab__block-wrap'>
-        <div className='main-tab__block-title'>Auction Status</div>
+        <div className='main-tab__block-title'>Auction Status (N/A)</div>
         <div className='main-tab__chart-wrap'>
           <div className='main-tab__chart'>
             <div className='main-tab__chart-head'>
-              <div className='main-tab__chart-title'>Bid vs Ask</div>
+              <div className='main-tab__chart-title'>Bid vs Ask </div>
             </div>
             <div className='main-tab__chart-body'>
               <svg width='646' height='152' viewBox='0 0 646 152' fill='none' xmlns='http://www.w3.org/2000/svg'>

@@ -1,6 +1,7 @@
-import { takeLatest } from 'redux-saga/effects'
+import { put, takeLatest } from 'redux-saga/effects'
 import { FactoryAction, isType } from '@sha/fsa'
 import { auctionDuck, PlaceBidModel, SellModel } from './auctionDuck'
+import { nav, push } from '../nav'
 
 export function* auctionSaga() {
   yield takeLatest(isType(auctionDuck.actions.placeBid), placeBidWorker)
@@ -11,9 +12,9 @@ export function* auctionSaga() {
 }
 
 function* placeBidWorker(action: FactoryAction<PlaceBidModel>) {
-  console.log('palce bid', action)
+  yield put(push(nav.auctionMyAuctionsBids)())
 }
 
 function* submitSellWorker(action: FactoryAction<SellModel>) {
-  console.log('Submit sell', action)
+  yield put(push(nav.auctionMyAuctionsSells)())
 }

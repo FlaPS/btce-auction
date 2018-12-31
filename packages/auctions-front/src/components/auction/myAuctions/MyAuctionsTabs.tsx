@@ -1,24 +1,27 @@
 import React from 'react'
-import styled from '../../styles'
-import { InputProps } from '../inputs/helpers'
-import useWithValue from '../../hooks/useWithValue'
+
 import {compose, constant} from 'lazy-compose'
+import { styled } from '../../../styles'
+import { InputProps } from '../../inputs/helpers'
+import { useWithValue } from '../../../hooks'
 
 const TabButton = styled.div`
   font-family: 'Brandon Grotesque';
 
-    cursor: pointer;
+  cursor: pointer;
   width: 100%;
   box-sizing: border-box;
   div {
-  
+    width: 100%
     display: flex;
     justify-content: center;
     cursor: pointer;
-    color: #616161;
+    color: #FEFEFE;
+    opacity: 0.3;
     height: 4.3em;
-    margin-bottom: -0.2em;
     pointer-events: none;
+    align-items: center;
+    background-color: #616161;
     label {
       width: 100%;
       text-align: center;
@@ -30,8 +33,9 @@ const TabButton = styled.div`
   
   
   .active {
-      border-bottom: #FFAE00 solid 0.2em;
-      color: #FFAE00;
+      opacity: 1;
+      background-color: #191919;
+      color: #FEFEFE;
   }
 `
 
@@ -41,10 +45,10 @@ const Layout = styled.div`
   background-color: #000000;
   display: flex;
   justify-content: space-around;
-  border-bottom: #272727 solid 0.2em;
+  bottom-border: #272727 solid 0.2em;
 `
 
-const AuctionTabsRaw = ({value, onValueChange, data, ...props}: InputProps<number, string>) =>
+const MyAuctionsTabsRaw = ({value, onValueChange, data, ...props}: InputProps<number, string>) =>
   <Layout >
     {
       data.map((item, index) =>
@@ -54,7 +58,7 @@ const AuctionTabsRaw = ({value, onValueChange, data, ...props}: InputProps<numbe
           </div>
         </TabButton>,
 
-    )}
+      )}
   </Layout>
 
-export const AuctionTabs = AuctionTabsRaw
+export const MyAuctionsTabs = useWithValue(0)(MyAuctionsTabsRaw)

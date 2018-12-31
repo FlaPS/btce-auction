@@ -3,8 +3,6 @@ import {connectRouter} from 'connected-react-router'
 import {History} from 'history'
 import { btceDuck } from './btce/btceDuck'
 
-//import {walliDuck} from './btcs/walliDuck'
-
 type DeepReadonly<T> = T extends any[]
   ? DeepReadonlyArray<T[number]>
   : T extends object ? DeepReadonlyObject<T> : T

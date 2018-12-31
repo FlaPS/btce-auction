@@ -25,6 +25,7 @@
     "history": "^4.7.2",
     "jest-config": "^23.6.0",
     "lazy-compose": "^0.1.0",
+    "moment": "^2.23.0",
     "prop-types": "^15.6.2",
     "ramda": "^0.25.0",
     "rc-gesture": "0.0.22",

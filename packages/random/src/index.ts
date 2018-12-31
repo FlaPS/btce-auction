@@ -82,10 +82,10 @@ export const randomInt = (max: number, min: number = 0) => {
 export const randomNatural = (max: number = 10) =>
     randomInt(max, 1)
 
-const takeRandomArray = <T>(array: T[], max: number | undefined = array.length, min: number = 0): T[] => {
+export const takeRandomArray = <T>(array: T[], max: number | undefined = array.length, min: number = 0): T[] => {
     const source = shuffle(array)
     max = typeof max === 'number' ? max : source.length - 1
-    const length = Math.max(randomInt(max, min), source.length - 1)
+    const length = Math.min(randomInt(max, min), source.length - 1)
     return source.slice(0, length)
 }
 

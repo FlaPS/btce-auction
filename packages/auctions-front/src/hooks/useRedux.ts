@@ -3,6 +3,7 @@
 import {createContext, default as React, useContext, useEffect, useRef, useState,} from 'react'
 import {Action, Dispatch, Store} from 'redux'
 import shallowEqual from './shallowEqual'
+import { FrontState } from '../store/reducer'
 
 const Context: React.Context<Store<any> | null> = createContext(null)
 export const StoreProvider = Context.Provider
@@ -20,7 +21,7 @@ export const StoreProvider = Context.Provider
  * );
  * const todo = useMappedState(mapState);
  */
-export function useMappedState<TState, TResult = {}>(
+export function useMappedState<TState = FrontState, TResult = {}>(
     mapState: (state: TState) => TResult,
 ): TResult {
     const store = useContext(Context)

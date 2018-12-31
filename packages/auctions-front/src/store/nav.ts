@@ -77,8 +77,10 @@ export const push = <T>(route: NavRoute<T>) => (params: T = {} as any as T) => (
 
 export const nav = {
   auctionHome: makeRoute('/auction/home'),
-  auctionBuyName: makeRoute('/auction/buyName'),
+  auctionBuyName: makeRoute<{fullName?: string}>('/auction/buyName/:fullName'),
   auctionSellName: makeRoute('/auction/sellName'),
   auctionMyAuctions: makeRoute('/auction/myAuctions'),
+  auctionMyAuctionsBids: makeRoute('/auction/myAuctions/bids'),
+  auctionMyAuctionsSells: makeRoute('/auction/myAuctions/sells'),
   auctionHouseRules: makeRoute('/auction/houseRules'),
 }
