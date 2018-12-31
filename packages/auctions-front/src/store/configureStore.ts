@@ -4,6 +4,7 @@ import {isFrontend} from '@sha/utils'
 import createRootReducer from './reducer'
 import {createBrowserHistory} from 'history'
 import {routerMiddleware} from 'connected-react-router'
+import { auctionSaga } from './btce/auctionSaga'
 // import saga from './walli/saga'
 // import api from './walli/api'
 // import {walliDuck} from './walli/walliDuck'
@@ -17,7 +18,7 @@ const configureFrontendStore = (
 
   const store = createStore(createRootReducer(history), initialState, getFrontEndMiddlewares(history))
   store['runSaga'] = sagaMiddleware.run
-  // store['runSaga'](saga(api())(walliDuck))
+  store['runSaga'](auctionSaga)
 
   return store as typeof store & { runSaga: Function, history: any }
 }

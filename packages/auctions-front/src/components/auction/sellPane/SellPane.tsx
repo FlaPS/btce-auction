@@ -1,21 +1,14 @@
 import React from 'react'
 import { DivProps } from '@sha/react-fp'
+import { auctionDuck, defaultSellModel, SellModel } from '../../../store/btce/auctionDuck'
+import { useDispatch } from '../../../hooks'
 
-const defaultState = () => ({
-  salePrice: undefined as number,
-  EOSname: undefined as string,
-  receivingAccount: undefined as string,
-  email: undefined as string,
-  auctionPeriod: undefined as number,
-  message: undefined as string,
-})
 
-type FormState = Partial<ReturnType<typeof defaultState>>
 
 const isValid = (value: any) =>
   value !== undefined && String(value).trim().length > 0
 
-const isStateValid = (state: FormState) =>
+const isStateValid = (state: SellModel) =>
   isValid(state.salePrice) &&
   isValid(state.EOSname) &&
   isValid(state.receivingAccount) &&
@@ -24,14 +17,20 @@ const isStateValid = (state: FormState) =>
 
 
 export const SellPane = (props: DivProps) => {
-  const [state, setState] = React.useState(defaultState())
+  const [state, setState] = React.useState(defaultSellModel())
   const stateIsValid = isStateValid(state)
 
-  const bindField = (field: keyof FormState) => (state: FormState) =>
+  const bindField = (field: keyof SellModel) => (state: SellModel) =>
     ({
       value: state[field],
       onChange: (event) => setState({...state, [field]: event.target.value})
     })
+
+  const dispatch = useDispatch()
+  const doSubmitSell = React.useCallback(() =>
+      dispatch(auctionDuck.actions.submitSell(state)),
+    [],
+  )
 
   return (
   <div className='main-tab__wrap' {...props}>
@@ -119,7 +118,7 @@ export const SellPane = (props: DivProps) => {
               <button
                 className='form__btn'
                 disabled={!stateIsValid}
-                onClick={() => console.log(state)}
+                onClick={doSubmitSell}
               >
                 <span className='form__btn-text'>Submit Sell Auction</span>
               </button>

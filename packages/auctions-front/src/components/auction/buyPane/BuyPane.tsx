@@ -1,29 +1,34 @@
 import React from 'react'
 import { DivProps } from '@sha/react-fp'
+import { auctionDuck, defaultPlaceBidModel, PlaceBidModel } from '../../../store/btce/auctionDuck'
+import { useDispatch } from '../../../hooks'
 
-const defaultState = () => ({
-  bidAmount: undefined as number,
-  EOSAccountName: undefined as string,
-})
-
-type FormState = Partial<ReturnType<typeof defaultState>>
 
 const isValid = (value: any) =>
   value !== undefined && String(value).trim().length > 0
 
-const isStateValid = (state: FormState) =>
+const isStateValid = (state: PlaceBidModel) =>
   isValid(state.bidAmount) &&
   isValid(state.EOSAccountName)
 
 export const BuyPane = (props: DivProps) => {
-  const [state, setState] = React.useState(defaultState())
+
+
+  const [state, setState] = React.useState(defaultPlaceBidModel())
   const stateIsValid = isStateValid(state)
 
-  const bindField = (field: keyof FormState) => (state: FormState) =>
+
+  const bindField = (field: keyof PlaceBidModel) => (state: PlaceBidModel) =>
     ({
       value: state[field],
       onChange: (event) => setState({...state, [field]: event.target.value})
     })
+
+  const dispatch = useDispatch()
+  const doPlaceBid = React.useCallback(() =>
+      dispatch(auctionDuck.actions.placeBid(state)),
+    [],
+  )
 
   return (
     <div className='main-tab__wrap' {...props}>
@@ -60,7 +65,7 @@ export const BuyPane = (props: DivProps) => {
         </div>
         <div className='form__item-wrap'>
           <div className='form__item' style={stateIsValid ? {} : {pointerEvents: 'none'}}>
-            <button className='form__btn' onClick={() => console.log(state)}>
+            <button className='form__btn' onClick={doPlaceBid}>
               <span className='form__btn-text'>Submit Your Bid</span>
             </button>
           </div>
