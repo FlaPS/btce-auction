@@ -27,7 +27,7 @@ export const BuyPane = (props: DivProps) => {
   const dispatch = useDispatch()
   const doPlaceBid = React.useCallback(() =>
       dispatch(auctionDuck.actions.placeBid(state)),
-    [],
+    [state],
   )
 
   return (

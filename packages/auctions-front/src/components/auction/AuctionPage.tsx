@@ -10,12 +10,13 @@ import { AuctionTabs } from './AuctionTabs'
 import { useMappedState } from '../../hooks'
 import { SellPane } from './sellPane/SellPane'
 import { BuyPane } from './buyPane/BuyPane'
+import { HomePane } from './home/HomePane'
 
 const routes = [
   {
     nav: nav.auctionHome,
     label: 'home',
-    Component: () => <div>Auction home</div>,
+    Component: () => <HomePane/>,
   },
   {
     nav: nav.auctionBuyName,

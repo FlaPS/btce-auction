@@ -5,6 +5,9 @@ import { auctionDuck, PlaceBidModel, SellModel } from './auctionDuck'
 export function* auctionSaga() {
   yield takeLatest(isType(auctionDuck.actions.placeBid), placeBidWorker)
   yield takeLatest(isType(auctionDuck.actions.submitSell), submitSellWorker)
+
+
+
 }
 
 function* placeBidWorker(action: FactoryAction<PlaceBidModel>) {

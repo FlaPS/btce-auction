@@ -4,20 +4,20 @@ import { actionCreatorFactory } from '@sha/fsa'
 const factory = actionCreatorFactory('auction')
 
 export const defaultSellModel = () => ({
-  salePrice: undefined as number,
-  EOSname: undefined as string,
-  receivingAccount: undefined as string,
-  email: undefined as string,
-  auctionPeriod: undefined as number,
-  message: undefined as string,
+  salePrice: '' as any as number,
+  EOSname: '' as string,
+  receivingAccount: '' as string,
+  email: '' as string,
+  auctionPeriod: '' as any as number,
+  message: '' as string,
 })
 
 export type SellModel = Partial<ReturnType<typeof defaultSellModel>>
 
 
 export const defaultPlaceBidModel = () => ({
-  bidAmount: undefined as number,
-  EOSAccountName: undefined as string,
+  bidAmount: '' as any as number,
+  EOSAccountName: '' as string,
 })
 
 export type PlaceBidModel = Partial<ReturnType<typeof defaultPlaceBidModel>>
@@ -25,7 +25,7 @@ export type PlaceBidModel = Partial<ReturnType<typeof defaultPlaceBidModel>>
 const actions = {
   placeBid: factory<PlaceBidModel>('placeBid'),
   submitSell: factory<SellModel>('sell'),
-  
+  fetchRecentAuctions: factory.async<undefined, AuctionRow[]>('fetchUsers'),
 }
 
 export const auctionDuck = {

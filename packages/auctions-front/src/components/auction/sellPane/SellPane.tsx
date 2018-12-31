@@ -29,7 +29,7 @@ export const SellPane = (props: DivProps) => {
   const dispatch = useDispatch()
   const doSubmitSell = React.useCallback(() =>
       dispatch(auctionDuck.actions.submitSell(state)),
-    [],
+    [state],
   )
 
   return (
