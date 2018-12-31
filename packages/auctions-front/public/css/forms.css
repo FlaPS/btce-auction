@@ -1,0 +1,354 @@
+.main-tab__wrap {
+    max-width: 1450px;
+    width: 100%;
+    border-radius: 0 0 6px 6px;
+}
+
+.main-tab__head {
+    padding: 1.3em 1.5em;
+    background-color:  #1E1E1E;
+}
+
+.main-tab__head span {
+    font-size: 2.2em;
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+.main-tab__body {
+    padding: 2em 3.7em 2.3em 2.6em;
+    background-color: #191919;
+    border-radius: 0 0 6px 6px;
+}
+
+.form__wrap {
+
+}
+
+.form__title-wrap {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.form__title {
+    font-family: 'Muller';
+    font-size: 2.4em;
+    color: #fefefe;
+}
+
+.form__title-info {
+    margin-left: 0.4em;
+    text-decoration: none;
+}
+
+.form__title-info  svg {
+    display: block;
+}
+
+.form__item-wrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
+}
+
+.form__item-wrap+.form__item-wrap {
+    margin-top: 2em;
+}
+
+.form__label {
+    font-family: 'Muller';
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+}
+
+.form__label-text {
+    color: #fefefe;
+    font-size: 1.6em;
+    line-height: 2.3em;
+    margin-right: 0.6em;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.form__item {
+    width: 100%;
+    max-width: calc(100% - 16.1em);
+    height: 100%;
+}
+
+.form__item.no-miw {
+    max-width: unset;
+}
+
+.form__input {
+    width: 100%;
+    height: 100%;
+    color: #616161;
+    background-color: #131313;
+    border: 1px solid #2B2B2B;
+    padding: 0.55em 0.8em;
+    font-size: 1.6em;
+    outline: none;
+    border-radius: 3px;
+    transition: border .4s ease;
+    resize: none;
+}
+
+.form__input:hover {
+    border: 1px solid #616161;
+}
+
+.form__btn {
+    font-size: 1em;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    padding: 1.6em 1em;
+    border-radius: 3px;
+    outline: none;
+    border: 1px solid rgba(255, 174, 0, 1);
+    background-color: rgba(255, 174, 0, 0);
+    color: rgba(255, 174, 0, 1);
+    transition: color .4s ease, background-color .4s ease;
+}
+
+.form__btn:hover {
+    background-color: rgba(255, 174, 0, 1);
+    color: rgba(255, 255, 255, 1);
+}
+
+.form__btn.disable {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.form__btn-text {
+    text-transform: uppercase;
+    font-size: 1.8em;
+    letter-spacing: 1px;
+    font-weight: 900;
+}
+
+.main-tab__block-wrap {
+    padding: 1.6em 2em 2em;
+    background-color: #131313;
+    border-radius: 3px;
+    font-family: 'Muller';
+}
+
+.main-tab__block-title {
+    color: #fefefe;
+    font-size: 2.4em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.main-tab__block-body {
+    margin-top: 2em;
+    padding: 2.8em 2em 2.6em;
+    background-color: #191919;
+    border-radius: 3px;
+}
+
+.account-table {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.account-table_block {
+    width: 100%;
+}
+
+.account-table_row {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #2B2B2B;
+    padding: 1.1em 0;
+}
+
+.account-table_row:first-child {
+    padding-top: 0;
+}
+
+.account-table_row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.account-table.double-block .account-table_block:first-child .account-table_row {
+    padding-right: 29px;
+}
+
+.account-table.double-block .account-table_block:last-child .account-table_row {
+    padding-left: 29px;
+}
+
+.account-table.double-block .account-table_block {
+    width: 50%;
+}
+
+.account-table_cell {
+    width: 50%;
+    font-size: 1.6em;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.account-table_cell.dislike {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-weight: 500;
+}
+
+.account-table_cell.dislike svg {
+    fill: #D80147;
+    width: 1em;
+    height: 1em;
+    margin-left: 0.4em;
+    position: relative;
+    top: -2px;
+}
+
+.dislike-value {
+    color: #D80147;
+}
+
+.account-table_cell:last-child {
+    text-align: right;
+}
+
+.account-table_cell a {
+    text-decoration: none;
+    color: #FFAE00;
+}
+
+.main-tab__block-info {
+    margin-top: 5em;
+    width: 100%;
+    padding: 1.4em;
+    border: 3px solid #2B2B2B;
+    border-radius: 3px;
+    text-align: center;
+}
+
+.main-tab__block-info_text {
+    font-size: 2.4em;
+    color: #616161;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.main-tab__chart-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.main-tab__chart {
+    margin-top: 1.5em;
+    background-color: #191919;
+    border-radius: 9px;
+    width: calc(50% - 1em);
+}
+
+.main-tab__chart-head {
+    width: 100%;
+    background-color: #2B2B2B;
+    border-radius: 9px 9px 0 0;
+    padding: 1.5em;
+}
+
+.main-tab__chart-title {
+    font-size: 1.5em;
+    text-transform: uppercase;
+    color: #fff;
+    letter-spacing: 0.7px;
+}
+
+.main-tab__chart-body {
+    padding: 1em;
+}
+
+.main-tab__chart-body svg {
+    max-width: 100%;
+}
+
+.sale-name-grid {
+    display: grid;
+    column-gap: 5em;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    grid-template-areas:
+            'saleTitle saleTitle saleTitle saleTitle saleBlock saleBlock saleBlock saleBlock'
+            'saleForm saleForm saleTextarea saleTextarea saleBlock saleBlock saleBlock saleBlock'
+            'saleForm saleForm saleTextarea saleTextarea saleBlock saleBlock saleBlock saleBlock';
+}
+
+.sale-name-grid .form__title-wrap {
+    grid-area: saleTitle;
+    margin-bottom: 7.5em;
+}
+
+.sale-name-grid .main-tab__block-wrap {
+    grid-area: saleBlock;
+}
+
+.sale-name-grid .form__wrap {
+    grid-area: saleForm;
+}
+
+.sale-name-grid .form__wrap:nth-child(3) {
+    grid-area: saleTextarea;
+}
+
+.place-bid-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.place-bid-grid .form__item-wrap {
+    height: unset;
+}
+
+.place-bid-grid .form__title-wrap {
+    margin-bottom: 3em;
+}
+
+.place-bid-grid .form__wrap {
+    width: calc(34% - 4.5em);
+    margin-right: 4.5em;
+}
+
+.place-bid-grid .main-tab__block-wrap {
+    width: calc(66% - 4.5em);
+    margin-left: 4.5em;
+}
+
+.place-bid-grid .main-tab__block-title {
+    text-align: center;
+}
+
+.place-bid-grid .main-tab__block-wrap:last-child {
+    margin-top: 2em;
+    width: 100%;
+}
