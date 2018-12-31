@@ -1,0 +1,86 @@
+.menu__wrap {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-direction: column;
+    max-width: 9em;
+    background-color: #000;
+    min-height: 100%;
+    padding-right: 0.6em;
+}
+
+.menu__logo {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    padding: 1em 1em;
+    text-decoration: none;
+    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 2em;
+}
+
+.menu__logo svg {
+    width: 4.5em;
+    height: 4.5em;
+    fill: #fff;
+}
+
+.menu__logo-name {
+    margin-top: 0.6em;
+    font-weight: 700;
+    font-size: 1.8em;
+}
+
+.menu__logo-text {
+    font-size: 0.85em;
+    margin-top: 0.4em;
+}
+
+
+.menu__item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    padding: 1em 1em;
+    text-decoration: none;
+    border-radius: 0 8px 8px 0;
+    background-color: #000;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    color: #616161;
+}
+
+.menu__item+.menu__item {
+    margin-top: 2em;
+}
+
+.menu__item:hover,
+.menu__item.active {
+    background-color: #191919;
+    color: #FFAE00;
+}
+
+.menu__item:hover svg,
+.menu__item.active svg {
+    fill: #fff;
+}
+
+.menu__item svg {
+    display: block;
+    width: 4.5em;
+    height: 4.5em;
+    fill: #616161;
+    transition: fill 0.4s ease;
+}
+
+.menu__item-text {
+    text-align: center;
+    margin-top: 0.7em;
+    font-size: 1.1em;
+    letter-spacing: 1px;
+    line-height: 1.3em;
+    text-transform: uppercase;
+}
