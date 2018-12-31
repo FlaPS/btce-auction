@@ -68,6 +68,29 @@ const Layout = styled.div`
   }
 `
 
+const Header1 = styled.div`
+  width: 100%;
+  text-align: center;
+  font-family: Muller;
+  line-height: 6.0em;
+  margin-top: 3.0em;
+  text-align: center;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  label {
+      width: 100%;
+      font-size: 4.8em;
+  }
+`
+
+
+const Header2 = styled(Header1)`
+  margin-top: 0.3em;
+  label {
+    font-size: 2.2em;
+  }
+`
+
 const getSelectedTabIndex = (pathname: string) =>
   routes.findIndex( r => r.nav.match(pathname) !== null)
 
@@ -78,6 +101,8 @@ const AuctionPageRaw = () => {
   return (
     <Layout>
       <div className={'content'}>
+        <Header1><label>EOS Namespace Auction House</label></Header1>
+        <Header2><label>The Largest Marketplace for Premium EOS Accounts</label> </Header2>
         <AuctionTabs
           data={routes.map( r => r.label)}
           value={getSelectedTabIndex(useMappedState(pathnameSelector))}

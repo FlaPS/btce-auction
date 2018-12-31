@@ -1,8 +1,32 @@
 import React from 'react'
 import { DivProps } from '@sha/react-fp'
 
-export const BuyPane = (props: DivProps) =>
-  <div className='main-tab__wrap' {...props}>
+const defaultState = () => ({
+  bidAmount: undefined as number,
+  EOSAccountName: undefined as string,
+})
+
+type FormState = Partial<ReturnType<typeof defaultState>>
+
+const isValid = (value: any) =>
+  value !== undefined && String(value).trim().length > 0
+
+const isStateValid = (state: FormState) =>
+  isValid(state.bidAmount) &&
+  isValid(state.EOSAccountName)
+
+export const BuyPane = (props: DivProps) => {
+  const [state, setState] = React.useState(defaultState())
+  const stateIsValid = isStateValid(state)
+
+  const bindField = (field: keyof FormState) => (state: FormState) =>
+    ({
+      value: state[field],
+      onChange: (event) => setState({...state, [field]: event.target.value})
+    })
+
+  return (
+    <div className='main-tab__wrap' {...props}>
     <div className='main-tab__head'>
       <span>place a bid</span>
     </div>
@@ -22,7 +46,7 @@ export const BuyPane = (props: DivProps) =>
           <label className='form__label'>
             <span className='form__label-text'>EOS Account Name*</span>
             <span className='form__item'>
-                            <input className='form__input' type='text'/>
+                            <input className='form__input' type='text'  {...bindField('EOSAccountName')(state)}/>
                         </span>
           </label>
         </div>
@@ -30,13 +54,13 @@ export const BuyPane = (props: DivProps) =>
           <label className='form__label'>
             <span className='form__label-text'>Bid Amount*</span>
             <span className='form__item'>
-                            <input className='form__input' type='text'/>
+                            <input className='form__input' type='text'   {...bindField('bidAmount')(state)}/>
                         </span>
           </label>
         </div>
         <div className='form__item-wrap'>
-          <div className='form__item'>
-            <button className='form__btn'>
+          <div className='form__item' style={stateIsValid ? {} : {pointerEvents: 'none'}}>
+            <button className='form__btn' onClick={() => console.log(state)}>
               <span className='form__btn-text'>Submit Your Bid</span>
             </button>
           </div>
@@ -510,3 +534,4 @@ export const BuyPane = (props: DivProps) =>
       </div>
     </div>
   </div>
+  )}

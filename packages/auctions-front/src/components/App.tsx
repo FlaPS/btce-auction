@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {Provider} from 'react-redux'
-import {Route, Switch} from 'react-router' // react-router v4
+import { Redirect, Route, Switch } from 'react-router' // react-router v4
 import {ConnectedRouter} from 'connected-react-router'
 import { configureFrontendStore, nav } from '../store/'
 import {createBrowserHistory} from 'history'
@@ -59,7 +59,9 @@ const App = () =>
             <ConnectedRouter history={history}>
               <Switch>
                 {
-                  reactRoutes
+                  [...reactRoutes,
+                    <Redirect from='/' to='/auction/home' />
+                    ]
                 }
               </Switch>
             </ConnectedRouter>

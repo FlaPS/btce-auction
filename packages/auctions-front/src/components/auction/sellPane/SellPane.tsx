@@ -1,7 +1,39 @@
 import React from 'react'
 import { DivProps } from '@sha/react-fp'
 
-export const SellPane = (props: DivProps) =>
+const defaultState = () => ({
+  salePrice: undefined as number,
+  EOSname: undefined as string,
+  receivingAccount: undefined as string,
+  email: undefined as string,
+  auctionPeriod: undefined as number,
+  message: undefined as string,
+})
+
+type FormState = Partial<ReturnType<typeof defaultState>>
+
+const isValid = (value: any) =>
+  value !== undefined && String(value).trim().length > 0
+
+const isStateValid = (state: FormState) =>
+  isValid(state.salePrice) &&
+  isValid(state.EOSname) &&
+  isValid(state.receivingAccount) &&
+  isValid(state.email)
+
+
+
+export const SellPane = (props: DivProps) => {
+  const [state, setState] = React.useState(defaultState())
+  const stateIsValid = isStateValid(state)
+
+  const bindField = (field: keyof FormState) => (state: FormState) =>
+    ({
+      value: state[field],
+      onChange: (event) => setState({...state, [field]: event.target.value})
+    })
+
+  return (
   <div className='main-tab__wrap' {...props}>
     <div className='main-tab__head'>
       <span>Place an Ask</span>
@@ -26,45 +58,69 @@ export const SellPane = (props: DivProps) =>
             <label className='form__label'>
               <span className='form__label-text'>Sale Price*</span>
               <span className='form__item'>
-                                <input className='form__input' type='text'/>
-                            </span>
+                  <input
+                    className='form__input'
+                    type='text'
+                    {...bindField('salePrice')(state)}
+                  />
+              </span>
             </label>
           </div>
           <div className='form__item-wrap'>
             <label className='form__label'>
               <span className='form__label-text'>EOS  Name*</span>
               <span className='form__item'>
-                                <input className='form__input' type='text'/>
-                            </span>
+                  <input
+                    className='form__input'
+                    type='text'
+                    {...bindField('EOSname')(state)}
+                  />
+              </span>
             </label>
           </div>
           <div className='form__item-wrap'>
             <label className='form__label'>
               <span className='form__label-text'>Receiving Account*</span>
               <span className='form__item'>
-                                <input className='form__input' type='text'/>
-                            </span>
+                <input
+                  className='form__input'
+                  type='text'
+                  {...bindField('receivingAccount')(state)}
+                />
+              </span>
             </label>
           </div>
           <div className='form__item-wrap'>
             <label className='form__label'>
               <span className='form__label-text'>Email*</span>
               <span className='form__item'>
-                                <input className='form__input' type='text'/>
-                            </span>
+                <input
+                  className='form__input'
+                  type='text'
+                  {...bindField('email')(state)}
+                />
+              </span>
             </label>
           </div>
           <div className='form__item-wrap'>
             <label className='form__label'>
               <span className='form__label-text'>Auction Period</span>
               <span className='form__item'>
-                                <input className='form__input' type='text'/>
-                            </span>
+                <input
+                  className='form__input'
+                  type='text'
+                  {...bindField('auctionPeriod')(state)}
+                />
+              </span>
             </label>
           </div>
           <div className='form__item-wrap'>
-            <div className='form__item'>
-              <button className='form__btn'>
+            <div className='form__item' style={stateIsValid ? {} : {pointerEvents: 'none'}}>
+              <button
+                className='form__btn'
+                disabled={!stateIsValid}
+                onClick={() => console.log(state)}
+              >
                 <span className='form__btn-text'>Submit Sell Auction</span>
               </button>
             </div>
@@ -76,8 +132,8 @@ export const SellPane = (props: DivProps) =>
             <label className='form__label'>
               <span className='form__label-text'>Your message</span>
               <span className='form__item no-miw'>
-                                    <textarea className='form__input' rows='14'></textarea>
-                                </span>
+                  <textarea className='form__input' rows='14'  {...bindField('message')(state)}></textarea>
+              </span>
             </label>
           </div>
         </div>
@@ -119,5 +175,6 @@ export const SellPane = (props: DivProps) =>
 
       </div>
     </div>
-  </div>
+  </div>)
+}
 
