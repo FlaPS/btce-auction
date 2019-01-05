@@ -1,7 +1,7 @@
 import React from 'react'
-import styled, {layouts} from '../../styles'
-import TextAreaInput, {TextAreaProps} from './TextAreaInput'
-import {Div} from '@sha/react-fp/src'
+import styled, { layouts } from '../../styles'
+import TextAreaInput, { TextAreaProps } from './TextAreaInput'
+import { Div } from '@sha/react-fp/src'
 
 const makeShadow = value =>
     value

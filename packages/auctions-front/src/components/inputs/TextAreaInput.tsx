@@ -1,6 +1,6 @@
-import React, {ChangeEvent} from 'react'
-import {TextArea, TextAreaProps} from '@sha/react-fp/src'
-import {InputProps} from './helpers'
+import React, { ChangeEvent } from 'react'
+import { TextArea, TextAreaProps } from '@sha/react-fp/src'
+import { InputProps } from './helpers'
 
 const TextAreaInput = React.forwardRef(
     (

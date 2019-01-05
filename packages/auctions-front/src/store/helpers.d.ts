@@ -1,5 +1,5 @@
-import {AnyAction} from 'redux'
-import {$Values} from 'utility-types'
+import { AnyAction } from 'redux'
+import { $Values } from 'utility-types'
 
 export type AnyReducer = (state: any, action: any) => any
 

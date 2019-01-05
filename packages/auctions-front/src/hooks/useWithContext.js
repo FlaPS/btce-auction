@@ -9,9 +9,10 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-import React from 'react';
-import { identity } from 'ramda';
-import { useSubscribe } from '../contexts';
+import React from 'react'
+import { identity } from 'ramda'
+import { useSubscribe } from '../contexts'
+
 var useWithContext = function (context, property, contextMapper) {
     if (contextMapper === void 0) { contextMapper = identity; }
     return function (Component) {

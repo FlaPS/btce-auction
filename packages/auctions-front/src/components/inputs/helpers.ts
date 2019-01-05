@@ -1,7 +1,7 @@
-import React, {ChangeEvent, ChangeEventHandler} from 'react'
-import {Div, Renderable} from '../../../../react-fp/src'
-import styled, {fontSize} from '../../styles'
-import {Subtract} from 'utility-types'
+import React, { ChangeEvent, ChangeEventHandler } from 'react'
+import { Div, Renderable } from '../../../../react-fp/src'
+import styled, { fontSize } from '../../styles'
+import { Subtract } from 'utility-types'
 
 type OptionalKeys<T, U extends keyof T> = Subtract<T, { [key in U]: T[U] }> &
     { [key in U]?: T[U] }

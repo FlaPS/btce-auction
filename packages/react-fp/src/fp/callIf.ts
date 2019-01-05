@@ -30,13 +30,13 @@ export const CallIf =
 /**
  * <example>
  *     const trace = (d: number) =>
- *     console.log(d)
+ *      console.log(d)
  *
  *     const only10to15 = CallIf(R.gt(10)).ap(R.lt(15)).fold
  *     const trace10to15 = only10to15(trace)
  *
- *     trace10to15(8) // nothing in console
- *     trace10to15(12) // 12
- *     trace10to15(16) // nothing in console
+ *      trace10to15(8) // nothing in console
+ *      trace10to15(12) // 12
+ *      trace10to15(16) // nothing in console
  * </example>
  */

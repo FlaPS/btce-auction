@@ -1,10 +1,11 @@
 import * as React from 'react'
-import styled, {SVGLibrary} from '../../styles'
-import {Div, ExtractProps} from '../../../../react-fp/src'
-import {InputProps, onCheckboxChangeHandler} from './helpers'
-import {AccountVO} from '../../store/valueObjects'
+import styled, { SVGLibrary } from '../../styles'
+import { Div, ExtractProps } from '../../../../react-fp/src'
+import { InputProps, onCheckboxChangeHandler } from './helpers'
+import { AccountVO } from '../../store/valueObjects'
 import AccountIcon from '../AccountIcon'
-import {useWithValue} from '../../hooks/'
+import { useWithValue } from '../../hooks/'
+
 console.log('React', React)
 window['react'] = React
 export const AccountCheckbox = ({

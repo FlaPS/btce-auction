@@ -1,6 +1,6 @@
 import React from 'react'
-import {identity} from 'ramda'
-import {now} from '@sha/utils'
+import { identity } from 'ramda'
+import { now } from '@sha/utils'
 import createBrowserHistory from 'history/createBrowserHistory'
 
 const defaultValues = new Map<React.Context<any>, any>()

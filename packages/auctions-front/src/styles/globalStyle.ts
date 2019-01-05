@@ -1,5 +1,5 @@
-import {createGlobalStyle} from './styled'
-import {layouts} from './index'
+import { createGlobalStyle } from './styled'
+import { layouts } from './index'
 
 const GlobalStyle = createGlobalStyle`
     @font-face {

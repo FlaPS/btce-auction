@@ -1,6 +1,6 @@
-import React, {ChangeEvent} from 'react'
-import {HTMLInput, HTMLInputProps} from '@sha/react-fp/src'
-import {InputProps} from './helpers'
+import React, { ChangeEvent } from 'react'
+import { HTMLInput, HTMLInputProps } from '@sha/react-fp/src'
+import { InputProps } from './helpers'
 
 const StringInput = React.forwardRef(
   (

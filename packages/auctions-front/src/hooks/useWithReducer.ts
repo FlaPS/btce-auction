@@ -1,5 +1,5 @@
-import React, {Reducer} from 'react'
-import {Omit} from 'utility-types'
+import React, { Reducer } from 'react'
+import { Omit } from 'utility-types'
 
 export type WithReducerProps<S, A> = {
     dispatch: (action: A) => any

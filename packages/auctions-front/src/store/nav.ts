@@ -1,6 +1,6 @@
-import {match, matchPath} from 'react-router'
-import {trace} from '../../../utils/src'
-import {LOCATION_CHANGE} from 'connected-react-router'
+import { match, matchPath } from 'react-router'
+import { trace } from '../../../utils/src'
+import { LOCATION_CHANGE } from 'connected-react-router'
 
 const makeRoute = <T extends { [K in keyof T]?: string }>(pattern: string): NavRoute<T> => {
   const creator = (props: T = {} as any as T): string =>
@@ -83,4 +83,15 @@ export const nav = {
   auctionMyAuctionsBids: makeRoute('/auction/myAuctions/bids'),
   auctionMyAuctionsSells: makeRoute('/auction/myAuctions/sells'),
   auctionHouseRules: makeRoute('/auction/houseRules'),
+
+  explorer: {
+    liveFeed: makeRoute('/explorer/liveFeed'),
+    producers: makeRoute('/explorer/producers'),
+    proxies: makeRoute('/explorer/proxies'),
+    smartContracts: makeRoute('/explorer/smartContracts'),
+    accounts: makeRoute('/explorer/accounts'),
+    ram: makeRoute('/explorer/ram'),
+    bids: makeRoute('/explorer/bids'),
+    tokens: makeRoute('/explorer/tokens'),
+  }
 }

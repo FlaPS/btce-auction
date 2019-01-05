@@ -1,5 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var ramda_1 = require("ramda");
 var arrify = function (val) {
-    return val === null || val === undefined ? [] : Array.isArray(val) ? val : [val];
+    return (val === null || val === undefined)
+        ? []
+        : (Array.isArray(val) ? val : [val]);
 };
 var reduceProducers = function () {
     var reducers = [];
@@ -14,14 +19,21 @@ var idMorphism = function (state, action) { return state; };
 var concat = function (f, g) {
     return reduceProducers(f, g);
 };
-export var concatR = concat;
-export var Consumer = function (f) {
+exports.concatR = concat;
+exports.Consumer = function (f) {
     if (f === void 0) { f = idMorphism; }
     return Object.assign(f, {
         valueOf: function () { return f; },
         concat: function (g) {
-            return Consumer(concat(f, g));
+            return exports.Consumer(concat(f, g));
         },
     });
 };
-//# sourceMappingURL=fp.js.map
+exports.makeLens = function (prop) {
+    return ramda_1.lens(ramda_1.path(arrify(prop)), ramda_1.assocPath(arrify(prop)));
+};
+var num = exports.makeLens('num');
+var log = exports.makeLens('log');
+exports.overLens = function (prop, transform) {
+    return ramda_1.over(ramda_1.lens(ramda_1.path(arrify(prop)), ramda_1.assocPath(arrify(prop))), transform);
+};

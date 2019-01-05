@@ -1,19 +1,27 @@
 import * as React from 'react'
-import {Provider} from 'react-redux'
+import { useContext } from 'react'
+import { connect, Provider } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router' // react-router v4
-import {ConnectedRouter} from 'connected-react-router'
+import { ConnectedRouter } from 'connected-react-router'
 import { configureFrontendStore, nav } from '../store/'
 
-import {StoreProvider} from '../hooks'
+import { StoreProvider, useMappedState } from '../hooks'
 import { HistoryContext } from '../contexts'
 import { AuctionPage } from './auction/AuctionPage'
 import { styled } from '../styles'
-import { Menu } from './auction/Menu'
-import {history} from '../history'
+import { Menu } from './Menu'
+import { history } from '../history'
+import { ExplorerPage } from './explorer/ExplorerPage'
+import { FrontState } from '../store/reducer'
 
 const store = configureFrontendStore(history)
 
 const routes = [
+  {
+    path: '/explorer',
+    label: 'Explorer',
+    Component: ExplorerPage,
+  },
   {
     path: '/auction',
     label: 'home',
@@ -38,38 +46,91 @@ const reactRoutes =
 
 
 const Layout = styled.div`
-  display: flex;
-  flex-direction: row;
-  .content {
-     width: calc(100%);
+
+    .content {
+       width: calc(100%);
+    }
+    display: flex;
+    flex-direction: row;
+
+`
+
+
+const pathnameSelector = state => state.router.location.pathname
+
+
+const Root = () => {
+  const history = useContext(HistoryContext)
+
+  const pathname = useMappedState(pathnameSelector)
+
+  return (
+          <Layout>
+
+              <Menu
+                value={pathname.includes('explorer') ? 0 : 3}
+                onValueChange={
+                  (value) =>
+                    value === 0
+                      ? history.push(nav.explorer.liveFeed())
+                      : history.push(nav.auctionHome())
+
+                }
+              />
+              <div className={'content'}>
+                <ConnectedRouter history={history}>
+                  <Switch>
+                    {
+                      [
+                        ...reactRoutes,
+                        <Redirect from='/' to='/auction/home' key={'/'}/>,
+                        <Redirect from='/auction' to='/auction/home' key={'/auction'}/>,
+                      ]
+                    }
+                  </Switch>
+                </ConnectedRouter>
+              </div>
+          </Layout>
+
+  )
+}
+
+
+const BusLayout = styled.div`
+
+  div {
+    transition: all 0.3s ease-in;
+  }
+  
+  .busy {
+    pointer-events: none;
+    opacity: 0.3;
   }
 `
+
+
+const BusyContainer = connect(
+  (state: FrontState) =>
+    ({isBusy: state.ui.busy.length > 0}),
+)
+(({isBusy}: {isBusy: boolean}) =>
+  <BusLayout><div className={isBusy ? 'busy' : ''}><Root/></div></BusLayout>
+)
 
 /**
  * Legacy provider used for connected-react-router
  * @constructor
  */
-const App = () =>
-  <StoreProvider value={store}>
-    <Provider store={store}>
-      <HistoryContext.Provider value={history}>
-        <Layout>
-            <Menu />
-          <div className={'content'}>
-            <ConnectedRouter history={history}>
-              <Switch>
-                {
-                  [
-                    ...reactRoutes,
-                    <Redirect from='/' to='/auction/home' />,
-                  ]
-                }
-              </Switch>
-            </ConnectedRouter>
-          </div>
-        </Layout>
-      </HistoryContext.Provider>
-    </Provider>
-  </StoreProvider>
 
+const App = () => {
+          return(
+    <StoreProvider value={store}>
+      <Provider store={store}>
+        <HistoryContext.Provider value={history}>
+          <BusyContainer />
+        </HistoryContext.Provider>
+      </Provider>
+    </StoreProvider>
+  )
+}
 export default App

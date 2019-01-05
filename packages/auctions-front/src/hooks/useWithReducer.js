@@ -25,7 +25,8 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-import React from 'react';
+import React from 'react'
+
 var useWithReducer = function (reducer, defaultState) { return function (Component) {
     return (function (props) {
         var _a = __read(React.useReducer(reducer, props.state || defaultState), 2), state = _a[0], dispatch = _a[1];

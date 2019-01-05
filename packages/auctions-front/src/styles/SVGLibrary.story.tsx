@@ -1,6 +1,6 @@
 import React from 'react'
-import {storiesOf} from '@storybook/react'
-import {compose, reduce, sort, toPairs} from 'ramda'
+import { storiesOf } from '@storybook/react'
+import { compose, reduce, sort, toPairs } from 'ramda'
 import SVGLibrary from './SVGLibrary'
 import styled from './styled'
 

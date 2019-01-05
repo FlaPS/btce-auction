@@ -1,7 +1,8 @@
-import {combineReducers} from 'redux'
-import {connectRouter} from 'connected-react-router'
-import {History} from 'history'
+import { combineReducers } from 'redux'
+import { connectRouter } from 'connected-react-router'
+import { History } from 'history'
 import { btceDuck } from './btce/btceDuck'
+import { uiDuck } from './btce/ui/uiDuck'
 
 type DeepReadonly<T> = T extends any[]
   ? DeepReadonlyArray<T[number]>
@@ -17,6 +18,7 @@ type DeepReadonlyObject<T> = {
 const reducer = (history: History) => combineReducers({
   router: connectRouter(history),
   app: btceDuck.reducer,
+  ui: uiDuck.reducer,
 })
 
 export type FrontState = ReturnType<ReturnType<typeof reducer>>

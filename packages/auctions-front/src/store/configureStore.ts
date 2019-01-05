@@ -1,13 +1,11 @@
-import {applyMiddleware, compose, createStore} from 'redux'
+import { applyMiddleware, compose, createStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import {isFrontend} from '@sha/utils'
+import { isFrontend } from '@sha/utils'
 import createRootReducer from './reducer'
-import {createBrowserHistory} from 'history'
-import {routerMiddleware} from 'connected-react-router'
-import { auctionSaga } from './btce/auctionSaga'
-// import saga from './walli/saga'
-// import api from './walli/api'
-// import {walliDuck} from './walli/walliDuck'
+import { createBrowserHistory } from 'history'
+import { routerMiddleware } from 'connected-react-router'
+import { btceSaga } from './btce/btceSaga'
+
 
 const REDUX_DEV_TOOLS = '__REDUX_DEVTOOLS_EXTENSION__'
 
@@ -17,8 +15,9 @@ const configureFrontendStore = (
 ) => {
 
   const store = createStore(createRootReducer(history), initialState, getFrontEndMiddlewares(history))
+
   store['runSaga'] = sagaMiddleware.run
-  store['runSaga'](auctionSaga)
+  store['runSaga'](btceSaga, {mode: 'confirm'})
 
   return store as typeof store & { runSaga: Function, history: any }
 }

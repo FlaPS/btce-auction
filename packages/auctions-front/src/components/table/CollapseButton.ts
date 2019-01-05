@@ -2,8 +2,7 @@ import React from 'react'
 import { styled, SVGLibrary } from '../../styles'
 import { ButtonProps } from '@sha/react-fp'
 import { InputProps } from '../inputs/helpers'
-import compose, {constant} from 'lazy-compose'
-import { useWithValue } from '../../hooks'
+import compose, { constant } from 'lazy-compose'
 
 const CollapseButtonBase = styled.div`
   background: #2A2A2A;

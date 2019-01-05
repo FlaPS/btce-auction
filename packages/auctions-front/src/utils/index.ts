@@ -1,5 +1,5 @@
-import {DAY_MILIS, now} from '@sha/utils'
-import {shortDateFormat} from './dateFormat'
+import { DAY_MILIS, now } from '@sha/utils'
+import { shortDateFormat } from './dateFormat'
 
 export const getDayStartTimestamp = (
     timestamp: number = new Date().getTime(),

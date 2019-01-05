@@ -1,8 +1,8 @@
 import React from 'react'
-import {Renderable, renderChildren} from '../../../react-fp/src'
-import {NowContext} from '.'
-import {now} from '../../../utils/src'
-import {useMount, useUnmount} from '../hooks/'
+import { Renderable, renderChildren } from '../../../react-fp/src'
+import { NowContext } from '.'
+import { now } from '../../../utils/src'
+import { useMount, useUnmount } from '../hooks/'
 
 type NowProvideProps = {
     children?: Renderable

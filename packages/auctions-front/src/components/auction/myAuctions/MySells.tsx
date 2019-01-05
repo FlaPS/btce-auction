@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from '../../../styles'
 import { ColumnProps } from '../../table/ColumnProps'
-import { AuctionRow } from '../../../store/btce/auctionDuck'
-import { history } from '../../../history'
-import { nav } from '../../../store'
+import { auctionDuck, AuctionRow } from '../../../store/btce/auction/auctionDuck'
 import moment from '../home/HomePane'
 import { FrontState } from '../../../store/reducer'
-import { useMappedState } from '../../../hooks'
+import { useDispatch, useMappedState } from '../../../hooks'
 import { Table } from '../../table/Table'
+import { MyAuctionsExpandedRowRender } from './MyBids'
+import { GoldButtonCell } from '../../table/GoldButtonCell'
+
 const NameCell = styled.div`
 
     font-size: 2.0em;
@@ -61,11 +62,52 @@ const columns: ColumnProps<AuctionRow, any> = [
     width: '15em',
     mapValue: value => moment(value).format('MMM DD, YYYY'),
   },
+  {
+    title: ' ',
+    dataIndex: 'name',
+    width: '10em',
+    render: (value: string, record) =>
+      record.bestBid > record.ask
+          ? <AcceptCell record={record} />
+          : '',
+  },
+  {
+    title: ' ',
+    dataIndex: 'name',
+    width: '10em',
+    render: (value: string, record: AuctionRow) =>
+      <CancelCell record={record} />
+     ,
+  },
 ]
+
+
+const AcceptCell = ({record}) => {
+  const dispatch = useDispatch()
+  return <GoldButtonCell
+            label={'ACCEPT'}
+            onClick={
+              () =>
+                  dispatch(
+                    auctionDuck.actions.acceptSell.started(record.id),
+                  )
+            }
+          />
+}
+
+const CancelCell = ({record}) => {
+  const dispatch = useDispatch()
+  return (
+    <GoldButtonCell
+      label={'CANCEL'}
+      onClick={() =>  dispatch(auctionDuck.actions.cancelSell.started(record.id))}
+    />
+  )
+}
 
 const selectAuctionsWithMySells = (state: FrontState) => {
   const mySells = state.app.auction.mySells
-  const auctions = state.app.auction.auctions.filter( item =>
+  const auctions = auctionDuck.selectors.auctionRows(state).filter( item =>
     mySells.find( id => id === item.id),
   )
   return auctions
@@ -74,6 +116,10 @@ const selectAuctionsWithMySells = (state: FrontState) => {
 export const MySells = () => {
   const data = useMappedState(selectAuctionsWithMySells)
 
-  return <Table columns={columns} data={data}/>
+  return <Table
+          columns={columns}
+          data={data}
+          expandedRowRender={MyAuctionsExpandedRowRender}
+        />
 
 }

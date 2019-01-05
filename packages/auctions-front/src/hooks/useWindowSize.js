@@ -14,7 +14,8 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
+
 var isClient = typeof window === 'object';
 var useWindowSize = function (initialWidth, initialHeight) {
     if (initialWidth === void 0) { initialWidth = Infinity; }

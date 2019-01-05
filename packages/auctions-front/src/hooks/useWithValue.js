@@ -34,7 +34,8 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-import React from 'react';
+import React from 'react'
+
 var useWithValue = function (initialValue) { return function (Component) {
     return React.memo(function (_a) {
         var value = _a.value, onValueChange = _a.onValueChange, props = __rest(_a, ["value", "onValueChange"]);

@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect } from 'react'
+
 var useUnmount = function (unmount) {
     useEffect(function () { return function () {
         if (unmount)

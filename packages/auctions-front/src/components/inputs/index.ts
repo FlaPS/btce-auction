@@ -3,9 +3,8 @@ import AccountSelectRaw from './AccountSelect'
 import DateTimeInputRaw from './DateTimeInput'
 import SelectInputRaw from './SelectInput'
 import TextAreaAutosizeInputRaw from './TextAreaAutosizeInput'
-import {useWithContext} from '../../hooks'
-import {DisabledContext} from '../../contexts'
-import {map} from 'ramda'
+import { useWithContext } from '../../hooks'
+import { DisabledContext } from '../../contexts'
 
 const makeDisableble = useWithContext(DisabledContext, 'disabled')
 

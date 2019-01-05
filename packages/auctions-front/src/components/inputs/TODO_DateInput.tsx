@@ -1,6 +1,6 @@
 import React from 'react'
-import {HTMLInputProps, renderChildren} from '../../../../react-fp/src'
-import {InputLayout, InputProps, memoizedOnChange} from './helpers'
+import { HTMLInputProps, renderChildren } from '../../../../react-fp/src'
+import { InputLayout, InputProps, memoizedOnChange } from './helpers'
 
 type DateInputProps = InputProps<string> & HTMLInputProps
 

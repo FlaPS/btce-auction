@@ -1,6 +1,5 @@
 import React from 'react'
-
-import {compose, constant} from 'lazy-compose'
+import { compose, constant } from 'lazy-compose'
 import { styled } from '../../../styles'
 import { InputProps } from '../../inputs/helpers'
 import { useWithValue } from '../../../hooks'
@@ -27,7 +26,6 @@ const TabButton = styled.div`
       text-align: center;
       font-size: 2.2em;
       text-transform: uppercase;
-    
     }
   }
   
@@ -52,7 +50,7 @@ const MyAuctionsTabsRaw = ({value, onValueChange, data, ...props}: InputProps<nu
   <Layout >
     {
       data.map((item, index) =>
-        <TabButton onClick={compose(onValueChange, constant(index))} >
+        <TabButton onClick={compose(onValueChange, constant(index))} key={index} >
           <div className={(index === value ? 'active' : '')}>
             <label>{item}</label>
           </div>

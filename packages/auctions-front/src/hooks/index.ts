@@ -7,7 +7,7 @@ export {default as useWithValue} from './useWithValue'
 export {default as useWindowSize} from './useWindowSize'
 export {default as useGLobalKeyDown} from './useGlobalKeyDown'
 
-import {WithReducerProps} from './useWithReducer'
+import { WithReducerProps } from './useWithReducer'
 
 export {
     WithReducerProps

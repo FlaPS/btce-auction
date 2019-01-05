@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect } from 'react'
+
 var useGlobalKeyDown = function (callback) {
     useEffect(function () {
         window.addEventListener('keydown', callback);

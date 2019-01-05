@@ -1,17 +1,16 @@
 import React from 'react'
 import styled from '../../styles'
 import { InputProps } from '../inputs/helpers'
-import useWithValue from '../../hooks/useWithValue'
-import {compose, constant} from 'lazy-compose'
+import { compose, constant } from 'lazy-compose'
 
 const TabButton = styled.div`
   font-family: 'Brandon Grotesque';
 
-    cursor: pointer;
+  cursor: pointer;
   width: 100%;
   box-sizing: border-box;
   div {
-  
+
     display: flex;
     justify-content: center;
     cursor: pointer;
@@ -24,11 +23,11 @@ const TabButton = styled.div`
       text-align: center;
       font-size: 2.2em;
       text-transform: uppercase;
-    
+
     }
   }
-  
-  
+
+
   .active {
       border-bottom: #FFAE00 solid 0.2em;
       color: #FFAE00;
@@ -48,7 +47,7 @@ const AuctionTabsRaw = ({value, onValueChange, data, ...props}: InputProps<numbe
   <Layout >
     {
       data.map((item, index) =>
-        <TabButton onClick={compose(onValueChange, constant(index))} >
+        <TabButton onClick={compose(onValueChange, constant(index))} key={index} >
           <div className={(index === value ? 'active' : '')}>
             <label>{item}</label>
           </div>

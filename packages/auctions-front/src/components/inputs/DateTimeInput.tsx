@@ -1,14 +1,14 @@
 import React from 'react'
-import styled, {fontColor, fontSize} from '../../styles'
-import {Div, ExtractProps} from '../../../../react-fp/src'
-import {InputProps} from './helpers'
-import {DAY_MILIS, HOUR_MILIS, MINUTE_MILIS, now, shortTimeZone, WEEK_MILIS,} from '../../../../utils/src'
+import styled, { fontColor, fontSize } from '../../styles'
+import { Div, ExtractProps } from '../../../../react-fp/src'
+import { InputProps } from './helpers'
+import { DAY_MILIS, HOUR_MILIS, MINUTE_MILIS, now, shortTimeZone, WEEK_MILIS } from '../../../../utils/src'
 import SelectInputRaw from './SelectInput'
-import {clamp} from 'ramda'
-import {getDayLabel, getDayStartTimestamp} from '../../utils'
-import {useWithContext} from '../../hooks/'
-import {DisabledContext, NowContext} from '../../contexts'
-import {media} from '../../styles/media'
+import { clamp } from 'ramda'
+import { getDayLabel, getDayStartTimestamp } from '../../utils'
+import { useWithContext } from '../../hooks/'
+import { DisabledContext, NowContext } from '../../contexts'
+import { media } from '../../styles/media'
 
 const SelectInput = useWithContext(DisabledContext, 'disabled')(SelectInputRaw)
 

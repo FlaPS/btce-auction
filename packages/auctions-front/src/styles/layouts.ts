@@ -1,5 +1,5 @@
-import {fontSize} from './index'
-import {media} from './media'
+import { fontSize } from './index'
+import { media } from './media'
 
 export const primary = `
     background: #FFFFFF;

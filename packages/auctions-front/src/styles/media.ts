@@ -1,4 +1,4 @@
-import {css} from './styled'
+import { css } from './styled'
 
 export const sizes = {
     desktop: 1024,

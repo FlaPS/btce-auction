@@ -1,7 +1,7 @@
 import React from 'react'
-import {identity} from 'ramda'
-import {useSubscribe} from '../contexts'
-import {Omit} from 'utility-types'
+import { identity } from 'ramda'
+import { useSubscribe } from '../contexts'
+import { Omit } from 'utility-types'
 
 const useWithContext = <T, K extends string = 'value', R = T>(
     context: React.Context<T>,

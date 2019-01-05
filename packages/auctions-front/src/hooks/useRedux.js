@@ -15,8 +15,9 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-import { createContext, useContext, useEffect, useRef, useState, } from 'react';
-import shallowEqual from './shallowEqual';
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import shallowEqual from './shallowEqual'
+
 var Context = createContext(null);
 export var StoreProvider = Context.Provider;
 /**

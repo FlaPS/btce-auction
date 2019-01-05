@@ -1,5 +1,6 @@
-import { DAY_MILIS, now } from '@sha/utils';
-import { shortDateFormat } from './dateFormat';
+import { DAY_MILIS, now } from '@sha/utils'
+import { shortDateFormat } from './dateFormat'
+
 export var getDayStartTimestamp = function (timestamp) {
     if (timestamp === void 0) { timestamp = new Date().getTime(); }
     return timestamp - (timestamp % DAY_MILIS);

@@ -1,8 +1,7 @@
 import React from 'react'
 import { DivProps } from '@sha/react-fp'
-import { auctionDuck, defaultSellModel, SellModel } from '../../../store/btce/auctionDuck'
+import { auctionDuck, defaultSellModel, SellModel } from '../../../store/btce/auction/auctionDuck'
 import { useDispatch } from '../../../hooks'
-
 
 
 const isValid = (value: any) =>
@@ -10,9 +9,9 @@ const isValid = (value: any) =>
 
 const isStateValid = (state: SellModel) =>
   isValid(state.ask) &&
+  Number(state.ask) >= 1 &&
   isValid(state.name) &&
-  isValid(state.receivingAccount) &&
-  isValid(state.email)
+  isValid(state.receivingAccount)
 
 
 
@@ -28,7 +27,7 @@ export const SellPane = (props: DivProps) => {
 
   const dispatch = useDispatch()
   const doSubmitSell = React.useCallback(() =>
-      dispatch(auctionDuck.actions.submitSell(state)),
+      dispatch(auctionDuck.actions.submitSell.started(state)),
     [state],
   )
 
@@ -143,31 +142,45 @@ export const SellPane = (props: DivProps) => {
             <div className='account-table'>
               <div className='account-table_block'>
                 <div className='account-table_row'>
-                  <div className='account-table_cell'>EOS Balance</div>
+                  <div className='account-table_cell'>
+                    <span>EOS Balance</span>
+                  </div>
                   <div className='account-table_cell'>
                     <a href='#'>10.45 EOS</a>
                   </div>
                 </div>
                 <div className='account-table_row'>
-                  <div className='account-table_cell'>RAM Quota</div>
-                  <div className='account-table_cell'>50%</div>
+                  <div className='account-table_cell'>
+                    <span>
+                      RAM Quota
+                    </span>
+                  </div>
+                  <div className='account-table_cell'>
+                    <span>
+                      50%
+                    </span>
+                  </div>
                 </div>
                 <div className='account-table_row'>
-                  <div className='account-table_cell'>RAM Unused</div>
-                  <div className='account-table_cell'>12</div>
+                  <div className='account-table_cell'>
+                    <span>RAM Unused</span>
+                  </div>
+                  <div className='account-table_cell'>
+                    <span>12</span>
+                  </div>
                 </div>
                 <div className='account-table_row'>
-                  <div className='account-table_cell'>Staked CPU</div>
-                  <div className='account-table_cell'>21</div>
+                  <div className='account-table_cell'><span>Staked CPU</span></div>
+                  <div className='account-table_cell'><span>21</span></div>
                 </div>
                 <div className='account-table_row'>
-                  <div className='account-table_cell'>Staked Net</div>
-                  <div className='account-table_cell'>12</div>
+                  <div className='account-table_cell'><span>Staked Net</span></div>
+                  <div className='account-table_cell'><span>12</span></div>
                 </div>
               </div>
             </div>
             <div className='main-tab__block-info'>
-              <div className='main-tab__block-info_text'>{state.name}.eosio</div>
+              <div className='main-tab__block-info_text'>{state.name}</div>
             </div>
           </div>
         </div>

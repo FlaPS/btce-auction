@@ -1,4 +1,5 @@
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom'
+
 var scroll = function (x, y, opts) { return window.scrollTo(x, y); };
 function calculateScrollOffset(element, offset, alignment) {
     var body = document.body;

@@ -6,9 +6,9 @@
   },
   "homepage": "",
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
+    "build": "webpack --config ./webpack.config/prod.js",
     "storybook": "start-storybook -s ./public -p 6006",
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js  --config ./webpack.config.js  --inline --history-api-fallback "
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js  --config ./webpack.config/dev.js  --inline --history-api-fallback "
   },
   "engines": {
     "node": "=10.6.0",
@@ -37,8 +37,7 @@
     "ts-keycode-enum": "^1.0.6",
     "ts-loader": "^5.3.0",
     "use-onclickoutside": "^0.2.2",
-    "utility-types": "^2.1.0",
-    "webpack-merge": "^4.1.5"
+    "utility-types": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",
@@ -81,6 +80,7 @@
     "typescript": "^3.2.0-rc",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10"
+    "webpack-dev-server": "^3.1.10",
+    "webpack-merge": "^4.1.5"
   }
 }

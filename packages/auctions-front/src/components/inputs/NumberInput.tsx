@@ -1,6 +1,6 @@
-import React, {ChangeEvent} from 'react'
-import {HTMLInput, HTMLInputProps} from '@sha/react-fp/src'
-import {InputProps} from './helpers'
+import React, { ChangeEvent } from 'react'
+import { HTMLInput, HTMLInputProps } from '@sha/react-fp/src'
+import { InputProps } from './helpers'
 
 const NumberInput = React.forwardRef(
   (
@@ -13,7 +13,7 @@ const NumberInput = React.forwardRef(
       onChange={React.useCallback(
         (event?: ChangeEvent<HTMLInputElement>) => {
           if (onChange) onChange(event)
-          if (onValueChange) onValueChange(Number(event.target.value))
+          if (onValueChange) onValueChange(event.target.value)
         },
         [onChange, onValueChange],
       )}

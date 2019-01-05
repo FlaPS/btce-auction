@@ -1,5 +1,5 @@
 import React from 'react'
-import {WithValueProps} from '../components/inputs/helpers'
+import { WithValueProps } from '../components/inputs/helpers'
 
 const useWithValue = <T>(initialValue?: T) => <P extends WithValueProps<T>>(
     Component: React.ComponentType<P>,

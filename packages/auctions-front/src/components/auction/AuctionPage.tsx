@@ -1,9 +1,9 @@
 import { nav } from '../../store'
 import { Redirect, Route, Switch } from 'react-router'
 import * as React from 'react'
+import { useContext } from 'react'
 import { styled } from '../../styles'
 import { ConnectedRouter } from 'connected-react-router'
-import { useContext, useState } from 'react'
 import { HistoryContext, useSubscribe } from '../../contexts'
 import { SideBar } from './sidebar/SideBar'
 import { AuctionTabs } from './AuctionTabs'
@@ -12,6 +12,7 @@ import { SellPane } from './sellPane/SellPane'
 import { BuyPane } from './buyPane/BuyPane'
 import { HomePane } from './home/HomePane'
 import { MyAuctionsPane } from './myAuctions/MyAuctionsPane'
+import { HouseRulesPane } from './houseRules/HouseRulesPane'
 
 const routes = [
   {
@@ -38,7 +39,7 @@ const routes = [
   {
     nav: nav.auctionHouseRules,
     label: 'house rules',
-    Component: () => <div>House rules</div>,
+    Component: HouseRulesPane,
   },
 ]
 
@@ -54,7 +55,13 @@ const reactRoutes =
           <Component {...props.match.params as any} />
         }
       />,
-    ).concat(<Redirect from={'auction/myAuctions'} from={'auction/myAuctions/bids'}/>)
+    ).concat(
+      <Redirect
+        from={'auction/myAuctions'}
+        to={'auction/myAuctions/bids'}
+        key={'redirect1'}
+      />,
+  )
 
 const Layout = styled.div`
   display: flex;
@@ -118,12 +125,16 @@ const AuctionPageRaw = () => {
           onValueChange={ index => history.push(routes[index].nav({}))}
         />
         <ConnectedRouter history={useSubscribe(HistoryContext)}>
-          <Switch>{
-            reactRoutes}</Switch>
+          <Switch>
+            {
+              reactRoutes
+            }
+          </Switch>
         </ConnectedRouter>
       </div>
       <SideBar className={'sidebar'}/>
     </Layout>
   )
 }
+
 export const AuctionPage = AuctionPageRaw

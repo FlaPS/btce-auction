@@ -1,7 +1,7 @@
 import React from 'react'
-import {HTMLSelectProps, renderChildren} from '@sha/react-fp/src'
-import {InputLayout, InputProps, memoizedOnChange} from './helpers'
-import {identity} from 'ramda'
+import { HTMLSelectProps, renderChildren } from '@sha/react-fp/src'
+import { InputLayout, InputProps, memoizedOnChange } from './helpers'
+import { identity } from 'ramda'
 import shallowEqual from '../../hooks/shallowEqual'
 import styled from '../../styles'
 
