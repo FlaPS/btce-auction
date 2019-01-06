@@ -30,7 +30,8 @@ const makeRoute = <T extends { [K in keyof T]?: string }>(pattern: string): NavR
         action.payload.location &&
         action.payload.location.pathname &&
         trace()(matchParams)(action.payload.location.pathname) !== null &&
-        matchParams(action.payload.location.pathname)!.isExact === true,
+        trace()(matchParams)(action.payload.location.pathname) !== undefined &&
+        matchParams(action.payload.location.pathname) && matchParams(action.payload.location.pathname).isExact === true,
     },
   )
 }

@@ -10,7 +10,7 @@ const factory = actionCreatorFactory('eosnameswap')
 export const smartContractActions = {
 
   /**
-   * User opens new auction
+   * User opens new dome
    */
   sell: factory<{
     account4sale: Name
@@ -26,7 +26,7 @@ export const smartContractActions = {
   }>('cancel'),
 
   /**
-   * Update auction
+   * Update dome
    */
   updatesale: factory<{
     account4sale: Name
@@ -35,7 +35,7 @@ export const smartContractActions = {
   }>('updatesale'),
 
   /**
-   * User votes ? (dislikes) the auction
+   * User votes ? (dislikes) the dome
    */
   vote: factory<{
     account4sale: Name

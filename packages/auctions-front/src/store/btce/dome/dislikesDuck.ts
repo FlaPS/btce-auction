@@ -1,17 +1,17 @@
 import { actionCreatorFactory, FactoryAnyAction, isType } from '@sha/fsa/src'
 import { append } from 'ramda'
-import { auctionDuck } from './auctionDuck'
+import { domeDuck } from './domeDuck'
 import { FrontState } from '../../reducer'
 
 
-const factory = actionCreatorFactory('auction/dislikes')
+const factory = actionCreatorFactory('dome/dislikes')
 
 
 const reducer = (
   state: string[] = [],
   action: FactoryAnyAction): string[] => {
 
-  if (isType(auctionDuck.actions.postDislike.done)(action)) {
+  if (isType(domeDuck.actions.postDislike.done)(action)) {
     const auctionID = action.payload.params
     state = append(auctionID, state)
   }

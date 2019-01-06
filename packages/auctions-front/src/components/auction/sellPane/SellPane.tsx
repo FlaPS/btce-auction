@@ -1,6 +1,6 @@
 import React from 'react'
 import { DivProps } from '@sha/react-fp'
-import { auctionDuck, defaultSellModel, SellModel } from '../../../store/btce/auction/auctionDuck'
+import { domeDuck, defaultSellModel, SellModel } from '../../../store/btce/dome/domeDuck'
 import { useDispatch } from '../../../hooks'
 
 
@@ -12,8 +12,6 @@ const isStateValid = (state: SellModel) =>
   Number(state.ask) >= 1 &&
   isValid(state.name) &&
   isValid(state.receivingAccount)
-
-
 
 export const SellPane = (props: DivProps) => {
   const [state, setState] = React.useState(defaultSellModel())
@@ -27,7 +25,7 @@ export const SellPane = (props: DivProps) => {
 
   const dispatch = useDispatch()
   const doSubmitSell = React.useCallback(() =>
-      dispatch(auctionDuck.actions.submitSell.started(state)),
+      dispatch(domeDuck.actions.submitSell.started(state)),
     [state],
   )
 
@@ -88,6 +86,8 @@ export const SellPane = (props: DivProps) => {
               </span>
             </label>
           </div>
+          {
+            /**
           <div className='form__item-wrap'>
             <label className='form__label'>
               <span className='form__label-text'>Email*</span>
@@ -112,10 +112,12 @@ export const SellPane = (props: DivProps) => {
               </span>
             </label>
           </div>
+             */
+          }
           <div className='form__item-wrap'>
             <div className='form__item' style={stateIsValid ? {} : {pointerEvents: 'none'}}>
               <button
-                className='form__btn'
+                className={'form__btn ' + (!stateIsValid ? 'disabled-button' : '')}
                 disabled={!stateIsValid}
                 onClick={doSubmitSell}
               >

@@ -4,6 +4,8 @@ import { ColumnProps } from './ColumnProps'
 import { TableHeaderRow } from './TableHeaderRow'
 import { TableRow } from './TableRow'
 import * as R from 'ramda'
+import { Renderable, renderChildren } from '@sha/react-fp'
+import { Spinner } from '../elements/Spinner'
 
 
 const Layout = styled.div`
@@ -14,7 +16,6 @@ const Layout = styled.div`
     min-height: 5.6em;
     padding: 2em;
   }
-  
 `
 
 export type TableProps<T> = {
@@ -23,10 +24,12 @@ export type TableProps<T> = {
   expandable?: boolean,
   expandedRowRender?: (record, index) => React.ReactNode,
   rowKey?: keyof T
+
   paginationConfig: {
     maxPagesToShow?: number
-
   }
+  emptyContent?: Renderable<TableProps<T>>
+  isLoading?: boolean
   maxRowsPerPage?: number
 }
 
@@ -52,6 +55,8 @@ export const Table = <T>({
    columns,
    data,
    rowKey = columns[0].dataIndex,
+   emptyContent,
+   isLoading,
    expandedRowRender,
    paginationConfig = defaultPaginationConfig,
    maxRowsPerPage = 6, ...props }: TableProps<T>) => {
@@ -60,7 +65,7 @@ export const Table = <T>({
   const [sortState, setSortState] = React.useState({order: 'asc', columnIndex: -1} as any as SortState)
 
   let list = data
-  if(sortState.columnIndex !== -1) {
+  if (sortState.columnIndex !== -1) {
     const column = columns[sortState.columnIndex]
     const getValue = column.mapToSort || ((value, record) => value)
     list = list.sort((a, b) => {
@@ -69,7 +74,7 @@ export const Table = <T>({
         if (aValue  === bValue)
           return 0
         return aValue > bValue ? 1 : -1
-      }
+      },
     )
     if (sortState.order === 'desc')
       list = list.reverse()
@@ -94,9 +99,15 @@ export const Table = <T>({
 
   const header = React.createElement(TableHeaderRow, { columns, isExpandable: expandedRowRender !== undefined, sortState, onSort: setSortState, key: 'header' })
 
-  const rows = list.map((record, index) =>
-    React.createElement(TableRow, { record, index, columns, key: index})//, expandedRowRender: expandedKeys[record[rowKey]] && expandedRowRender })
-  )
+
+  const renderRow = (record, index) =>
+    React.createElement(TableRow, { record, index, columns, key: index})
+
+  const rows = isLoading
+    ? React.createElement(Spinner)
+    : (list && list.length)
+                ? list.map(renderRow)
+                : renderChildren(emptyContent)
 
   return (
     React.createElement(TableContext.Provider, {value: api},

@@ -34,7 +34,7 @@ type Date = number
 export type AuctionVO = {
   /**
    * I need a unique Identifier to forward users to related pages.
-   * I.E. certain page of auction (just name & suffix info is not enoght)
+   * I.E. certain page of dome (just name & suffix info is not enoght)
    */
   id: ID
 
@@ -44,7 +44,7 @@ export type AuctionVO = {
   name: string
 
   /**
-   * The minimum value to close auction, could be unset ?
+   * The minimum value to close dome, could be unset ?
    */
   ask: number
 
@@ -59,7 +59,7 @@ export type AuctionVO = {
   publishedOn: Date
 
   /**
-   * Duration, after one auction is automatically closed.
+   * Duration, after one dome is automatically closed.
    * Required, i hope so, because default duration could be changed later, And front-end could have no info about
    */
   duration: Date

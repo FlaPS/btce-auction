@@ -106,7 +106,7 @@ const Header2 = styled(Header1)`
 `
 
 const getSelectedTabIndex = (pathname: string) =>
-  pathname.includes('/auction/myAuctions')
+  pathname.includes('/dome/myAuctions')
     ? 3
     : routes.findIndex( r => r.nav.match(pathname) !== null)
 

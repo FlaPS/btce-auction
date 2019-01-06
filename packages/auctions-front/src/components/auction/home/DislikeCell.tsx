@@ -1,5 +1,5 @@
 import { styled } from '../../../styles'
-import { auctionDuck, AuctionRow } from '../../../store/btce/auction/auctionDuck'
+import { domeDuck, AuctionRow } from '../../../store/btce/dome/domeDuck'
 import React, { useCallback } from 'react'
 import { useDispatch } from '../../../hooks'
 
@@ -30,7 +30,7 @@ export const DislikeCell = (record?: AuctionRow) => {
   const dispatch = useDispatch()
 
   const onClick = useCallback(() => {
-      dispatch(auctionDuck.actions.postDislike.started(record.id))
+      dispatch(domeDuck.actions.postDislike.started(record.id))
     },
     [dispatch, record],
   )

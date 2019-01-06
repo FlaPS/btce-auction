@@ -12,7 +12,7 @@ export function* asyncWorker<P, S, E>(actionCreators: AsyncActionCreators<P, S, 
 ) {
   function* callApi(action: FactoryAnyAction) {
 
-    log('calling auction method', method.name, ' params', action.payload)
+    log('calling dome method', method.name, ' params', action.payload)
 
     if (requireScatter && scatterDuck.actions.attach !== actionCreators as any) {
       const state = yield select()

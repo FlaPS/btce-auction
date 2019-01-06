@@ -1,11 +1,13 @@
 import React from 'react'
 import { DivProps } from '@sha/react-fp'
-import { auctionDuck, AuctionRow, PlaceBidModel } from '../../../store/btce/auction/auctionDuck'
+import { domeDuck, AuctionRow, PlaceBidModel, AuctionState } from '../../../store/btce/dome/domeDuck'
 import { FrontState } from '../../../store/reducer'
 import StringInput from '../../inputs/StringInput'
 import NumberInput from '../../inputs/NumberInput'
 import { connect } from 'react-redux'
 import { DislikeCell } from '../home/DislikeCell'
+import { AsyncState } from '@sha/fsa'
+import { ScatterState } from '../../../store/btce/scatter/scatterDuck'
 
 
 const isValid = (value: any) =>
@@ -19,24 +21,26 @@ const appSelector = (state: FrontState) => state.app
 
 const BuyPaneRaw = ({
   fullName,
-  auctionState,
+  auctionsState,
   dispatch,
+  scatter,
   ...props}: DivProps & {
     fullName?: string,
-    auctionState: any,
-    dispatch
+    auctionsState: AsyncState<AuctionRow[]>,
+    dispatch,
+    scatter: ScatterState
 }) => {
 
-  const rows = auctionDuck.selectors.auctionRows({app: {auction: auctionState}})
-  const testAuction = rows.find(
+  const auctions = auctionsState.value || []
+  const testAuction = auctions.find(
     auction =>
-      auction.name + '.' + auction.suffix === fullName,
+      auction.name === fullName,
   )
 
   const [EOSAccountName, setEOSAccountName] = React.useState(testAuction ? fullName : '')
 
-  const auction: AuctionRow = rows.find( auction =>
-      auction.name + '.' + auction.suffix === EOSAccountName,
+  const auction: AuctionRow = auctions.find( auction =>
+      auction.name === EOSAccountName,
   )
 
   const [bidAmountString, setBidAmount] = React.useState((testAuction && testAuction.bestBid) ? ( testAuction.bestBid + 1 ): 1)
@@ -44,7 +48,7 @@ const BuyPaneRaw = ({
   const bidAmount = Number(bidAmountString)
   const accoutnIsValid = auction !== undefined
 
-  const scatter =  auctionState.scatter
+
 
   const bidIsValid =
     bidAmount === Number(bidAmountString) &&
@@ -59,7 +63,7 @@ const BuyPaneRaw = ({
 
 
   const doPlaceBid = React.useCallback(() =>
-      dispatch(auctionDuck.actions.placeBid.started({bidAmount, auctionId})),
+      dispatch(domeDuck.actions.placeBid.started({bidAmount, auctionId})),
     [bidAmount, EOSAccountName],
   )
 
@@ -99,7 +103,7 @@ const BuyPaneRaw = ({
         </div>
         <div className='form__item-wrap'>
           <div className='form__item' style={stateIsValid ? {} : {pointerEvents: 'none'}}>
-            <button className={'form__btn'} disabled={!stateIsValid} onClick={doPlaceBid}>
+            <button className={'form__btn ' + (!stateIsValid ? 'disabled-button' : '')} disabled={!stateIsValid} onClick={doPlaceBid}>
               <span className='form__btn-text'>Submit Your Bid</span>
             </button>
           </div>
@@ -124,10 +128,14 @@ const BuyPaneRaw = ({
                 <div className='account-table_cell'><span>Latest Bid %</span></div>
                 <div className='account-table_cell'><span>{auction && auction.bestBidPercent}</span></div>
               </div>
-              <div className='account-table_row'>
-                <div className='account-table_cell'><span>Time Remaining</span></div>
-                <div className='account-table_cell'><span>3d 12h 23m</span></div>
-              </div>
+              {
+                /*
+                <div className='account-table_row'>
+                  <div className='account-table_cell'><span>Time Remaining</span></div>
+                  <div className='account-table_cell'><span>3d 12h 23m</span></div>
+                </div>
+                */
+              }
             </div>
             <div className='account-table_block'>
               <div className='account-table_row'>
@@ -572,7 +580,10 @@ const BuyPaneRaw = ({
   )}
 
   export const BuyPane = connect(
-    (state: FrontState) => ({auctionState: state.app.auction}),
+    (state: FrontState) => ({
+      auctionsState: state.app.auction.auctions,
+      scatter: state.app.scatter,
+    }),
     dispatch => ({dispatch}),
   )
   (BuyPaneRaw)

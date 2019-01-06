@@ -23,6 +23,6 @@ storiesOf('auction', module)
   .add('ticker', () =>(
     <Ticker/>
   ))
-  .add('auction tabs' , () =>
+  .add('dome tabs' , () =>
     <AuctionTabs data={['home', 'sell name', 'buy name', 'my auctions', 'house rules']} />
   )

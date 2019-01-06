@@ -10,10 +10,10 @@ const confirImpl = (config) =>
           ...result,
           [key]: async (params?) => {
             const result = await value(params)
-            if (window.confirm('call method ' + key + ', returns '+ JSON.stringify(result)))
+            if (window.confirm('call method ' + key + ', returns ' + JSON.stringify(result)))
               return result
             return {
-              errors: ['Cancelled'],
+              errors: ['Scatter refused'],
             }
           },
         }),

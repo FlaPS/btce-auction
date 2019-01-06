@@ -41,7 +41,7 @@ const Layout = styled.div`
 const rules = [
   {
     title: 'Introduction',
-    content: 'Our aim is to create as perfectly efficient and transparent market for EOS namespaces as possible, available to anyone, at any point in time, anywhere, at the lowest possible cost. Dome is the stage where anyone can buy, sell, and make a public request for (premium) EOS namespaces. The custom auction design promotes rapid price discovery and prevents automated bidding from interfering with the “normal” conditions of the market structure. Finally, we strive to provide the most convenient way of namespace exchange through intuitive and pleasant to use user interface suitable for the needs of all users. ',
+    content: 'Our aim is to create as perfectly efficient and transparent market for EOS namespaces as possible, available to anyone, at any point in time, anywhere, at the lowest possible cost. Dome is the stage where anyone can buy, sell, and make a public request for (premium) EOS namespaces. The custom dome design promotes rapid price discovery and prevents automated bidding from interfering with the “normal” conditions of the market structure. Finally, we strive to provide the most convenient way of namespace exchange through intuitive and pleasant to use user interface suitable for the needs of all users. ',
   },
   {
     title: 'Setup',
@@ -54,7 +54,7 @@ Make sure that, as an account seller, you have full access to the EOS account th
   },
   {
     title: 'Updates',
-    content: 'The Dome House Rules will be greatly expanded in the following months by including user-activated Buy auctions, Over-the-Counter deals, custom auction duration, and more. Therefore, to remain fully informed visit this section on a regular basis.',
+    content: 'The Dome House Rules will be greatly expanded in the following months by including user-activated Buy auctions, Over-the-Counter deals, custom dome duration, and more. Therefore, to remain fully informed visit this section on a regular basis.',
   },
 
 ]

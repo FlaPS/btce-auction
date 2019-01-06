@@ -1,15 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { ColumnProps } from '../../table/ColumnProps'
 import { now } from '@sha/utils'
 import { Table } from '../../table/Table'
-import { styled } from '../../../styles'
+import { constants, styled } from '../../../styles'
 import moment from 'moment'
-import { auctionDuck, AuctionRow } from '../../../store/btce/auction/auctionDuck'
-import { useMappedState } from '../../../hooks'
+import { domeDuck, AuctionRow } from '../../../store/btce/dome/domeDuck'
 import { nav } from '../../../store'
 import { history } from '../../../history'
 import { DislikeCell } from './DislikeCell'
 import { Caption, ExpandedRowLayout, Value } from '../../table/ExpandedRowLayout'
+import { FrontState } from '../../../store/reducer'
+import { connect } from 'react-redux'
+import { EmptyRows } from '../../table/EmptyRows'
+import { compose, constant } from 'lazy-compose'
+import { HistoryContext, useSubscribe } from '../../../contexts'
 
 const NameCell = styled.div`
   cursor: pointer;
@@ -81,31 +85,53 @@ const BodyLayout = styled.div`
 
 `
 
-export const HomePane = () => {
-  return (  <div className='main-tab__wrap' >
+const expandedRowRender =  (record: AuctionRow, index) =>
+  <ExpandedRowLayout>
+    <Caption>Length</Caption>
+    <Value>{record.name.length + record.suffix.length + 1}</Value>
+    <Caption>Number of bids</Caption>
+    <Value>Unknown</Value>
+    <Caption>Time elapsed</Caption>
+    <Value>{moment(now() - record.publishedOn).format('d h')}</Value>
+    {
+      record.message && [
+        <Caption>Message</Caption>,
+        <Value>{record.message}</Value>,
+      ]
+    }
+  </ExpandedRowLayout>
+
+const HomePaneRaw = ({auctions, isLoading, error, dispatch}) => {
+
+  const hisotry = useSubscribe(HistoryContext)
+
+  const empty = error
+      ? <EmptyRows
+          text={error}
+          actionText={' Please try to refetch data'}
+          onActionClick={() =>
+            dispatch(domeDuck.actions.fetchRecentAuctions.started())
+          }
+        />
+      : <EmptyRows
+          text={'No auctions found. '}
+          actionText={'Create a new one'}
+          onActionClick={() => history.push(nav.auctionSellName())}
+        />
+
+  return (
+            <div className='main-tab__wrap' >
               <div className='main-tab__head'>
                 <span>Recent</span>
               </div>
               <BodyLayout>
                 <Table
-                  data={useMappedState(auctionDuck.selectors.auctionRows)}
+                  rowKey={'id'}
+                  data={auctions}
                   columns={columns}
-                  expandedRowRender={(record, index) =>
-                    <ExpandedRowLayout>
-                      <Caption>Length</Caption>
-                      <Value>{record.name.length + record.suffix.length + 1}</Value>
-                      <Caption>Number of bids</Caption>
-                      <Value>Unknown</Value>
-                      <Caption>Time elapsed</Caption>
-                      <Value>{moment(now() - record.publishedOn).format('d h')}</Value>
-                      {
-                        record.message && [
-                              <Caption>Message</Caption>,
-                              <Value>{record.message}</Value>,
-                          ]
-                      }
-                    </ExpandedRowLayout>
-                  }
+                  expandedRowRender={expandedRowRender}
+                  isLoading={isLoading}
+                  emptyContent={empty}
                 >
 
                 </Table>
@@ -113,3 +139,15 @@ export const HomePane = () => {
             </div>
         )
 }
+
+export const HomePane = connect((state: FrontState) =>
+  ({
+    auctions: domeDuck.selectors.auctionRows(state),
+    isLoading: state.app.auction.auctions.status === 'started',
+    error: state.app.auction.auctions.error,
+  }),
+  dispatch =>
+    ({dispatch}),
+)(HomePaneRaw)
+
+

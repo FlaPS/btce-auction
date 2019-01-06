@@ -3,7 +3,7 @@ import { asyncWorker } from '../asyncWorker'
 import { APIConfig } from '../../api/APITypes'
 import { scatterDuck } from './scatterDuck'
 import { scatterApi } from '../../api/scatter/scatterApi'
-import { auctionDuck } from '../auction/auctionDuck'
+import { domeDuck } from '../dome/domeDuck'
 
 export function* scatterSaga(config: APIConfig) {
 
@@ -12,6 +12,6 @@ export function* scatterSaga(config: APIConfig) {
   yield fork(asyncWorker, scatterDuck.actions.attach, api.attach)
 
   yield takeLatest(scatterDuck.actions.attach.done.isType, function* () {
-    yield put(auctionDuck.actions.fetchMyState.started())
+    yield put(domeDuck.actions.fetchMyState.started())
   })
 }

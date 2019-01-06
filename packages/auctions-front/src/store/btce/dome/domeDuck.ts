@@ -1,6 +1,6 @@
 import { actionCreatorFactory, AsyncState, FactoryAnyAction } from '@sha/fsa/src'
 import { now } from '@sha/utils/src'
-import { add, compose, equals, lensIndex, lensPath, over, reject, update } from 'ramda'
+import { add, compose, equals, lensIndex, lensPath, over, reject, update, assocPath, prepend, append } from 'ramda'
 import { FrontState } from '../../reducer'
 
 import { dislikesDuck } from './dislikesDuck'
@@ -19,17 +19,15 @@ const actions = {
   postDislike: factory.async<ID>('postDislike'),
 }
 
-
-
 const selectAuctionRows = (state: FrontState) => {
-  const source: AuctionVO[] = state.app.auction.auctions
-  const myDislikes: string[] = state.app.auction.myDislikes
+  const source: AuctionVO[] = state.app.auction.auctions.value || []
+  const myDislikes: string[] = (state.app.auction.my.value && state.app.auction.my.value.dislikes) || []
   const currentTime = now()
   return source.map( auction => {
       const [name, suffix = ''] = auction.name.split('.')
       return {
         ...auction,
-        bestBidPercent: auction.bestBid ? (auction.bestBid).toFixed(2) : '0',
+        bestBidPercent: Number(auction.bestBid ? (auction.bestBid).toFixed(2) : '0'),
         length: auction.name.length,
         name,
         suffix,
@@ -64,7 +62,7 @@ export type SellModel = Partial<ReturnType<typeof defaultSellModel>>
 
 export const defaultPlaceBidModel = () => ({
   bidAmount: '' as any as number,
-  EOSAccountName: '' as string,
+  accountId: '' as string,
 })
 
 export type PlaceBidModel = {
@@ -73,89 +71,96 @@ export type PlaceBidModel = {
 }
 
 export type MyState = {
-  myDislikes: string[]
-  myBids: PlaceBidModel[]
-  mySells: string[]
+  dislikes: string[]
+  bids: PlaceBidModel[]
+  sells: string[]
 }
 
 const defaultAuctionState = {
-  auctions: [] as AuctionVO[],
-  myBids: [],
-  mySells: [],
-  myDislikes: [],
+  auctions: {
+    value: [],
+  }  as AsyncState<AuctionVO[]>,
+  my: {
+    value: {
+      bids: [],
+      sells: [],
+      dislikes: [],
+    },
+  }  as AsyncState<MyState>,
+
 }
 
 export type AuctionState = typeof defaultAuctionState
 
-
 const reducer = (state: AuctionState = defaultAuctionState, action: FactoryAnyAction): AuctionState => {
-  if (actions.fetchMyState.done.isType(action))
-    state = {...state, ...action.payload.result}
 
-  if (actions.fetchRecentAuctions.done.isType(action))
-    state = {...state, auctions: action.payload.result}
+  const auctions =  actions.fetchRecentAuctions.asyncReducer(state.auctions, action)
+  const my = actions.fetchMyState.asyncReducer(state.my, action)
+
+  if (auctions !== state.auctions || my !== state.my)
+    state = {
+      auctions,
+      my,
+    }
 
   if (actions.submitSell.done.isType(action)) {
     const publishedOn = now()
     const params = action.payload.params
-    const newAuction = {...params, id: params.name + publishedOn, publishedOn}
-    state = {
-      auctions: [ newAuction as any as AuctionVO, ...state.auctions],
-      myBids: state.myBids,
-      mySells: [newAuction.id, ...state.mySells],
-      myDislikes: state.myDislikes,
-    }
+    const newAuction = {...params, id: params.name + '_' + publishedOn, publishedOn}
+
+    state = over(lensPath(['auctions', 'value']), prepend(newAuction), state)
+    state = over(lensPath(['my', 'value', 'sells']), prepend(newAuction.id), state)
   }
 
   if (actions.acceptSell.done.isType(action) || actions.cancelSell.done.isType(action)) {
     const params = action.payload.params
-    const auction = state.auctions.find( a => a.id === params)
+    const auction = state.auctions.value.find( a => a.id === params)
     const idEquals = equals(params)
     const rejectId = reject(idEquals)
-    state = {
-      ...state,
-      auctions: reject(a => a.id === params, state.auctions),
-      mySells: rejectId(state.mySells),
-      myDislikes:  rejectId(state.myDislikes),
-    }
 
+    state = over(lensPath(['auctions', 'value']), reject(a => a.id === params), state)
+    state = over(lensPath(['my', 'value', 'sells']), rejectId, state)
+    state = over(lensPath(['my', 'value', 'dislikes']), rejectId, state)
   }
 
   if (actions.placeBid.done.isType(action)) {
     const params = action.payload.params
-    const prevAuction = state.auctions.find( a => a.id === params.auctionId)
-    const index = state.auctions.indexOf(prevAuction)
+    const prevAuction = state.auctions.value.find( a => a.id === params.auctionId)
+    const index = state.auctions.value.indexOf(prevAuction)
     const newAuction = {...prevAuction, bestBid: params.bidAmount}
     const auctionId = newAuction.id
 
-    state = {
-      auctions: update(index, newAuction, state.auctions),
-      myBids: [...state.myBids, {auctionId, bidAmount: params.bidAmount}],
-      mySells: state.mySells,
+    // add new auction to the local state
+    state = over(lensPath(['auctions', 'value']),  update(index, newAuction), state)
 
-      myDislikes: state.myDislikes,
-    }
+    // add new bud to my bids
+    state = over(lensPath(['my', 'value', 'bids']), prepend({auctionId, bidAmount: params.bidAmount}), state)
+
   }
 
-    if (actions.postDislike.done.isType(action)) {
-      const index = state.auctions.findIndex(a => a.id === action.payload.params )
-      const lens = compose(lensPath(['auctions']),  lensIndex(index), lensPath(['dislikes']))
-      state = over(lens, add(1), state)
-      state = { ...state, myDislikes: dislikesDuck.reducer(state.myDislikes, action) }
-    }
+  if (actions.postDislike.done.isType(action)) {
+    const auctionID = action.payload.params
+    const index = auctions.value.findIndex(a => a.id === auctionID )
+    const lens = compose(lensPath(['auctions', 'value']),  lensIndex(index), lensPath(['dislikes']))
 
+    // increment dislikes of an auction
+    state = over(lens, add(1), state)
+
+    state = over(lensPath(['my', 'value', 'dislikes']), append(auctionID), state)
+  }
 
 
   return state
 }
 
 
-export const auctionDuck = {
+export const domeDuck = {
   optics: {
 
   },
   selectors: {
-    myDislikes: (state): AsyncState<string[]> => state.app.auction.myDislikes,
+    myDislikes: (state): AsyncState<string[]> => state.app.auction.my.dislikes,
+    myState: (state) => state.app.auction.my,
     auctionRows: selectAuctionRows,
   },
   actions,

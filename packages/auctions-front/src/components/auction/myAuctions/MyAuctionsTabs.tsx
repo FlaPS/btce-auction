@@ -28,8 +28,8 @@ const TabButton = styled.div`
       text-transform: uppercase;
     }
   }
-  
-  
+
+
   .active {
       opacity: 1;
       background-color: #191919;

@@ -2,6 +2,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { FooterTabs } from '../components/explorer/FooterTabs'
 import { Pagination } from '../components/table/Pagination'
+import { EmptyRows } from '../components/table/EmptyRows'
 
 const explorerTabs = [
   'EOS Live Feed',
@@ -27,4 +28,11 @@ storiesOf('table', module)
   ))
   .add('FooterTabs', () => (
     <FooterTabs data={explorerTabs} />
+  ))
+  .add('Empty rows', () => (
+    <EmptyRows
+      text={'This is an "empty rows" text, '}
+      actionText={'And this is an action. Click one!'}
+      onClick={console.log}
+    />
   ))

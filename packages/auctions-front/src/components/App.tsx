@@ -46,13 +46,11 @@ const reactRoutes =
 
 
 const Layout = styled.div`
-
     .content {
        width: calc(100%);
     }
     display: flex;
     flex-direction: row;
-
 `
 
 
@@ -83,8 +81,8 @@ const Root = () => {
                     {
                       [
                         ...reactRoutes,
-                        <Redirect from='/' to='/auction/home' key={'/'}/>,
-                        <Redirect from='/auction' to='/auction/home' key={'/auction'}/>,
+                        <Redirect exact from='/' to='/auction/home' key={'/'}/>,
+                        <Redirect exact from='/auction' to='/auction/home' key={'/dome'}/>,
                       ]
                     }
                   </Switch>
@@ -114,7 +112,11 @@ const BusyContainer = connect(
     ({isBusy: state.ui.busy.length > 0}),
 )
 (({isBusy}: {isBusy: boolean}) =>
-  <BusLayout><div className={isBusy ? 'busy' : ''}><Root/></div></BusLayout>
+  <BusLayout>
+    <div className={isBusy ? 'busy' : ''}>
+      <Root/>
+    </div>
+  </BusLayout>
 )
 
 /**

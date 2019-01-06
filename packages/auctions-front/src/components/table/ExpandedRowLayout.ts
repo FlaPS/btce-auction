@@ -25,7 +25,7 @@ export const ExpandedRowLayout = styled.div`
   border-bottom: 0.1em solid #FFAF02;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   background-color:  #000000;
   
   div {
