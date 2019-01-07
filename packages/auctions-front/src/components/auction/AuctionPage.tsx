@@ -1,6 +1,6 @@
 import { nav } from '../../store'
 import { Redirect, Route, Switch } from 'react-router'
-import * as React from 'react'
+import React from 'react'
 import { useContext } from 'react'
 import { styled } from '../../styles'
 import { ConnectedRouter } from 'connected-react-router'
@@ -97,7 +97,6 @@ const Header1 = styled.div`
   }
 `
 
-
 const Header2 = styled(Header1)`
   margin-top: 0.3em;
   label {
@@ -110,7 +109,8 @@ const getSelectedTabIndex = (pathname: string) =>
     ? 3
     : routes.findIndex( r => r.nav.match(pathname) !== null)
 
-const pathnameSelector = state => state.router.location.pathname
+const pathnameSelector = state =>
+  state.router.location.pathname
 
 const AuctionPageRaw = () => {
   const history = useContext(HistoryContext)
@@ -122,7 +122,9 @@ const AuctionPageRaw = () => {
         <AuctionTabs
           data={routes.map( r => r.label)}
           value={getSelectedTabIndex(useMappedState(pathnameSelector))}
-          onValueChange={ index => history.push(routes[index].nav({}))}
+          onValueChange={ index =>
+            history.push(routes[index].nav({fullName: '_'}))
+          }
         />
         <ConnectedRouter history={useSubscribe(HistoryContext)}>
           <Switch>

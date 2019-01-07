@@ -17,7 +17,7 @@ const configureFrontendStore = (
   const store = createStore(createRootReducer(history), initialState, getFrontEndMiddlewares(history))
 
   store['runSaga'] = sagaMiddleware.run
-  store['runSaga'](btceSaga, {mode: 'confirm'})
+  store['runSaga'](btceSaga, {mode: 'mock'})
 
   return store as typeof store & { runSaga: Function, history: any }
 }

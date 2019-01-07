@@ -14,6 +14,7 @@ const isStateValid = (state: SellModel) =>
   isValid(state.receivingAccount)
 
 export const SellPane = (props: DivProps) => {
+
   const [state, setState] = React.useState(defaultSellModel())
   const stateIsValid = isStateValid(state)
 
@@ -55,9 +56,10 @@ export const SellPane = (props: DivProps) => {
               <span className='form__label-text'>Sale Price*</span>
               <span className='form__item'>
                   <input
-                    className='form__input'
-                    type='text'
-                    {...bindField('ask')(state)}
+                      className='form__input'
+                      type='text'
+                      maxlength={12}
+                      {...bindField('ask')(state)}
                   />
               </span>
             </label>
@@ -69,6 +71,7 @@ export const SellPane = (props: DivProps) => {
                   <input
                     className='form__input'
                     type='text'
+                    maxlength={12}
                     {...bindField('name')(state)}
                   />
               </span>
@@ -81,6 +84,7 @@ export const SellPane = (props: DivProps) => {
                 <input
                   className='form__input'
                   type='text'
+                  maxlength={12}
                   {...bindField('receivingAccount')(state)}
                 />
               </span>

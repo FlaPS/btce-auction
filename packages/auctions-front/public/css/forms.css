@@ -85,6 +85,21 @@
     max-width: calc(100% - 16.1em);
     height: 100%;
 }
+.form__error {
+    padding-top: 0.5em;
+    font-size: 1.2em;
+    color: #f5222d;
+    transition: all .3s ease-out;
+    opacity: 0;
+}
+
+.visible {
+    opacity: 1;
+}
+
+.invisible {
+    opacity: 0;
+}
 
 .form__item.no-miw {
     max-width: unset;

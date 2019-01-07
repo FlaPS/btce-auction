@@ -1,10 +1,9 @@
-import * as React from 'react'
+import React from 'react'
 import { useContext } from 'react'
 import { connect, Provider } from 'react-redux'
-import { Redirect, Route, Switch } from 'react-router' // react-router v4
+import { Redirect, Route, Switch } from 'react-router'
 import { ConnectedRouter } from 'connected-react-router'
 import { configureFrontendStore, nav } from '../store/'
-
 import { StoreProvider, useMappedState } from '../hooks'
 import { HistoryContext } from '../contexts'
 import { AuctionPage } from './auction/AuctionPage'
@@ -27,7 +26,6 @@ const routes = [
     label: 'home',
     Component: AuctionPage,
   },
-
 ]
 
 const reactRoutes =
@@ -48,48 +46,45 @@ const reactRoutes =
 const Layout = styled.div`
     .content {
        width: calc(100%);
+       min-width: 81em;
     }
     display: flex;
     flex-direction: row;
 `
 
-
 const pathnameSelector = state => state.router.location.pathname
 
-
 const Root = () => {
+
   const history = useContext(HistoryContext)
 
   const pathname = useMappedState(pathnameSelector)
 
   return (
-          <Layout>
-
-              <Menu
-                value={pathname.includes('explorer') ? 0 : 3}
-                onValueChange={
-                  (value) =>
-                    value === 0
-                      ? history.push(nav.explorer.liveFeed())
-                      : history.push(nav.auctionHome())
-
+      <Layout>
+          <Menu
+            value={pathname.includes('explorer') ? 0 : 3}
+            onValueChange={
+              (value) =>
+                value === 0
+                  ? history.push(nav.explorer.liveFeed())
+                  : history.push(nav.auctionHome())
+            }
+          />
+          <div className={'content'}>
+            <ConnectedRouter history={history}>
+              <Switch>
+                {
+                  [
+                    ...reactRoutes,
+                    <Redirect exact from='/' to='/auction/home' key={'/'}/>,
+                    <Redirect exact from='/auction' to='/auction/home' key={'/dome'}/>,
+                  ]
                 }
-              />
-              <div className={'content'}>
-                <ConnectedRouter history={history}>
-                  <Switch>
-                    {
-                      [
-                        ...reactRoutes,
-                        <Redirect exact from='/' to='/auction/home' key={'/'}/>,
-                        <Redirect exact from='/auction' to='/auction/home' key={'/dome'}/>,
-                      ]
-                    }
-                  </Switch>
-                </ConnectedRouter>
-              </div>
-          </Layout>
-
+              </Switch>
+            </ConnectedRouter>
+          </div>
+      </Layout>
   )
 }
 

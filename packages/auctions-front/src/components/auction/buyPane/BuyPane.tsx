@@ -30,6 +30,9 @@ const BuyPaneRaw = ({
     dispatch,
     scatter: ScatterState
 }) => {
+  fullName = fullName.split('_').join('.')
+  if (fullName.length === 1)
+    fullName = ''
 
   const auctions = auctionsState.value || []
   const testAuction = auctions.find(
@@ -37,7 +40,7 @@ const BuyPaneRaw = ({
       auction.name === fullName,
   )
 
-  const [EOSAccountName, setEOSAccountName] = React.useState(testAuction ? fullName : '')
+  const [EOSAccountName, setEOSAccountName] = React.useState(fullName)
 
   const auction: AuctionRow = auctions.find( auction =>
       auction.name === EOSAccountName,
@@ -46,9 +49,7 @@ const BuyPaneRaw = ({
   const [bidAmountString, setBidAmount] = React.useState((testAuction && testAuction.bestBid) ? ( testAuction.bestBid + 1 ): 1)
 
   const bidAmount = Number(bidAmountString)
-  const accoutnIsValid = auction !== undefined
-
-
+  const accoutIsValid = auction !== undefined
 
   const bidIsValid =
     bidAmount === Number(bidAmountString) &&
@@ -57,7 +58,7 @@ const BuyPaneRaw = ({
     (bidAmount >= (auction.bestBid || 0) + 0.1)
     // && scatter.freeEOS + 1 >= bidAmount
 
-  const stateIsValid = accoutnIsValid && bidIsValid
+  const stateIsValid = accoutIsValid && bidIsValid
 
   const auctionId = auction ? auction.id : ''
 
@@ -88,17 +89,29 @@ const BuyPaneRaw = ({
         <div className='form__item-wrap'>
           <label className='form__label'>
             <span className='form__label-text'>EOS Account Name*</span>
-            <span className='form__item'>
-                            <StringInput className={'form__input ' + (accoutnIsValid ? '' : 'invalid')} type='text'   value={EOSAccountName} onValueChange={setEOSAccountName}/>
-                        </span>
+            <div >
+                <span className='form__item'>
+                    <StringInput
+                      className={'form__input ' + (accoutIsValid ? '' : 'invalid')}
+                      type='text'
+                      value={EOSAccountName}
+                      onValueChange={setEOSAccountName}
+                      maxlength={12}
+                    />
+                </span>
+                <div className={'form__error ' + ((!accoutIsValid) ? ' visible' : ' invisible')}>Enter a valid EOS account name</div>
+            </div>
           </label>
         </div>
         <div className='form__item-wrap'>
           <label className='form__label'>
             <span className='form__label-text'>Bid Amount*</span>
-            <span className='form__item'>
-                            <NumberInput className={'form__input ' + (bidIsValid ? '' : 'invalid')} type='text'   value={bidAmountString} onValueChange={setBidAmount}/>
-                        </span>
+            <div >
+              <span className='form__item'>
+                  <NumberInput className={'form__input ' + (bidIsValid ? '' : 'invalid')} type='text'   value={bidAmountString} onValueChange={setBidAmount}/>
+              </span>
+              <div className={'form__error ' + ((!bidIsValid ) ? ' visible' : ' invisible')}>Enter a valid EOS amount</div>
+            </div>
           </label>
         </div>
         <div className='form__item-wrap'>
@@ -125,8 +138,12 @@ const BuyPaneRaw = ({
                 <div className='account-table_cell'><span>{auction && auction.bestBid}</span></div>
               </div>
               <div className='account-table_row'>
-                <div className='account-table_cell'><span>Latest Bid %</span></div>
-                <div className='account-table_cell'><span>{auction && auction.bestBidPercent}</span></div>
+                <div className='account-table_cell'>
+                  <span>Latest Bid %</span>
+                </div>
+                <div className='account-table_cell'>
+                  <span>{auction && auction.bestBidPercent}</span>
+                </div>
               </div>
               {
                 /*

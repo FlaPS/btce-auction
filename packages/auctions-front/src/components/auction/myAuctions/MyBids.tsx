@@ -160,7 +160,7 @@ const columns: ColumnProps<AuctionRow & {bidAmount: number}, any> = [
       <GoldButtonCell
         label={'BID'}
         onClick={() =>
-          history.push(nav.auctionBuyName({ fullName: record.name + '.' + record.suffix}))
+          history.push(nav.auctionBuyName({ fullName: record.name + '_' + record.suffix}))
         }
       />,
   },

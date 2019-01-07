@@ -62,13 +62,11 @@ Make sure that, as an account seller, you have full access to the EOS account th
 export const HouseRulesPane = () =>
   <Layout>
     {
-      rules.map( rule =>
-        <div className={'section'}>
+      rules.map( (rule, index) =>
+        <div className={'section'} key={index} >
           <div className={'title'}><span>{rule.title}</span></div>
           <div className={'text'}><span>{rule.content}</span></div>
         </div>,
       )
     }
   </Layout>
-
-

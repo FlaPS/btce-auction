@@ -30,7 +30,7 @@ const columns: ColumnProps<AuctionRow> = [
     width: '18em',
     render: (value, record) =>
       <NameCell>
-        <a onClick={() => history.push(nav.auctionBuyName({fullName: record.name + '.' + record.suffix }))}>
+        <a onClick={() => history.push(nav.auctionBuyName({fullName: record.name + '_' + record.suffix }))}>
           {record.name}
         </a>
       </NameCell>,
@@ -79,10 +79,8 @@ const columns: ColumnProps<AuctionRow> = [
 ]
 
 const BodyLayout = styled.div`
-   background-color: #191919;
+  background-color: #191919;
   border-radius: 0 0 6px 6px;
-
-
 `
 
 const expandedRowRender =  (record: AuctionRow, index) =>
