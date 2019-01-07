@@ -1,6 +1,6 @@
 import { APIConfig, APIMode } from '../APITypes'
 import mockImpl from './mockImpl'
-import scatterImpl from './apiImpl'
+import apiImpl from './apiImpl'
 import confirmImpl from './confirmImpl'
 
 const defaultScatterConfig = {
@@ -14,6 +14,6 @@ export const scatterApi = (config: APIConfig = defaultScatterConfig) => {
   if (config.mode === 'confirm')
     return confirmImpl(config)
 
-  return {...mockImpl(config), ...scatterImpl(config)}
+  return {...mockImpl(config), ...apiImpl(config)}
 }
 
