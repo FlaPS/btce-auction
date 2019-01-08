@@ -1,8 +1,9 @@
-import { APIConfig } from '../APITypes'
+import { APIConfig, APIResponse } from '../APITypes'
 import ScatterJS from 'scatterjs-core'
 import ScatterEOS from 'scatterjs-plugin-eosjs'
 import eosjs from 'eosjs'
 import { ScatterAttachResponse, ScattetDetachResponse } from '../scatter/types'
+import { Eos } from '../../../utils/eos'
 
 export default (config: APIConfig) => ({
 

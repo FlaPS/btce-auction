@@ -3,15 +3,15 @@ import ScatterJS from 'scatterjs-core'
 import ScatterEOS from 'scatterjs-plugin-eosjs'
 import eosjs from 'eosjs'
 import { ScatterAttachResponse, ScattetDetachResponse } from '../scatter/types'
+import { Eos } from '../../../utils/eos'
 
 export default (config: APIConfig) => ({
 
   attach: async (): Promise<ScatterAttachResponse> => {
 
-    console.log('attach scatter')
 
     ScatterJS.plugins(new ScatterEOS())
-
+    await ScatterJS.scatter.forgetIdentity()
 
     const jungleTestnetChainId = 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473'
     const mainnetChainId = 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
@@ -28,45 +28,47 @@ export default (config: APIConfig) => ({
 
     const appName = 'eosbidnames'
     const isConnected = await ScatterJS.scatter.connect(appName)
-    console.log('connected: ', isConnected)
+
+    if (!isConnected)
+      return { errors: ['scatter is not connected']}
 
     const scatter = ScatterJS.scatter
     const requiredFields = { accounts: [network] }
 
-    const response = await scatter
-      .getIdentity(requiredFields) // todo: @deprecated - Use `login(requiredFields)`?
-      .then(() => {
-        const account = scatter.identity.accounts.find(
-          x => x.blockchain === 'eos',
-        )
+    try {
+      await scatter.getIdentity(requiredFields)
 
-        console.log('account:', account)
-        // todo: ask for account.name info using eosjs and fetch account data (ram ect)
-        // eosjs.getAccount(account.name)
+      const account = scatter.identity.accounts.find(
+        x => x.blockchain === 'eos',
+      )
+      const accountInfo = await _getAccountInfo(account.name)
+      console.log('accinf', accountInfo)
 
-        return { result: { account: account.name } }
-      })
-      .catch(error => {
-        // The user rejected this request, or doesn't have the appropriate requirements.
-        console.error('error getIdentity', error)
-        // todo: show alarm window with erreor message
-
-        return {  errors: [error] }
-
-      })
-      .finally(() => { // todo: delete
-        ScatterJS.scatter.forgetIdentity()
-      })
-
-
-    return response
+      return accountInfo
+    } catch (e) {
+      // The user rejected this request, or doesn't have the appropriate requirements
+      return { errors: [e] }
+    }
 
   },
+
   detach: async (): Promise<ScattetDetachResponse> => {
 
+    console.log('detach scatter')
     await ScatterJS.scatter.forgetIdentity()
     return {
       result: true,
     }
   },
 })
+
+const _getAccountInfo = async (name): Promise<ScatterAttachResponse> => {
+  const myEosjs = new Eos()
+
+  try {
+    const accountInfo = await myEosjs.api.getAccount(name)
+    return { result: { account: accountInfo } }
+  } catch (e) {
+    return { errors: e }
+  }
+}
