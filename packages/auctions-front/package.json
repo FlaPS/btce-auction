@@ -35,6 +35,7 @@
     "react-dom": "^16.7.0-alpha.2",
     "react-fade-in": "^0.1.6",
     "react-transition-group": "^2.5.2",
+    "recompose": "^0.30.0",
     "redux": "^4.0.0-rc.1",
     "redux-saga": "^0.16.2",
     "scatterjs-core": "^2.6.0",

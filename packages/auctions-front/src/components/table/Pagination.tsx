@@ -25,8 +25,10 @@ const Layout = styled.div`
     line-height: 3.0em;
     width: 2.0em;
     text-align: center;
+    cursor: pointer;
     span {
       vertical-align: middle;
+      font-weight: bold;
       ${fontSize.small}
     }
 
@@ -35,6 +37,7 @@ const Layout = styled.div`
   }
 
   .icon {
+    cursor: pointer;
     color: #616161;
     width: 2.0em;
     height: 3.0em;
@@ -46,21 +49,24 @@ const Layout = styled.div`
   }
 `
 
-type PaginationProps =  InputProps<number> &
+export type PaginationProps =  InputProps<number> &
   {
-    totalPages?: number
+    rowsPerPage: number
+    totalRows: number
     maxPagesToShow?: number
   }
 
 
-const PaginationRaw = ({value, onValueChange, totalPages, maxPagesToShow = 5, ...props}: PaginationProps ) => {
-
+const PaginationRaw = ({value, onValueChange, totalRows, rowsPerPage, maxPagesToShow, ...props}: PaginationProps ) => {
+  let totalPages = Math.ceil(totalRows / rowsPerPage)
+  const suggestedPage = Math.ceil(value / rowsPerPage)
   totalPages = Math.max(1, totalPages)
 
+  // onValueChange = console.log
   if (totalPages === 1)
     return null
 
-  const currentPage = Math.min(value, totalPages - 1)
+  const currentPage = Math.min(suggestedPage, totalPages - 1)
 
   const startPage = Math.max(
     0,
@@ -80,22 +86,22 @@ const PaginationRaw = ({value, onValueChange, totalPages, maxPagesToShow = 5, ..
       <div className={'icon'} onClick={() => onValueChange(0)}>
         <SVGLibrary.ArrowLeftDouble />
       </div>
-      <div className={'icon'} onClick={() => onValueChange(Math.max(0, currentPage - 1))}>
+      <div className={'icon'} onClick={() => onValueChange(Math.max(0, (currentPage - 1) * rowsPerPage))}>
         <SVGLibrary.ArrowLeft/>
       </div>
       {list.map( (item, index) =>
           <div
             className={'page ' + (item === currentPage ? 'selected' : '')}
-            onClick={compose(onValueChange, constant(item))}
+            onClick={compose(onValueChange, constant(item * rowsPerPage))}
             key={index}
           >
             <span>{item + 1}</span>
           </div>,
       )}
-      <div className={'icon'} onClick={() => onValueChange(Math.min(totalPages - 1, currentPage + 1))}>
+      <div className={'icon'} onClick={() => onValueChange(Math.min((totalPages - 1) * rowsPerPage, (currentPage + 1) * rowsPerPage))}>
         <SVGLibrary.ArrowRight/>
       </div>
-      <div className={'icon'} onClick={() => onValueChange(totalPages - 1)}>
+      <div className={'icon'} onClick={() => onValueChange((totalRows - 1) * rowsPerPage)}>
         <SVGLibrary.ArrowRightDouble />
       </div>
     </Layout>

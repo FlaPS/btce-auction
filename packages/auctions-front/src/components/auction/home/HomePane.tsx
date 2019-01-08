@@ -124,6 +124,7 @@ const HomePaneRaw = ({auctions, isLoading, error, dispatch}) => {
               </div>
               <BodyLayout>
                 <Table
+                  paginationExtended={true}
                   rowKey={'id'}
                   data={auctions}
                   columns={columns}

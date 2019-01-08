@@ -157,6 +157,7 @@ const MySellsRaw = ({isLoading, mySells, scatterIsConnected, myError, auctionsEr
   const data = useMappedState(selectAuctionsWithMySells)
 
   return <Table
+            paginationExtended={true}
             rowKey={'id'}
             isLoading={isLoading}
             columns={columns}

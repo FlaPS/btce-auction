@@ -64,6 +64,7 @@ const MyBidsRaw = ({isLoading, myBids, scatterIsConnected, myError, auctionsErro
 
   return  (
     <Table
+      paginationExtended={true}
       rowKey={'id'}
       isLoading={isLoading}
       columns={columns}

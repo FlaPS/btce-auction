@@ -6,6 +6,7 @@ import { TableRow } from './TableRow'
 import * as R from 'ramda'
 import { Renderable, renderChildren } from '@sha/react-fp'
 import { Spinner } from '../elements/Spinner'
+import { PaginationExtended } from './PaginationExtended'
 
 
 const Layout = styled.div`
@@ -14,7 +15,10 @@ const Layout = styled.div`
     flex-direction: row;
     justify-content: space-between;
     min-height: 5.6em;
-    padding: 2em;
+    padding-left: 2em;
+    padding-right: 2em;
+    background: #1E1E1E;
+    border-radius: 0px 0px 0.5em 0.5em;
   }
 `
 
@@ -25,9 +29,8 @@ export type TableProps<T> = {
   expandedRowRender?: (record, index) => React.ReactNode,
   rowKey?: keyof T
 
-  paginationConfig: {
-    maxPagesToShow?: number
-  }
+  paginationConfig?: typeof defaultPaginationConfig
+  paginationExtended?: boolean
   emptyContent?: Renderable<TableProps<T>>
   isLoading?: boolean
   maxRowsPerPage?: number
@@ -46,8 +49,8 @@ export type SortState = {
 }
 
 const defaultPaginationConfig = {
-  maxPagesToShow: 5,
-
+  maxPagesToShow: 6,
+  maxRowsOptions: [10, 25, 50],
 }
 
 
@@ -58,8 +61,9 @@ export const Table = <T>({
    emptyContent,
    isLoading,
    expandedRowRender,
+   paginationExtended = false,
    paginationConfig = defaultPaginationConfig,
-   maxRowsPerPage = 6, ...props }: TableProps<T>) => {
+   ...props }: TableProps<T>) => {
 
   /// sorting
   const [sortState, setSortState] = React.useState({order: 'asc', columnIndex: -1} as any as SortState)
@@ -82,8 +86,33 @@ export const Table = <T>({
 
 
   // pagination
-  const [selectedPage, setSelectedPage] = React.useState(0)
+  const [startRow, setSelectedRow] = React.useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState(paginationConfig.maxRowsOptions[0])
 
+
+
+  const footer =
+    React.createElement(
+        'div',
+        {className: 'footer', key: 'footer'},
+        paginationExtended
+          ? React.createElement(
+            PaginationExtended,
+            {
+              rowsPerPageOptions: paginationConfig.maxRowsOptions,
+              rowsPerPage,
+              value: startRow,
+              onValueChange: setSelectedRow,
+              onRowsPerPageChange: setRowsPerPage,
+              totalRows: list.length,
+              maxPagesToShow: paginationConfig.maxPagesToShow,
+            },
+          )
+          : React.createElement('div'),
+
+    )
+
+  list = list.splice(startRow, rowsPerPage)
 
   // Expanded keys
   const [expandedKeys, setExpandedKeys] = React.useState([] as any as  any[])
@@ -101,7 +130,7 @@ export const Table = <T>({
 
 
   const renderRow = (record, index) =>
-    React.createElement(TableRow, { record, index, columns, key: index})
+    React.createElement(TableRow, { record, index, columns, key: record[rowKey] || index})
 
   const rows = isLoading
     ? React.createElement(Spinner)
@@ -110,11 +139,14 @@ export const Table = <T>({
                 : renderChildren(emptyContent)
 
   return (
-    React.createElement(TableContext.Provider, {value: api},
+    React.createElement(
+      TableContext.Provider,
+      {value: api},
       [
         React.createElement(Layout, {key: 'layout'}, [
           header,
           ...rows,
+          footer,
         ]),
       ],
     )

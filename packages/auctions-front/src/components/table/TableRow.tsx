@@ -30,10 +30,17 @@ export const TableRow = ({columns, index, record}: {columns: ColumnProps<any, an
   const isExpanded = tableApi.expandedKeys.includes(rowKey)
 
   return [
-    <Layout style={{backgroundColor: isExpanded ?  '#000000' : 'rgba(0,0,0,0)'}}>
+    <Layout style={{backgroundColor: isExpanded ?  '#000000' : 'rgba(0,0,0,0)'}} key={'row' + index}>
       {
         // @ts-ignore
-        columns.map( (col, colIndex) => React.createElement(TableCell, { index, record, column: col, key: index + '_' + colIndex }))
+        columns.map( (col, colIndex) =>
+          <TableCell
+            index={index}
+            record={record}
+            column={col}
+            key={index + '_' + colIndex}
+          />,
+        )
       }
       {
         tableApi.expandedRowRender

@@ -5,6 +5,7 @@ import { AuctionVO } from './auctionApi'
 import { APIConfig, APIResponse } from '../APITypes'
 import { MyState, PlaceBidModel, SellModel } from '../../btce/dome/domeDuck'
 import { ID } from '../../btce/baseTypes'
+import { faker } from '@sha/random'
 
 const defaultTrueResponse = async () => {
   await sleep(Math.random() + 1000  + 2000)
@@ -15,7 +16,7 @@ const defaultTrueResponse = async () => {
 
 export default (config: APIConfig) => ({
   fetchRecentAuctions: async (): Promise<APIResponse<AuctionVO[]>> => {
-    await sleep(Math.random() * 500  + 2000)
+    await sleep(Math.random() * 500)
     return {
       result: auctionState.auctions,
     }
@@ -57,7 +58,8 @@ const names = ['max', 'while', 'a', 'xxx', 'btc', 'rus', 'aaa', '1', '2', 'best'
 // const postDislike = (auctionID) => number
 
 const getAuctionRow = (index: number): AuctionVO => {
-  const name = names[index] + '.eosio'
+  const firstName = index < names.length ? names[index] : faker.lorem.word()
+  const name = firstName + '.eosio'
   const publishedOn = random.faker.date.recent(20).getTime()
   const ask = Number((Math.random() * 1000).toFixed(2))
   return ({
@@ -98,4 +100,4 @@ const populate = (totalAuctionsLength = 10, myBidsQuant = 3, sellsQuant = 2) => 
 
 
 
-const auctionState = populate()
+const auctionState = populate(190)
