@@ -10,8 +10,6 @@ export default (config: APIConfig = {mode: 'mock'}) =>
       await sleep(Math.random() * 1000)
       return {
         result: {
-          usdMultiplier: 2,
-          balanceEOS: Math.random() * 500 + 1000,
           account: 'myname.suffix',
         },
       }

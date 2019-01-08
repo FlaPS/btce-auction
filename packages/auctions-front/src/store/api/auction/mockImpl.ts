@@ -5,7 +5,10 @@ import { AuctionVO } from './auctionApi'
 import { APIConfig, APIResponse } from '../APITypes'
 import { MyState, PlaceBidModel, SellModel } from '../../btce/dome/domeDuck'
 import { ID } from '../../btce/baseTypes'
+
 import { faker } from '@sha/random'
+
+
 
 const defaultTrueResponse = async () => {
   await sleep(Math.random() + 1000  + 2000)
@@ -15,6 +18,7 @@ const defaultTrueResponse = async () => {
 }
 
 export default (config: APIConfig) => ({
+
   fetchRecentAuctions: async (): Promise<APIResponse<AuctionVO[]>> => {
     await sleep(Math.random() * 500)
     return {

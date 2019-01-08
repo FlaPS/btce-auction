@@ -3,8 +3,10 @@ import ScatterJS from 'scatterjs-core'
 import ScatterEOS from 'scatterjs-plugin-eosjs'
 import eosjs from 'eosjs'
 import { ScatterAttachResponse, ScattetDetachResponse } from '../scatter/types'
+import { Eos } from '../../../utils/eos'
 
 export default (config: APIConfig) => ({
+
 
   attach: async (): Promise<ScatterAttachResponse> => {
 
@@ -51,7 +53,7 @@ export default (config: APIConfig) => ({
         console.error('error getIdentity', error)
         // todo: show alarm window with erreor message
 
-        return {  errors: [error] }
+        return { result: { errors: [error] }}
 
       })
       .finally(() => { // todo: delete
@@ -70,3 +72,14 @@ export default (config: APIConfig) => ({
     }
   },
 })
+
+const _getAccountInfo = async (name): Promise<ScatterAttachResponse> => {
+  const myEosjs = new Eos()
+
+  try {
+    const accountInfo = await myEosjs.api.getAccount(name)
+    return { result: { account: accountInfo } }
+  } catch (e) {
+    return { errors: e }
+  }
+}
