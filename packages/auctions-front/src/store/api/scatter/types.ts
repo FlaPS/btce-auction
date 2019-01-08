@@ -12,8 +12,6 @@ export type ScattetDetachResponse = ScatterActionResponse
  * Scatter attached
  */
 export type ScatterAttachResponse = APIResponse<{
-    usdMultiplier: number
-    balanceEOS: number
     account: string
 }>
 
