@@ -33,15 +33,15 @@ export default (config: APIConfig) => ({
 
 
       // dislikes part
-      const eosScatter = scatter.eos(Eos.networkScatter, eosjs, Eos.defaultConfig())
-      const myEosjs = new Eos()
-
-      const voterAccount = 'arealgangsta'
-      const sellingAccount = 'nameswapsln2'
-      const contract = await eosScatter.contract(myEosjs.contractAccount)
-      const actionCallback = await contract.vote(
-        {account4sale: sellingAccount, voter: voterAccount},
-        { authorization: [voterAccount] })
+      // const eosScatter = scatter.eos(Eos.networkScatter, eosjs, Eos.defaultConfig())
+      // const myEosjs = new Eos()
+      //
+      // const voterAccount = 'arealgangsta'
+      // const sellingAccount = 'nameswapsln2'
+      // const contract = await eosScatter.contract(myEosjs.contractAccount)
+      // const actionCallback = await contract.vote(
+      //   {account4sale: sellingAccount, voter: voterAccount},
+      //   { authorization: [voterAccount] })
 
       // const auctionsTable = await eosScatter.getTableRows({
       //   json: true,
@@ -52,7 +52,7 @@ export default (config: APIConfig) => ({
       //   table: 'accounts',
       // })
 
-      console.log('voting res::', actionCallback)
+      // console.log('voting res::', actionCallback)
 
       return accountInfo
     } catch (e) {

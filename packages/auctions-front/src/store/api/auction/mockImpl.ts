@@ -24,7 +24,7 @@ export default (config: APIConfig) => ({
     }
   },
 
-  fetchMyState: async (): Promise<APIResponse<MyState>> => {
+  fetchMyState: async (): Promise<APIResponse<MyState>> => { // todo: set them empty
     await sleep(Math.random() * 500 + 2000)
     const {auctions, ...state} = auctionState
     return {

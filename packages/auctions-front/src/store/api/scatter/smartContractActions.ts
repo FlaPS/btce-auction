@@ -3,7 +3,7 @@ import ABIeosnameswap from './ABIeosnameswap'
 import { map } from 'ramda'
 
 type Name = string
-type Asset = number
+type Asset = string
 
 const factory = actionCreatorFactory('eosnameswap')
 

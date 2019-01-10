@@ -5,6 +5,7 @@ import eosjs from 'eosjs'
 import { ScatterAttachResponse, ScattetDetachResponse } from '../scatter/types'
 import { Eos } from '../../../utils/eos'
 import { AuctionVO } from './auctionApi'
+import { SellModel } from '../../btce/dome/domeDuck'
 
 export default (config: APIConfig) => ({
 
@@ -37,4 +38,38 @@ export default (config: APIConfig) => ({
       return { errors: e }
     }
   },
+
+  submitSell: async (value: SellModel): Promise<APIResponse<boolean>> => {
+    try {
+      console.log('start sell')
+      // todo: ask for a permission
+
+
+      const eosScatter = ScatterJS.scatter.eos(Eos.networkScatter, eosjs, Eos.defaultConfig())
+
+      const contract = await eosScatter.contract(Eos.contractAccount)
+      const actionCallback = await contract.sell(
+        {
+          account4sale: value.name,
+          saleprice: value.ask + ' EOS',
+          paymentaccnt: value.receivingAccount,
+          message: value.message,
+        },
+        { // only the account4sale@owner can sell
+          authorization: [{
+            actor: value.name,
+            permission: 'owner',
+          }],
+        })
+
+      console.log('the account is on sale now:', actionCallback)
+      return { result: true }
+
+    } catch (e) {
+      console.log('errors selling: ', e)
+      return { errors: e}
+    }
+
+  },
+
 })
