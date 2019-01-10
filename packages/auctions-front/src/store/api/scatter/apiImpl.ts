@@ -4,66 +4,64 @@ import ScatterEOS from 'scatterjs-plugin-eosjs'
 import eosjs from 'eosjs'
 import { ScatterAttachResponse, ScattetDetachResponse } from '../scatter/types'
 import { Eos } from '../../../utils/eos'
+import my from '../../btce/dome/my'
 
 export default (config: APIConfig) => ({
 
 
   attach: async (): Promise<ScatterAttachResponse> => {
 
-    console.log('attach scatter')
-
     ScatterJS.plugins(new ScatterEOS())
+    await ScatterJS.scatter.forgetIdentity() // todo: do not forget
 
-
-    const jungleTestnetChainId = 'e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473'
-    const mainnetChainId = 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
-    // todo: make it as a constant depending on env
-    const chainId = jungleTestnetChainId
-
-    const network = {
-      blockchain: 'eos',
-      protocol: 'https',
-      chainId,
-      host: 'nodes.get-scatter.com',
-      port: 443,
-    }
-
-    const appName = 'eosbidnames'
+    const appName = 'eosnamesbids'
     const isConnected = await ScatterJS.scatter.connect(appName)
-    console.log('connected: ', isConnected)
+
+    if (!isConnected)
+      return { errors: ['scatter is not connected']}
 
     const scatter = ScatterJS.scatter
-    const requiredFields = { accounts: [network] }
+    const requiredFields = { accounts: [Eos.networkScatter] }
 
-    const response = await scatter
-      .getIdentity(requiredFields) // todo: @deprecated - Use `login(requiredFields)`?
-      .then(() => {
-        const account = scatter.identity.accounts.find(
-          x => x.blockchain === 'eos',
-        )
-
-        console.log('account:', account)
-        // todo: ask for account.name info using eosjs and fetch account data (ram ect)
-        // eosjs.getAccount(account.name)
-
-        return { result: { account: account.name } }
-      })
-      .catch(error => {
-        // The user rejected this request, or doesn't have the appropriate requirements.
-        console.error('error getIdentity', error)
-        // todo: show alarm window with erreor message
-
-        return { result: { errors: [error] }}
-
-      })
-      .finally(() => { // todo: delete
-        ScatterJS.scatter.forgetIdentity()
-      })
+    try {
+      await scatter.getIdentity(requiredFields)
+      const account = scatter.identity.accounts.find(
+        x => x.blockchain === 'eos',
+      )
+      const accountInfo = await _getAccountInfo(account.name)
+      console.log('accinf', accountInfo)
 
 
-    return response
+      // dislikes part
+      const eosScatter = scatter.eos(Eos.networkScatter, eosjs, Eos.defaultConfig())
+      const myEosjs = new Eos()
 
+      const voterAccount = 'arealgangsta'
+      const sellingAccount = 'nameswapsln2'
+      const contract = await eosScatter.contract(myEosjs.contractAccount)
+      const actionCallback = await contract.vote(
+        {account4sale: sellingAccount, voter: voterAccount},
+        { authorization: [voterAccount] })
+
+      // const auctionsTable = await eosScatter.getTableRows({
+      //   json: true,
+      //   // scope: 'eosnamesbids',
+      //   // code: 'eosnamesbids',
+      //   scope: myEosjs.contractAccount,
+      //   code: myEosjs.contractAccount,
+      //   table: 'accounts',
+      // })
+
+      console.log('voting res::', actionCallback)
+
+      return accountInfo
+    } catch (e) {
+      // The user rejected this request, or doesn't have the appropriate requirements
+      console.log('error scatter:', e)
+      return { errors: [e] }
+    }
   },
+
   detach: async (): Promise<ScattetDetachResponse> => {
 
     await ScatterJS.scatter.forgetIdentity()

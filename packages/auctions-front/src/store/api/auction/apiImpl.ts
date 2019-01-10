@@ -36,10 +36,5 @@ export default (config: APIConfig) => ({
     } catch (e) {
       return { errors: e }
     }
-
-    // todo: leave how it was ie
-    // return {
-    //   result: auctionState.auctions,
-    // }
   },
 })

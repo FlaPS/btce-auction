@@ -8,8 +8,6 @@ import { ID } from '../../btce/baseTypes'
 
 import { faker } from '@sha/random'
 
-
-
 const defaultTrueResponse = async () => {
   await sleep(Math.random() + 1000  + 2000)
   return {
@@ -101,7 +99,6 @@ const populate = (totalAuctionsLength = 10, myBidsQuant = 3, sellsQuant = 2) => 
     },
   }
 }
-
 
 
 const auctionState = populate(190)
