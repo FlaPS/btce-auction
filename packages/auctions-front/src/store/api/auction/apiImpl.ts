@@ -12,9 +12,7 @@ export default (config: APIConfig) => ({
 
   fetchRecentAuctions: async (): Promise<APIResponse<AuctionVO[]>> => {
 
-    const contractAccount = 'nameswapsln1'
     const myEosjs = new Eos()
-    const auctionsPerPage = 50
     const auctionsLowerBound = ''
 
     try {
@@ -40,38 +38,41 @@ export default (config: APIConfig) => ({
   },
 
   submitSell: async (value: SellModel): Promise<APIResponse<boolean>> => {
-    console.log('start sell')
-
-
     try {
-      // const eosScatter = ScatterJS.scatter.eos(Eos.networkScatter, eosjs, Eos.defaultConfig())
+      const eosScatter = ScatterJS.scatter.eos(Eos.networkScatter, eosjs, Eos.defaultConfig())
 
-      // todo: ask for a permission
-      // await _updateAuth(eosScatter, value)
-      // await _sellAction(eosScatter, value)
-      // await  _voteAction(eosScatter, value)
+      await _updateAuth(eosScatter, value)
+      await _sellAction(eosScatter, value)
 
       return { result: true }
-
     } catch (e) {
       console.log('errors selling: ', e)
       return { errors: e}
     }
-
   },
 
 })
 
 
 const _updateAuth = async (eosScatter, value) => {
-
+  console.log('Starting update auth')
   const eosio = await eosScatter.contract('eosio')
-  const contractOwnerKey = 'EOS6GssLdQr7gqC2mp6Y2iwUBuug5FGv1vSfNp8DbyZ7QaEjqQ9Mf'
+
+  const account = ScatterJS.scatter.identity.accounts.find(
+    x => x.blockchain === 'eos',
+  )
+  if (account.name !== value.name)
+    throw `the name in the form is different than in your identity in scatter: ${account.name} != ${value.name}`
+
+  console.log('names:', account.name, ' : ', value.name)
+
+  const accountOwnerKey = await _getAccountInfo(eosScatter, value.name)
+    .then(res => res.permissions.find(it => it.perm_name === 'owner').required_auth.keys[0].key)
 
   const authCode = {
     threshold: 1,
     keys: [{
-      key: contractOwnerKey,
+      key: accountOwnerKey,
       weight: 1,
     }],
     waits: [],
@@ -82,20 +83,19 @@ const _updateAuth = async (eosScatter, value) => {
   }
 
   const eosioCallback = await eosio.updateauth({
-    account: 'sellswapsln1', // todo : value.name
-    permission: 'owner', // todo: value.name@owner?
+    account: value.name,
+    permission: 'owner',
     parent: '',
     auth: authCode,
   },
   { // only the account4sale@owner can sell
     authorization: [{
-      actor: 'sellswapsln1', // todo : value.name
+      actor: value.name,
       permission: 'owner',
     }],
   })
 
   console.log('eosioCallback:', eosioCallback)
-
   return eosioCallback
 }
 
@@ -104,18 +104,18 @@ const _sellAction = async (eosScatter, value) => {
   const actionCallback = await contract.sell(
     {
       account4sale: value.name,
-      saleprice: value.ask + '.0000 EOS',
+      saleprice: value.ask + '.0000 EOS', // todo: add mask in a form
       paymentaccnt: value.receivingAccount,
       message: value.message,
     },
     { // only the account4sale@owner can sell
       authorization: [{
-        actor: 'sellswapsln1',
+        actor: value.name,
         permission: 'owner',
       }],
     })
 
-  console.log('the account is on sale now:', actionCallback)
+  console.log('the account is on sale now!:', actionCallback)
 }
 
 
@@ -129,4 +129,12 @@ const _voteAction = async (eosScatter, value) => {
 
   console.log('_voteAction result', actionCallback)
   return actionCallback
+}
+
+const _getAccountInfo = async (eosScatter, name): Promise<ScatterAttachResponse> => {
+  try {
+    return eosScatter.getAccount(name)
+  } catch (e) {
+    return { errors: e }
+  }
 }
