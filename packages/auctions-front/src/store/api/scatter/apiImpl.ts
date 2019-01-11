@@ -10,20 +10,24 @@ export default (config: APIConfig) => ({
 
 
   attach: async (): Promise<ScatterAttachResponse> => {
-
-    ScatterJS.plugins(new ScatterEOS())
-    await ScatterJS.scatter.forgetIdentity() // todo: do not forget
-
-    const appName = 'eosnamesbids'
-    const isConnected = await ScatterJS.scatter.connect(appName)
-
-    if (!isConnected)
-      return { errors: ['scatter is not connected']}
-
-    const scatter = ScatterJS.scatter
-    const requiredFields = { accounts: [Eos.networkScatter] }
+    console.log('attach scatter')
 
     try {
+      ScatterJS.plugins(new ScatterEOS())
+
+      // if there is no identity but forgetIdentity is called
+      // scatter will throw "There is no identity with an account set on your Scatter instance."
+      await ScatterJS.scatter.forgetIdentity() // todo: do not forget
+
+      const appName = 'eosnamesbids'
+      const isConnected = await ScatterJS.scatter.connect(appName)
+
+      if (!isConnected)
+        return { errors: ['scatter is not connected']}
+
+      const scatter = ScatterJS.scatter
+      const requiredFields = { accounts: [Eos.networkScatter] }
+
       await scatter.getIdentity(requiredFields)
       const account = scatter.identity.accounts.find(
         x => x.blockchain === 'eos',
@@ -52,7 +56,6 @@ export default (config: APIConfig) => ({
       //   table: 'accounts',
       // })
 
-      // console.log('voting res::', actionCallback)
 
       return accountInfo
     } catch (e) {
