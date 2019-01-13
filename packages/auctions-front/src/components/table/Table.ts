@@ -95,7 +95,7 @@ export const Table = <T>({
     React.createElement(
         'div',
         {className: 'footer', key: 'footer'},
-        paginationExtended
+       /* paginationExtended
           ? React.createElement(
             PaginationExtended,
             {
@@ -108,11 +108,11 @@ export const Table = <T>({
               maxPagesToShow: paginationConfig.maxPagesToShow,
             },
           )
-          : React.createElement('div'),
+          : |*/React.createElement('div'),
 
     )
 
-  list = list.splice(startRow, rowsPerPage)
+  //list = list.splice(startRow, rowsPerPage)
 
   // Expanded keys
   const [expandedKeys, setExpandedKeys] = React.useState([] as any as  any[])

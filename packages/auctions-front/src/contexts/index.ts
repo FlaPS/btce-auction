@@ -5,7 +5,7 @@ import createBrowserHistory from 'history/createBrowserHistory'
 
 const defaultValues = new Map<React.Context<any>, any>()
 
-const createAdvancedContext = <T>(defaultValue: T = undefined) => {
+export const createAdvancedContext = <T>(defaultValue: T = undefined) => {
     const context = React.createContext(defaultValue)
     defaultValues.set(context, defaultValue)
     return Object.assign(context, {

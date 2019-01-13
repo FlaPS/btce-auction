@@ -1,4 +1,5 @@
 import { ExtractAction } from './ExtractAction'
+import { generateGuid } from '../../random/src'
 
 export * from './ExtractAction'
 export const factoryDelimeter = '/'
@@ -8,6 +9,7 @@ export interface FactoryAction<P> {
   payload: P
   error?: boolean
   meta?: {} | any | null
+  guid: string
 }
 
 export type FactoryAnyAction = FactoryAction<any>
@@ -161,6 +163,7 @@ export function actionCreatorFactory(
       (payload: P, meta?: {} | null) => {
         const action: FactoryAction<P> = {
           type: fullType,
+          guid: generateGuid(),
           payload,
         }
 

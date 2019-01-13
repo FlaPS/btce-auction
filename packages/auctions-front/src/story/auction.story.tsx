@@ -6,23 +6,27 @@ import { SellPane } from '../components/auction/sellPane/SellPane'
 import { Menu } from '../components/Menu'
 import { Ticker } from '../components/auction/Ticker'
 import { AuctionTabs } from '../components/auction/AuctionTabs'
+import { MyAuctionsTabs } from '../components/auction/myAuctions/MyAuctionsTabs'
 
 storiesOf('auction', module)
   .add('SideBar', () => (
       <SideBar />
-))
-  .add('buyForm', () =>(
+  ))
+  .add('buyForm', () => (
     <BuyPane/>
   ))
-  .add('sellPane', () =>(
+  .add('sellPane', () => (
     <SellPane/>
   ))
-  .add('menu', () =>(
+  .add('menu', () => (
     <Menu/>
   ))
-  .add('ticker', () =>(
-    <Ticker/>
-  ))
+  .add('ticker', () =>
+    <Ticker/>,
+  )
   .add('dome tabs' , () =>
-    <AuctionTabs data={['home', 'sell name', 'buy name', 'my auctions', 'house rules']} />
+    <AuctionTabs data={['home', 'sell name', 'buy name', 'my auctions', 'house rules']} />,
+  )
+  .add('Pane tabs', () =>
+    <MyAuctionsTabs data={['My response to sell auctions', 'My published name sell']} />,
   )

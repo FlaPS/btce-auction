@@ -172,7 +172,7 @@ const selectAuctionsWithMySells = (state: FrontState) => {
   const auctions = domeDuck.selectors.auctionRows(state).filter(item =>
     mySells.find( id => id === item.id),
   )
-
+  debugger;
   const auctionsError = state.app.auction.auctions.error
   const myError = state.app.auction.my.error
   return {

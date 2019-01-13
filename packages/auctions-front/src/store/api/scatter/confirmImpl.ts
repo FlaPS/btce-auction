@@ -1,7 +1,8 @@
 import mockImpl from './mockImpl'
+import { APIConfig } from '../APITypes'
 
 
-const confirImpl = (config) =>
+const confirmImpl = (config: APIConfig) =>
   Object
     .entries(mockImpl(config))
     .reduce(
@@ -9,6 +10,7 @@ const confirImpl = (config) =>
         ({
           ...result,
           [key]: async (params?) => {
+            // @ts-ignore
             const result = await value(params)
             if (window.confirm('call method ' + key + ', returns ' + JSON.stringify(result)))
               return result
@@ -17,6 +19,6 @@ const confirImpl = (config) =>
             }
           },
         }),
-      {},
+      {} as any ,
   )
-export default confirImpl
+export default confirmImpl

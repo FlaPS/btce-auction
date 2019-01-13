@@ -4,8 +4,11 @@ import { createContext, default as React, useContext, useEffect, useRef, useStat
 import { Action, Dispatch, Store } from 'redux'
 import shallowEqual from './shallowEqual'
 import { FrontState } from '../store/reducer'
+import { createAdvancedContext } from '../contexts'
+import { configureFrontendStore } from '../store'
 
-const Context: React.Context<Store<any> | null> = createContext(null)
+// @ts-ignore
+const Context: React.Context<Store<FrontState> | null> = createAdvancedContext(configureFrontendStore(undefined, undefined, 'mock'))
 export const StoreProvider = Context.Provider
 
 /**
@@ -22,7 +25,7 @@ export const StoreProvider = Context.Provider
  * const todo = useMappedState(mapState);
  */
 export function useMappedState<TState = FrontState, TResult = {}>(
-    mapState: (state: TState) => TResult,
+    mapState: (state: FrontState) => TResult,
 ): TResult {
     const store = useContext(Context)
     if (!store) {

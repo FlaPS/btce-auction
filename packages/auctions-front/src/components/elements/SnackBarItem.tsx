@@ -6,63 +6,117 @@ import { GoldButtonCell } from '../table/GoldButtonCell'
 
 
 const Layout = styled.div`
-  background: #191919;
-  border: 0.1em solid #585858;
-  box-sizing: border-box;
-  border-radius: 0.5em;
-  display: flex;
+
   .main {
+    background: #191919;
+    border: 1px solid #616161;
+    min-height: 4.0em;
+    box-sizing: border-box;
+    border-radius: 0.5em;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    .text {
-      color: white;
-    }
+    justify-content: flex-start;
+    color: white;
+    align-items: center;
 
-    .icon {
-      color: #585858;
+    width: fit-content;
+    padding-left: 1.8em;
+
+    svg {
+      margin-right: 0.7em;
     }
+    .icon {
+      min-height: 3em;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding-left: 2em;
+      padding-right: 1.2em;
+      cursor: pointer;
+    }
+    .icon:hover {
+      color: ${colors.accent};
+    }
+  }
+
+  .warning {
+    background-color: #E91D1D;
+    border: none;
+  }
+
+  .success {
+    background-color: #0E9C1C;
+    border: none;
   }
 `
 
 export type SnackBarItemProps =
-  & ExtractProps<typeof Layout>
+
   & {
     guid: string
     text: string
     onDismiss?: (guid: string) => any
     onActionClick?: (guid: string) => any
     actionText?: string
+    type?: 'info' | 'warning' | 'success'
   }
 
-const GoldButton = styled.div`
+const SnackActionButton = styled.div`
   cursor: pointer;
-  background: #191919;
-  border: 0.1em solid #FFAE00;
+  border: 0.1em solid white;
   box-sizing: border-box;
-  border-radius: 0.5em;
-  color: ${colors.accent};
+  border-radius: 0.4em;
+  height: 2.4em;
+  padding-left: 1.6em;
+  padding-right: 1.6em;
+  display: flex;
+  align-items: center;
+  margin-left: 2em;
+
+  &:hover {
+    color: ${colors.accent};
+    border: 0.1em solid  ${colors.accent};
+  }
 `
 
-const SnackBarItemRaw = ({text, guid, onDismiss, onActionClick, actionText, ...props}: SnackBarItemProps) =>
+const Icons = {
+  info: SVGLibrary.InfoSnackIcon,
+  warning: SVGLibrary.ErrorSnackIcon,
+  success: SVGLibrary.SuccessSnackIcon,
+}
+
+
+const SnackBarItemRaw = ({
+   text,
+   guid,
+   onDismiss,
+   onActionClick,
+   actionText,
+   type = 'info',
+   ...props}: SnackBarItemProps) =>
   <Layout>
-    <div className={'main'}>
+
+    <div className={'main ' + type}>
+      {React.createElement(Icons[type])}
       <Font12 className={'text'}>{text}</Font12>
-      <SVGLibrary.CloseIcon
-        onClick={() => onDismiss && onDismiss(guid)}
-        className={'icon'}
-      />
+      {
+        actionText &&
+        <SnackActionButton
+          onClick={() => onActionClick && onActionClick(guid)}
+        >
+          <Font12>
+            {actionText}
+          </Font12>
+        </SnackActionButton>
+      }
+      <div         className={'icon'}>
+          <SVGLibrary.CloseIcon
+            onClick={() => onDismiss && onDismiss(guid)}
+
+          />
+      </div>
     </div>
-    {
-      actionText &&
-      <GoldButton
-        onClick={() => onActionClick && onActionClick(guid)}
-      >
-        <Font12>
-          {actionText}
-        </Font12>
-      </GoldButton>
-    }
+
   </Layout>
 
 export const SnackBarItem = React.memo(SnackBarItemRaw)
