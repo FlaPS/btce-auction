@@ -8,8 +8,6 @@ import { ID } from '../../btce/baseTypes'
 
 import { faker } from '@sha/random'
 
-
-
 const defaultTrueResponse = async () => {
   await sleep(Math.random() + 1000  + 2000)
   return {
@@ -26,7 +24,7 @@ export default (config: APIConfig) => ({
     }
   },
 
-  fetchMyState: async (): Promise<APIResponse<MyState>> => {
+  fetchMyState: async (): Promise<APIResponse<MyState>> => { // todo: set them empty
     await sleep(Math.random() * 500 + 2000)
     const {auctions, ...state} = auctionState
     return {
@@ -101,7 +99,6 @@ const populate = (totalAuctionsLength = 10, myBidsQuant = 3, sellsQuant = 2) => 
     },
   }
 }
-
 
 
 const auctionState = populate(190)
