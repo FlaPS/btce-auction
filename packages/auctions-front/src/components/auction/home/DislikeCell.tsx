@@ -40,7 +40,7 @@ export const DislikeCell = (record?: AuctionRow) => {
       <div
         // @ts-ignore
         className={(!record || record.isDislikedByMe) ? 'inactive' : ''}
-        onClick={record && !record.isDislikedByMe && onClick}
+        onClick={(record && !record.isDislikedByMe) ? onClick : undefined}
       >
         <span className={'value'}>{record ? record.dislikes : 'N/A'}</span>
         <svg

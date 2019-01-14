@@ -14,7 +14,7 @@ export const ScatterView = () => {
   return (
 
      [
-       <div className='sidebar__content_block'>
+       <div className='sidebar__content_block' key={'head'}>
         <div className='sidebar__content_block-head'>
           <div className='scatter__block'>
             <img className='scatter__logo' src='/assets/ava.jpg' alt=''/>
@@ -22,9 +22,12 @@ export const ScatterView = () => {
               <div className='scatter__name'>chintailease</div>
               <div className='scatter__status-wrap'>
                 <div className='scatter__status'>@active</div>
-                <div className='scatter__detach'
-                     onClick={() => dispatch(scatterDuck.actions.detach())}
-                >Detach Scatter</div>
+                <div
+                  className='scatter__detach'
+                  onClick={() => dispatch(scatterDuck.actions.detach.started(undefined))}
+                >
+                  Detach Scatter
+                </div>
               </div>
             </div>
           </div>
@@ -62,7 +65,7 @@ export const ScatterView = () => {
           <a href='https://get-scatter.com/' className='scatter__download'>download scatter</a>
         </div>
       </div>,
-      <div className='sidebar__content_block'>
+      <div className='sidebar__content_block' key={'contentBlock'}>
         <div className='sidebar__content_block-head'>
           <div className='sidebar__content_block-title'>my account</div>
         </div>
@@ -79,7 +82,7 @@ export const ScatterView = () => {
                 <div className='sidebar__balance-value'>${(scatter.freeEOS + scatter.auctionEOS) * scatter.usdMultiplier} US</div>
               </div>
             </div>
-            <div className='sidebar__balance-body'>
+            <div className='sidebar__balance-body' style={{display: 'none'}}>
               <div className='sidebar__balance-content'>
                 <div className='sidebar__balance-title'>Free</div>
                 <div className='sidebar__balance'>
@@ -87,7 +90,7 @@ export const ScatterView = () => {
                   <div className='sidebar__balance-value'>${(scatter.freeEOS) * scatter.usdMultiplier} US</div>
                 </div>
               </div>
-              <div className='sidebar__balance-content'>
+              <div className='sidebar__balance-content' style={{display: 'none'}}>
                 <div className='sidebar__balance-title'>In Auctions</div>
                 <div className='sidebar__balance'>
                   <div className='sidebar__balance-coin'>{scatter.auctionEOS} EOS</div>

@@ -56,12 +56,13 @@ const MyAuctionsTabsRaw = ({value, onValueChange, data, ...props}: InputProps<nu
   <Layout >
     {
       data.map((item, index) =>
-        [<TabButton onClick={compose(onValueChange, constant(index))} key={index} >
-          <div className={(index === value ? 'active' : '')}>
-            <label>{item}</label>
-          </div>
-        </TabButton>,
-          index !== data.length - 1 && <div className={'splitter'} ></div>
+        [
+          <TabButton onClick={compose(onValueChange, constant(index))} key={index} >
+            <div className={(index === value ? 'active' : '')}>
+              <label>{item}</label>
+            </div>
+          </TabButton>,
+          index !== data.length - 1 && <div className={'splitter'} key={'splitter' + index}></div>,
         ],
 
       )}

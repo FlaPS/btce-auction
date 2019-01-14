@@ -10,7 +10,7 @@ setConfig({ pureSFC: true })
 const req = require.context("../src", true, /.story.tsx?$/)
 
 configure(() => {
-    // require('../src/index.story')
+    // require('../src/auctionApi.story')
     req.keys()
         .sort()
         .forEach(req);

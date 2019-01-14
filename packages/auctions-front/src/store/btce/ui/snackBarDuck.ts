@@ -33,7 +33,7 @@ const reducer = (state = [] as FactoryAction<SnackBarData>[], action: FactoryAny
   return state
 }
 
-const defaultDelay = 5000
+const defaultDelay = 7000
 
 function* saga() {
   function* raceAction(action: FactoryAction<SnackBarData>) {
@@ -43,23 +43,28 @@ function* saga() {
     const isDismissed = (test: FactoryAnyAction) =>
       actions.dismiss.isType(test) && guid === test.payload
 
-    const isResolved = (test: FactoryAnyAction) =>
-      actions.resolve.isType(test) && guid === test.payload
-
-    const {delayed, dismissed, resolved} = race({
+    const isResolved = (test: FactoryAnyAction) => {
+      return actions.resolve.isType(test) && guid === test.payload
+    }
+    const {delayed, dismissed, resolved} =  yield race({
       delayed: delay(timeout),
       dismissed: take(isDismissed),
       resolved: take(isResolved),
     })
 
+
     if (delayed)
       yield put(actions.dismiss(action.guid))
 
-    else if (resolved)
+    else if (resolved) {
+      console.log('resolve action', action)
       yield put(action.payload.action)
+    }
 
   }
   yield takeEvery(actions.push.isType, raceAction)
+
+
 }
 
 

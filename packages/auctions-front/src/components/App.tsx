@@ -12,6 +12,7 @@ import { Menu } from './Menu'
 import { history } from '../history'
 import { ExplorerPage } from './explorer/ExplorerPage'
 import { FrontState } from '../store/reducer'
+import { SnackBar } from './elements/SnackBar'
 
 const store = configureFrontendStore(history)
 
@@ -84,6 +85,7 @@ const Root = () => {
               </Switch>
             </ConnectedRouter>
           </div>
+        <SnackBar />
       </Layout>
   )
 }

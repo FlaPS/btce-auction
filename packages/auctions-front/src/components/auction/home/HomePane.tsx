@@ -89,12 +89,16 @@ const expandedRowRender =  (record: AuctionRow, index) =>
     <Value>{record.name.length + record.suffix.length + 1}</Value>
     <Caption>Number of bids</Caption>
     <Value>Unknown</Value>
-    <Caption>Time elapsed</Caption>
-    <Value>{moment(now() - record.publishedOn).format('d h')}</Value>
+    {
+      /*
+      <Caption>Time elapsed</Caption>
+      <Value>{moment(now() - record.publishedOn).format('d h')}</Value>
+      */
+    }
     {
       record.message && [
-        <Caption>Message</Caption>,
-        <Value>{record.message}</Value>,
+        <Caption key={'messageLabel'}>Message</Caption>,
+        <Value key={'messageValue'}>{record.message}</Value>,
       ]
     }
   </ExpandedRowLayout>

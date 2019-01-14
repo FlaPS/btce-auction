@@ -133,7 +133,7 @@ export const Table = <T>({
     React.createElement(TableRow, { record, index, columns, key: record[rowKey] || index})
 
   const rows = isLoading
-    ? React.createElement(Spinner)
+    ? React.createElement(Spinner, {key: 'spinner'})
     : (list && list.length)
                 ? list.map(renderRow)
                 : renderChildren(emptyContent)

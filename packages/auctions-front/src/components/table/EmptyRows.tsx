@@ -9,7 +9,7 @@ const Layout = styled.div`
   justify-content: center;
   align-items: center;
   
-  background: #191919;
+  background: #343434;
   border-radius: 0px 0px 0.6em 0.6em;
   div {
     font-family: Brandon Grotesque;

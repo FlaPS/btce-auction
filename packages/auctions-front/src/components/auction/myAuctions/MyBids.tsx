@@ -110,7 +110,6 @@ const columns: ColumnProps<AuctionRow & {bidAmount: number}, any> = [
     render: (value, record) =>
       <NameCell>
           {record.name}
-
       </NameCell>,
   },
   {
@@ -141,7 +140,7 @@ const columns: ColumnProps<AuctionRow & {bidAmount: number}, any> = [
     mapValue: (value, record) =>
       (record.bestBid / record.ask * 100).toFixed(2) + '%',
   },
-  {
+ /* {
     title: 'time remaining',
     dataIndex: 'timeRemaining',
     width: '16em',
@@ -152,13 +151,14 @@ const columns: ColumnProps<AuctionRow & {bidAmount: number}, any> = [
     dataIndex: 'publishedOn',
     width: '15em',
     mapValue: value => moment(value).format('MMM DD, YYYY'),
-  },
+  },*/
   {
-    title: '',
+    title: 'Action',
     dataIndex: 'name',
     width: '10em',
     render: (value: string, record) =>
       <GoldButtonCell
+        key={'bid'}
         label={'BID'}
         onClick={() =>
           history.push(nav.auctionBuyName({ fullName: record.name + '_' + record.suffix}))
@@ -190,14 +190,17 @@ export const MyAuctionsExpandedRowRender =  (record: AuctionRow, index: number) 
       <Caption>Dislikes</Caption>
       {DislikeCell(record)}
     </div>
+    {
+      /*
+      <div>
+        <Caption>Time elapsed</Caption>
+        <Value>{moment(now() - record.publishedOn).format('DD')}</Value>
+      </div>
 
-    <div>
-      <Caption>Time elapsed</Caption>
-      <Value>{moment(now() - record.publishedOn).format('DD')}</Value>
-    </div>
-
-    <div>
-      <Caption>Published on</Caption>
-      <Value>{moment(record.publishedOn).format('YYYY MM DD')}</Value>
-    </div>
+      <div>
+        <Caption>Published on</Caption>
+        <Value>{moment(record.publishedOn).format('YYYY MM DD')}</Value>
+      </div>
+      */
+    }
   </ExpandedRowLayout>

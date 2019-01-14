@@ -4,18 +4,16 @@ import { FactoryAnyAction } from '@sha/fsa'
 import { SnackBarItem, SnackBarItemProps } from './SnackBarItem'
 import { compose, constant } from 'lazy-compose'
 import { useDispatch, useMappedState } from '../../hooks'
+import { snackBarDuck } from '../../store/btce/ui/snackBarDuck'
 
 
 const Layout = styled.div`
-  position: static;
-  height: 100vh;
-  padding-left: 3.0em;
-  padding-bottom: 7.0em;
+  position: fixed;
+  z-index: 1000;
+  left: 3.0em;
+  bottom: 2.0em;
   display: flex;
   flex-direction: column-reverse;
-  div + div {
-    margin-top: 3em;
-  }
 `
 
 type SnackBarDataItem = SnackBarItemProps & {
@@ -27,19 +25,27 @@ type SnackBarProps = {
   dispatch: (action: FactoryAnyAction) => any
 }
 
-const SnackBarRaw = ({data}: SnackBarProps) => {
+type DataItem = ReturnType<typeof snackBarDuck.actions.push>
+
+const SnackBarRaw = () => {
   const dispatch = useDispatch()
-  const data = useMappedState()
+  const data: DataItem[] = useMappedState(snackBarDuck.selector)
   return (
     <Layout>
       {
         data.map(
-          ({action, ...item}) =>
+          (action: DataItem) =>
             <SnackBarItem
-              {...item}
-              key={item.guid}
+              text={action.payload.text}
+              type={action.payload.type}
+              actionText={action.payload.actionText}
+              key={action.guid}
+              guid={action.guid}
+              onDismiss={() =>
+                dispatch(snackBarDuck.actions.dismiss(action.guid))
+              }
               onActionClick={
-                action ? compose(dispatch, constant(action)) : undefined
+                () => dispatch(snackBarDuck.actions.resolve(action.guid))
               }
             />,
         )

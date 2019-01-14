@@ -3,6 +3,7 @@ import { APIResponse } from '../api/APITypes'
 import { call, put, race, select, take, takeEvery } from 'redux-saga/effects'
 import { uiDuck } from './ui/uiDuck'
 import { scatterDuck } from './scatter/scatterDuck'
+import { action } from '@storybook/addon-actions'
 
 const log = console.info
 
@@ -39,7 +40,10 @@ export function* asyncWorker<P, S, E>(actionCreators: AsyncActionCreators<P, S, 
     }
 
 
-    yield put(uiDuck.actions.busy(JSON.stringify(action)))
+    const busyAction = JSON.stringify(action)
+    if( busyAction == null)
+      debugger
+    yield put(uiDuck.actions.busy(busyAction))
 
     try {
       const response: APIResponse<any> = yield call(method, action.payload)
@@ -72,6 +76,15 @@ export function* asyncWorker<P, S, E>(actionCreators: AsyncActionCreators<P, S, 
 
     yield put(uiDuck.actions.unbusy(JSON.stringify(action)))
   }
-  yield takeEvery(isType(actionCreators.started), callApi)
+
+  if (!actionCreators.started)
+    debugger
+
+  const pattern = (action) => {
+    const result = actionCreators.started.isType(action)
+    return result
+  }
+
+  yield takeEvery(pattern, callApi)
 
 }

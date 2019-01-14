@@ -5,7 +5,8 @@ import { FrontState } from '../../reducer'
 
 import { dislikesDuck } from './dislikesDuck'
 import { ID } from '../baseTypes'
-import { AuctionVO } from '../../api/auction/auctionApi'
+import { AuctionVO } from '../../api/auction'
+import { generateGuid, generateUint64Guid } from '@sha/random'
 
 const factory = actionCreatorFactory('auction')
 
@@ -13,10 +14,11 @@ const actions = {
   fetchRecentAuctions: factory.async<undefined, AuctionVO[]>('fetchRecentAuctions'),
   fetchMyState: factory.async<undefined, MyState>('fetchMyState'),
   placeBid: factory.async<PlaceBidModel>('placeBid'),
+  instantBuy: factory.async<PlaceBidModel>('instantBuy'),
   submitSell: factory.async<SellModel>('sell'),
-  acceptSell: factory.async<ID>('accept'),
-  cancelSell: factory.async<ID>('cancel'),
-  postDislike: factory.async<ID>('postDislike'),
+  acceptSell: factory.async<{auctionId: string, name: string}>('accept'),
+  cancelSell: factory.async<{auctionId: string, name: string}>('cancel'),
+  postDislike: factory.async<{auctionId: string, name: string}>('postDislike'),
 }
 
 const selectAuctionRows = (state: FrontState) => {
@@ -31,6 +33,7 @@ const selectAuctionRows = (state: FrontState) => {
         length: auction.name.length,
         name,
         suffix,
+        fullName: name + (suffix ? ('.' + suffix) : ''),
         isDislikedByMe: myDislikes.includes(auction.id),
       }
     },
@@ -49,11 +52,10 @@ export type AuctionRow =
 
 
 export const defaultSellModel = () => ({
+  auctionID: generateUint64Guid(),
   ask: '' as any as number,
   name: '' as string,
   receivingAccount: '' as string,
-  email: '' as string,
-  auctionPeriod: '' as any as number,
   message: '' as string,
 })
 
@@ -63,11 +65,16 @@ export type SellModel = Partial<ReturnType<typeof defaultSellModel>>
 export const defaultPlaceBidModel = () => ({
   bidAmount: '' as any as number,
   accountId: '' as string,
+  ask: 1,
+  nameToBuy: '',
 })
+
+
 
 export type PlaceBidModel = {
   bidAmount: number // decimal number with two digits after point
-  auctionId: string // Account name with suffix to buy
+  auctionId: string // Auction ID
+  nameToBuy: string
 }
 
 export type MyState = {
@@ -160,7 +167,7 @@ export const domeDuck = {
   },
   selectors: {
     myDislikes: (state): AsyncState<string[]> => state.app.auction.my.dislikes,
-    myState: (state) => state.app.auction.my,
+    myState: state => state.app.auction.my,
     auctionRows: selectAuctionRows,
   },
   actions,

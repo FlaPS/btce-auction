@@ -1,15 +1,15 @@
-import * as random from '@sha/random'
-import { DAY_MILIS, sleep } from '@sha/utils'
+import * as random from '../../../../../../random/src'
+import { DAY_MILIS, sleep } from '../../../../../../utils/src'
 import { times } from 'ramda'
-import { AuctionVO } from './auctionApi'
-import { APIConfig, APIResponse } from '../APITypes'
-import { MyState, PlaceBidModel, SellModel } from '../../btce/dome/domeDuck'
-import { ID } from '../../btce/baseTypes'
+import { AuctionVO } from '..'
+import { APIConfig, APIResponse } from '../../APITypes'
+import { MyState, PlaceBidModel, SellModel } from '../../../btce/dome/domeDuck'
+import { ID } from '../../../btce/baseTypes'
 
-import { faker } from '@sha/random'
+import { faker, generateGuid, generateUint64Guid } from '../../../../../../random/src'
 
 const defaultTrueResponse = async () => {
-  await sleep(Math.random() + 1000  + 2000)
+  await sleep(Math.random() + 500)
   return {
     result: true,
   }
@@ -25,31 +25,35 @@ export default (config: APIConfig) => ({
   },
 
   fetchMyState: async (): Promise<APIResponse<MyState>> => { // todo: set them empty
-    await sleep(Math.random() * 500 + 2000)
+    await sleep(Math.random() * 500 )
     const {auctions, ...state} = auctionState
     return {
       result: state.my,
     }
   },
+
   placeBid: async (value: PlaceBidModel): Promise<APIResponse<boolean>> =>
+    await defaultTrueResponse(),
+
+  instantBuy: async (value: PlaceBidModel): Promise<APIResponse<boolean>> =>
     await defaultTrueResponse(),
 
   submitSell: async (value: SellModel): Promise<APIResponse<boolean>> =>
     await defaultTrueResponse(),
 
-  accept: async (value: ID): Promise<APIResponse<boolean>> =>
+  accept: async (value: {auctionId: string, name: string}): Promise<APIResponse<boolean>> =>
     await defaultTrueResponse(),
 
-  cancel: async (value: ID): Promise<APIResponse<boolean>> =>
+  cancel: async (value: {auctionId: string, name: string}): Promise<APIResponse<boolean>> =>
     await defaultTrueResponse(),
 
 
-  vote: async (value: ID): Promise<APIResponse<boolean>> =>
+  vote: async (value: {auctionId: string, name: string}): Promise<APIResponse<boolean>> =>
     await defaultTrueResponse(),
 })
 
 
-const names = ['max', 'while', 'a', 'xxx', 'btc', 'rus', 'aaa', '1', '2', 'best', 'noname', 'plus']
+const names = ['p.io', 'max', 'while', 'a', 'xxx', 'btc', 'rus', 'aaa', '1', '2', 'best', 'noname', 'plus']
 
 
 /**
@@ -61,11 +65,11 @@ const names = ['max', 'while', 'a', 'xxx', 'btc', 'rus', 'aaa', '1', '2', 'best'
 
 const getAuctionRow = (index: number): AuctionVO => {
   const firstName = index < names.length ? names[index] : faker.lorem.word()
-  const name = firstName + '.eosio'
+  const name = firstName.includes('.') ? firstName : (firstName + '.eosio')
   const publishedOn = random.faker.date.recent(20).getTime()
   const ask = Number((Math.random() * 1000).toFixed(2))
   return ({
-    id: name + '_' + publishedOn,
+    id: generateUint64Guid(),
     name,
     ask,
     bestBid: Math.random() > 0.4 ? Number(((Math.random() * ask)).toFixed(2)) : 0,
@@ -101,4 +105,4 @@ const populate = (totalAuctionsLength = 10, myBidsQuant = 3, sellsQuant = 2) => 
 }
 
 
-const auctionState = populate(190)
+const auctionState = populate(12)

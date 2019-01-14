@@ -15,7 +15,7 @@ type SpinnerProps =
     loading?: boolean
   }
 
-export const Spinner = ({loading, ...props} : SpinnerProps) =>
+export const Spinner = ({loading, ...props}: SpinnerProps) =>
   <Layout {...props}>
     <div className='spinner'>
       <div className='double-bounce1'></div>

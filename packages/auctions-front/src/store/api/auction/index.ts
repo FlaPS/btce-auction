@@ -1,22 +1,9 @@
 import { APIConfig, APIMode } from '../APITypes'
-import mockImpl from './mockImpl'
-import apiImpl from './apiImpl'
-import confirmImpl from './confirmImpl'
+import mockImpl from './impls/mockImpl'
+import apiImpl from './impls/apiImpl'
+import createApi from '../createApi'
 
-const defaultConfig = {
-  mode: 'mock' as APIMode,
-}
-
-export const auctionApi = (config: APIConfig = defaultConfig) => {
-  if (config.mode === 'mock')
-    return mockImpl(config)
-
-  if (config.mode === 'confirm')
-    return confirmImpl(config)
-
-  return {...mockImpl(config), ...apiImpl(config)}
-}
-
+export const auctionApi = createApi(mockImpl, apiImpl)
 
 /**
  * Unique identifier for entities.

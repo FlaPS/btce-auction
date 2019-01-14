@@ -13,5 +13,6 @@ export type ScattetDetachResponse = ScatterActionResponse
  */
 export type ScatterAttachResponse = APIResponse<{
     account: string
+    balanceEOS: number
 }>
 

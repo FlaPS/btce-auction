@@ -11,7 +11,7 @@ const explorerTabs = [
   'Accounts / Black Lists',
   'RAM',
   'Account Bids',
-  'Tokens'
+  'Tokens',
 ]
 
 

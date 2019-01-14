@@ -23,7 +23,7 @@ const TabButton = styled.div`
       text-align: center;
       font-size: 2.2em;
       text-transform: uppercase;
-
+      font-weight: bold;
     }
   }
 

@@ -7,7 +7,7 @@ export const SideBar = ({className = '', ...props}: DivProps) => {
 
   return (
     <div className={'sidebar__container ' + className} {...props}>
-      <div className='sidebar__head'>
+      <div className='sidebar__head' style={{display: 'none'}}>
         <img className='sidebar__avatar' src='/assets/ava.jpg' alt=''/>
         <div className='sidebar__name-wrap'>
           <div className='sidebar__name'>MICHAIL VAKHRIN</div>
@@ -23,7 +23,7 @@ export const SideBar = ({className = '', ...props}: DivProps) => {
       </div>
       <div className='sidebar__body'>
         <div className='sidebar__content'>
-          <ScatterView/>
+          <ScatterView />
         </div>
         <div className='sidebar__tabs-wrap'>
           <button className='sidebar__tabs-item'>

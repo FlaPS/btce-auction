@@ -56,6 +56,7 @@ const columns: ColumnProps<AuctionRow, any> = [
     mapValue: (value, record) =>
       (record.bestBid / record.ask * 100).toFixed(2) + '%',
   },
+  /*
   {
     title: 'time remaining',
     dataIndex: 'timeRemaining',
@@ -68,6 +69,7 @@ const columns: ColumnProps<AuctionRow, any> = [
     width: '15em',
     mapValue: value => moment(value).format('MMM DD, YYYY'),
   },
+  */
   {
     title: ' ',
     dataIndex: 'name',
@@ -95,7 +97,7 @@ const AcceptCell = ({record}) => {
             onClick={
               () =>
                   dispatch(
-                    domeDuck.actions.acceptSell.started(record.id),
+                    domeDuck.actions.acceptSell.started({auctionId: record.id, name: record.fullName}),
                   )
             }
           />
@@ -106,7 +108,7 @@ const CancelCell = ({record}) => {
   return (
     <GoldButtonCell
       label={'CANCEL'}
-      onClick={() =>  dispatch(domeDuck.actions.cancelSell.started(record.id))}
+      onClick={() =>  dispatch(domeDuck.actions.cancelSell.started({auctionId: record.id, name: record.fullName}))}
     />
   )
 }
@@ -154,6 +156,7 @@ const MySellsRaw = ({isLoading, mySells, scatterIsConnected, myError, auctionsEr
           dispatch(domeDuck.actions.fetchMyState.started())
         }
       />
+
   const data = useMappedState(selectAuctionsWithMySells)
 
   return <Table
@@ -172,7 +175,7 @@ const selectAuctionsWithMySells = (state: FrontState) => {
   const auctions = domeDuck.selectors.auctionRows(state).filter(item =>
     mySells.find( id => id === item.id),
   )
-  debugger;
+
   const auctionsError = state.app.auction.auctions.error
   const myError = state.app.auction.my.error
   return {

@@ -37,8 +37,13 @@ export interface Failure<P, E = string> {
 
 export const isType = <P>(
   actionCreator: ActionCreator<P> | EmptyActionCreator,
-) => (action: FactoryAnyAction): action is FactoryAction<P> =>
-  action.type === actionCreator['type']
+) => {
+    if (!actionCreator)
+      debugger
+
+    return () => (action: FactoryAnyAction): action is FactoryAction<P> =>
+      action.type === actionCreator['type']
+}
 
 export const isTypeOfAny = <P>(actionCreator: Array<ActionCreator<P>>) => (
   action: FactoryAnyAction,
@@ -80,7 +85,7 @@ export type WithStatus<K extends string = 'asyncStatus'> = {
 export type AsyncActionCreators<P, S, E> = {
   type: string
   unset: EmptyActionCreator
-  started: P extends undefined ? EmptyActionCreator : ActionCreator<P>
+  started: ActionCreator<P>
   done: ActionCreator<Success<P, S>>
   failed: ActionCreator<Failure<P, E>>
   defautlState: AsyncState<S, P, E>
@@ -168,7 +173,7 @@ export function actionCreatorFactory(
         }
 
         if (commonMeta || meta || factoryMeta)
-          action.meta = Object.assign({}, factoryMeta, commonMeta, meta)
+          action.meta = Object.assign({stackTrace: new Error().stack}, factoryMeta, commonMeta, meta)
 
         if (isError && (typeof isError === 'boolean' || isError(payload)))
           action.error = true
@@ -322,7 +327,7 @@ function makeReducer<InS extends OutS, OutS>(
   ): OutS => {
     for (let i = 0, length = cases.length; i < length; i++) {
       const { actionCreator, handler } = cases[i]
-      if (isType(actionCreator)(action))
+      if (actionCreator.isType(action))
         return Array.isArray(state)
           ? handler(state, action.payload)
           : Object.assign({}, { ...(handler(state, action.payload) as any) })

@@ -12,13 +12,13 @@ const DefaultLayout = styled.div`
 `
 
 const defaultRender = (value: any, record: any, index: number) =>
-  React.createElement(DefaultLayout, {}, [
-    React.createElement('span',{},
+  React.createElement(DefaultLayout, {},
+    React.createElement('span', {key: 'span'},
       (typeof value === 'string' || typeof value === 'number')
         ? value
         : JSON.stringify(value),
     ),
-  ])
+  )
 
 const getRenderer = <T, K extends keyof T>(column: ColumnProps<T, K>) => {
   return column.render || defaultRender
@@ -28,8 +28,7 @@ const renderSafely = (f: () => any) => {
   let result = 'Error'
   try {
     result = f()
-  }
-  catch(e) {
+  } catch(e) {
     console.warn(e)
   }
   return result
@@ -39,7 +38,7 @@ export const TableCell = <T, K extends keyof T>({column, record, index}:
               {column: ColumnProps<T, K>, index: number, record: T}) =>
   React.createElement('div',
     {style: {width: column.width}},
-    [
+
       renderSafely(
         () =>
         getRenderer(column)(
@@ -48,5 +47,5 @@ export const TableCell = <T, K extends keyof T>({column, record, index}:
           index,
         ),
       ),
-    ],
+
   )

@@ -5,7 +5,7 @@ const factory = actionCreatorFactory('scatter')
 
 const actions = {
   attach: factory.async<undefined, ScatterActionResponse>('attach'),
-  detach: factory('detach'),
+  detach: factory.async('detach'),
 }
 
 export type ScatterState = Partial<
@@ -21,7 +21,7 @@ const reducer = (state: ScatterState = {attached: false}, action) => {
       ...action.payload.result,
       attached: true,
     }
-  } else if (isType(actions.detach)(action)) {
+  } else if (actions.detach.done.isType(action)) {
     state = {
       attached: false,
     }

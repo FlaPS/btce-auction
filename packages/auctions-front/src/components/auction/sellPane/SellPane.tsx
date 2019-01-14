@@ -58,7 +58,7 @@ export const SellPane = (props: DivProps) => {
                   <input
                       className='form__input'
                       type='text'
-                      maxlength={12}
+                      maxLength={12}
                       {...bindField('ask')(state)}
                   />
               </span>
@@ -71,7 +71,7 @@ export const SellPane = (props: DivProps) => {
                   <input
                     className='form__input'
                     type='text'
-                    maxlength={12}
+                    maxLength={12}
                     {...bindField('name')(state)}
                   />
               </span>
@@ -84,7 +84,7 @@ export const SellPane = (props: DivProps) => {
                 <input
                   className='form__input'
                   type='text'
-                  maxlength={12}
+                  maxLength={12}
                   {...bindField('receivingAccount')(state)}
                 />
               </span>

@@ -62,6 +62,7 @@ export type SnackBarItemProps =
   }
 
 const SnackActionButton = styled.div`
+
   cursor: pointer;
   border: 0.1em solid white;
   box-sizing: border-box;
@@ -111,7 +112,11 @@ const SnackBarItemRaw = ({
       }
       <div         className={'icon'}>
           <SVGLibrary.CloseIcon
-            onClick={() => onDismiss && onDismiss(guid)}
+            onClick={() => {
+                if (onDismiss)
+                  onDismiss(guid)
+              }
+            }
 
           />
       </div>
