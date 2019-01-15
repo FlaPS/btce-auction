@@ -55,10 +55,11 @@ const BuyPaneRaw = ({
   const accoutIsValid = auction !== undefined
 
   const bidIsValid =
-    bidAmount === Number(bidAmountString) &&
-    auction &&
-    bidAmount <= auction.ask &&
-    (bidAmount >= (auction.bestBid || 0) + 0.1)
+    bidAmount === Number(bidAmountString)
+    // && // todo: uncomment
+    // auction &&
+    // bidAmount <= auction.ask &&
+    // (bidAmount >= (auction.bestBid || 0) + 0.1)
     // && scatter.freeEOS + 1 >= bidAmount
 
   const stateIsValid = accoutIsValid && bidIsValid

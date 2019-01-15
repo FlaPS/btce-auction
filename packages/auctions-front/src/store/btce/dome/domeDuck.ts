@@ -14,7 +14,7 @@ const actions = {
   fetchRecentAuctions: factory.async<undefined, AuctionVO[]>('fetchRecentAuctions'),
   fetchMyState: factory.async<undefined, MyState>('fetchMyState'),
   placeBid: factory.async<PlaceBidModel>('placeBid'),
-  instantBuy: factory.async<PlaceBidModel>('instantBuy'),
+  instantBuy: factory.async<InstantBuyModel>('instantBuy'),
   submitSell: factory.async<SellModel>('sell'),
   acceptSell: factory.async<{auctionId: string, name: string}>('accept'),
   cancelSell: factory.async<{auctionId: string, name: string}>('cancel'),
@@ -69,7 +69,12 @@ export const defaultPlaceBidModel = () => ({
   nameToBuy: '',
 })
 
-
+export type InstantBuyModel = {
+  from: string,
+  to: string,
+  quantity: string,
+  memo: string
+}
 
 export type PlaceBidModel = {
   bidAmount: number // decimal number with two digits after point

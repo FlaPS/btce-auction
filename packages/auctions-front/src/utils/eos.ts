@@ -8,7 +8,7 @@ export class Eos {
 
   private readonly config: any
   public api: any
-  public static contractAccount = 'nameswapsln1'
+  public static contractAccount = 'nameswapsaa1'
   public auctionsPerPage = 50
   public scatter
 
@@ -57,13 +57,14 @@ export class Eos {
     this.api = eos(this.config)
   }
 
-  getTableRows(lb: string, table: string): Promise<any> {
+  getTableRows(lb: string, table: string, ub: string = ''): Promise<any> {
     return this.api.getTableRows({
       json: true,
       scope: Eos.contractAccount,
       code: Eos.contractAccount,
       table: table,
       lower_bound: lb,
+      upper_bound: ub,
       limit: this.auctionsPerPage,
     })
   }

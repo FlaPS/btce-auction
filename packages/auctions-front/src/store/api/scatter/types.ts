@@ -13,6 +13,7 @@ export type ScattetDetachResponse = ScatterActionResponse
  */
 export type ScatterAttachResponse = APIResponse<{
     account: string
+    permissions: Array<any>
     balanceEOS: number
 }>
 

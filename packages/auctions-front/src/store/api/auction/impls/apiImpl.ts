@@ -1,36 +1,28 @@
 import { APIConfig, APIResponse } from '../../APITypes'
 import ScatterJS from 'scatterjs-core'
-import ScatterEOS from 'scatterjs-plugin-eosjs'
 import eosjs from 'eosjs'
-import { ScatterAttachResponse, ScattetDetachResponse } from '../../scatter/types'
+import { ScatterAttachResponse } from '../../scatter/types'
 import { Eos } from '../../../../utils/eos'
 import { AuctionVO } from '..'
-import { SellModel } from '../../../btce/dome/domeDuck'
+import { MyState, PlaceBidModel, SellModel } from '../../../btce/dome/domeDuck'
+import { generateUint64Guid } from '@sha/random'
 
 export default (config: APIConfig) => ({
 
+  fetchMyState: async (): Promise<APIResponse<MyState>> => { // todo: set them empty
+    const myState = await auctionState()
+    console.log('fetching state:', myState)
+
+    const {auctions, ...state} = myState
+    return {
+      result: state.my,
+    }
+  },
+
   fetchRecentAuctions: async (): Promise<APIResponse<AuctionVO[]>> => {
 
-    const myEosjs = new Eos()
-    const auctionsLowerBound = ''
-
     try {
-
-      const auctionsTable = await myEosjs.getTableRows(auctionsLowerBound, 'accounts')
-      const extrasTable = await myEosjs.getTableRows(auctionsLowerBound, 'extras')
-
-      return {
-        result: auctionsTable.rows.map((row, index) => {
-          return {
-            id: 1,
-            name: row.account4sale,
-            ask: row.saleprice,
-            dislikes: extrasTable.rows[index].numberofvotes,
-            message: extrasTable.rows[index].message,
-          }
-        }),
-      }
-
+      return { result: await _getAuctions() }
     } catch (e) {
       return { errors: e }
     }
@@ -50,6 +42,58 @@ export default (config: APIConfig) => ({
     }
   },
 
+
+  // TODO:: it is:: instantBuy
+  placeBid: async (value: PlaceBidModel): Promise<APIResponse<boolean>> => {
+    console.log('start instantBuy')
+
+    try {
+      const eosScatter = ScatterJS.scatter.eos(Eos.networkScatter, eosjs, Eos.defaultConfig())
+      const buyer = _getAttachedAccount()
+
+      // todo: also search in the bids table
+      // todo: search by the auction guid?
+      // const myEosJs = new Eos()
+      // const priceForTheBuyer = (await myEosJs.getTableRows(buyer, 'accounts', account.name)).saleprice
+      // console.log('priceForTheBuyer:', priceForTheBuyer, 'ask:', value.ask)
+
+      // todo: get them from the value.newKeys
+      const newKeys = {
+        owner: 'EOS53Ad9acDA2mQZXDGmpJxB5MBopDoLY99qS4RoNs8D2SBXosoJx',
+        active: 'EOS53Ad9acDA2mQZXDGmpJxB5MBopDoLY99qS4RoNs8D2SBXosoJx',
+      }
+
+      // if (value.ask === priceForTheBuyer) {
+      const buyResult = _buyInstantAction(eosScatter, value, buyer, newKeys)
+      console.log('buy result =', buyResult)
+      // }
+
+      return { result: true }
+    } catch (e) {
+      console.log('errors selling: ', e)
+      return { errors: e}
+    }
+  },
+
+  cancel: async (value: {auctionId: string, name: string}): Promise<APIResponse<boolean>> => {
+    try {
+      const eosScatter = ScatterJS.scatter.eos(Eos.networkScatter, eosjs, Eos.defaultConfig())
+      const newKeys = { // todo: make a form for a new keys
+        owner: 'EOS53Ad9acDA2mQZXDGmpJxB5MBopDoLY99qS4RoNs8D2SBXosoJx',
+        active: 'EOS53Ad9acDA2mQZXDGmpJxB5MBopDoLY99qS4RoNs8D2SBXosoJx',
+      }
+
+      const myAccount = _getAttachedAccount()
+      const cancelResult = await _cancelAction(eosScatter, value, newKeys, myAccount)
+      console.log('cancel callback:', cancelResult)
+
+      return { result: true}
+    } catch (e) {
+      return { errors: e }
+    }
+
+  },
+
 })
 
 
@@ -57,13 +101,9 @@ const _updateAuth = async (eosScatter, value) => {
   console.log('Starting update auth')
   const eosio = await eosScatter.contract('eosio')
 
-  const account = ScatterJS.scatter.identity.accounts.find(
-    x => x.blockchain === 'eos',
-  )
-  if (account.name !== value.name)
-    throw `the name in the form is different than in your identity in scatter: ${account.name} != ${value.name}`
-
-  console.log('names:', account.name, ' : ', value.name)
+  const myAccount = _getAttachedAccount()
+  if (myAccount.name !== value.name)
+    throw `the name in the form is different than your attached identity. Scatter: ${myAccount.name}, Form: ${value.name}`
 
   const accountOwnerKey = await _getAccountInfo(eosScatter, value.name)
     .then(res => res.permissions.find(it => it.perm_name === 'owner').required_auth.keys[0].key)
@@ -86,8 +126,7 @@ const _updateAuth = async (eosScatter, value) => {
     permission: 'owner',
     parent: '',
     auth: authCode,
-  },
-  { // only the account4sale@owner can sell
+  }, { // only the account4sale@owner can sell
     authorization: [{
       actor: value.name,
       permission: 'owner',
@@ -102,6 +141,7 @@ const _sellAction = async (eosScatter, value) => {
   const contract = await eosScatter.contract(Eos.contractAccount)
   const actionCallback = await contract.sell(
     {
+      guid: generateUint64Guid(),
       account4sale: value.name,
       saleprice: value.ask + '.0000 EOS', // todo: add mask in a form
       paymentaccnt: value.receivingAccount,
@@ -117,6 +157,53 @@ const _sellAction = async (eosScatter, value) => {
   console.log('the account is on sale now!:', actionCallback)
 }
 
+const _buyInstantAction = async (eosScatter, value, buyer, newKeys) => {
+  const eosioToken = await eosScatter.contract('eosio.token')
+  const buyResult = await eosioToken.transfer({
+      from: buyer,
+      to: Eos.contractAccount,
+      quantity: 5 + '.0000 EOS', // todo: add mask in the frontend
+      memo: `sp:${value.nameToBuy},${newKeys.owner},${newKeys.active}`,
+    }, {
+      authorization: [{
+        actor: buyer.name,
+        permission: buyer.authority,
+      }],
+    })
+
+  console.log('buy callback:', buyResult)
+}
+
+const _cancelAction = async (eosScatter, value, keys, myAccount) => {
+  try {
+    const contract = await eosScatter.contract(Eos.contractAccount)
+    const cancelResult = await contract.cancel({
+      account4sale: 'nameswapsaa2', // todo: change to guid
+      owner_key: keys.owner,
+      active_key: keys.active,
+    }, {
+      authorization: [{
+        actor: myAccount.name,
+        permission: myAccount.authority,
+      }],
+    })
+    return cancelResult
+  } catch (e) {
+    console.log('error cancel', e)
+    throw e
+  }
+}
+
+const _getAttachedAccount = (): {name: string, authority: string} => {
+  if (!ScatterJS.scatter.identity)
+    throw 'Please attach identity'
+
+  const account = ScatterJS.scatter.identity.accounts.find(
+    x => x.blockchain === 'eos',
+  )
+
+  return account
+}
 
 const _voteAction = async (eosScatter, value) => {
   const voterAccount = 'arealgangsta'
@@ -137,3 +224,54 @@ const _getAccountInfo = async (eosScatter, name): Promise<ScatterAttachResponse>
     return { errors: e }
   }
 }
+
+const _getAuctions = async (auctionsLowerBound = '') => {
+  const myEosjs = new Eos()
+  const auctionsTable = await myEosjs.getTableRows(auctionsLowerBound, 'accounts')
+  const extrasTable = await myEosjs.getTableRows(auctionsLowerBound, 'extras')
+
+  return await auctionsTable.rows.map((row, index) => {
+      return {
+        id: row.guid,
+        name: row.account4sale,
+        paymentaccnt: row.paymentaccnt,
+        ask: row.saleprice,
+        dislikes: extrasTable.rows[index].numberofvotes,
+        message: extrasTable.rows[index].message,
+      }
+  })
+}
+
+
+const populate = async () => {
+  try {
+    const myEosjs = new Eos()
+    const myAccount = _getAttachedAccount()
+
+    const auctions = await _getAuctions()
+    console.log('auctions', auctions)
+
+    const bids = (await myEosjs.getTableRows('', 'bids')).rows
+      .filter( a => a.bidder === myAccount.name)
+
+    const sells = auctions.filter( a => a.paymentaccnt === myAccount)
+      .map(a => a.id)
+
+    const dislikes = [] // todo: there is no such table with all votes in the contract
+    // (await myEosjs.getTableRows('', 'vote')).rows.map( a => a.id)
+
+    return {
+      auctions,
+      my: {
+        bids,
+        sells,
+        dislikes,
+      },
+    }
+  } catch (e) {
+    console.log('error populate:', e)
+    return null
+  }
+}
+
+const auctionState = populate

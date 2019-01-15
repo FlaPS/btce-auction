@@ -13,7 +13,7 @@ const REDUX_DEV_TOOLS = '__REDUX_DEVTOOLS_EXTENSION__'
 const configureFrontendStore = (
   initialState?: any,
   history: ReturnType<typeof createBrowserHistory> = createBrowserHistory(),
-  mode: APIMode = 'confirm',
+  mode: APIMode = 'api',
 ) => {
 
   const store = createStore(createRootReducer(history), initialState, getFrontEndMiddlewares(history))
