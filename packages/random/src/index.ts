@@ -15,7 +15,8 @@ export const generatePassword = (
 export const generateGuid = uuid
 
 export const generateUint64Guid = () =>
-  BigInt('0x' + uuid().split('-').join('').slice(0, 8)).toString()
+  Math.floor(Math.random() * 2 ** 63 - 1).toString()
+  // BigInt('0x' + uuid().split('-').join('').slice(0, 8)).toString()
 
 export const faker = fakerRaw
 

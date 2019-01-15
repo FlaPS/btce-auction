@@ -9,7 +9,7 @@ import { generateUint64Guid } from '@sha/random'
 
 export default (config: APIConfig) => ({
 
-  fetchMyState: async (): Promise<APIResponse<MyState>> => { // todo: set them empty
+  fetchMyState: async (): Promise<APIResponse<MyState>> => {
     const myState = await auctionState()
     console.log('fetching state:', myState)
 
@@ -70,7 +70,7 @@ export default (config: APIConfig) => ({
 
       return { result: true }
     } catch (e) {
-      console.log('errors selling: ', e)
+      console.log('errors placing bid: ', e)
       return { errors: e}
     }
   },
@@ -105,8 +105,14 @@ const _updateAuth = async (eosScatter, value) => {
   if (myAccount.name !== value.name)
     throw `the name in the form is different than your attached identity. Scatter: ${myAccount.name}, Form: ${value.name}`
 
-  const accountOwnerKey = await _getAccountInfo(eosScatter, value.name)
-    .then(res => res.permissions.find(it => it.perm_name === 'owner').required_auth.keys[0].key)
+  let accountOwnerKey = {}
+
+  try {
+    accountOwnerKey = await _getAccountInfo(eosScatter, value.name)
+      .then(res => res.permissions.find(it => it.perm_name === 'owner').required_auth.keys[0].key)
+  } catch (e) {
+    throw 'account key is not found: ' + e
+  }
 
   const authCode = {
     threshold: 1,
@@ -157,13 +163,13 @@ const _sellAction = async (eosScatter, value) => {
   console.log('the account is on sale now!:', actionCallback)
 }
 
-const _buyInstantAction = async (eosScatter, value, buyer, newKeys) => {
+const _buyInstantAction = async (eosScatter, value: PlaceBidModel, buyer, newKeys) => {
   const eosioToken = await eosScatter.contract('eosio.token')
   const buyResult = await eosioToken.transfer({
       from: buyer,
       to: Eos.contractAccount,
-      quantity: 5 + '.0000 EOS', // todo: add mask in the frontend
-      memo: `sp:${value.nameToBuy},${newKeys.owner},${newKeys.active}`,
+      quantity: value.bidAmount + '.0000 EOS', // todo: add mask in the frontend
+      memo: `sp:${value.auctionId},${newKeys.owner},${newKeys.active}`,
     }, {
       authorization: [{
         actor: buyer.name,
@@ -174,11 +180,11 @@ const _buyInstantAction = async (eosScatter, value, buyer, newKeys) => {
   console.log('buy callback:', buyResult)
 }
 
-const _cancelAction = async (eosScatter, value, keys, myAccount) => {
+const _cancelAction = async (eosScatter, value: {auctionId: string, name: string}, keys, myAccount) => {
   try {
     const contract = await eosScatter.contract(Eos.contractAccount)
     const cancelResult = await contract.cancel({
-      account4sale: 'nameswapsaa2', // todo: change to guid
+      guid: value.auctionId, // todo: change to guid
       owner_key: keys.owner,
       active_key: keys.active,
     }, {
@@ -254,8 +260,11 @@ const populate = async () => {
     const bids = (await myEosjs.getTableRows('', 'bids')).rows
       .filter( a => a.bidder === myAccount.name)
 
-    const sells = auctions.filter( a => a.paymentaccnt === myAccount)
+    const sells = auctions
+      .filter( a => a.paymentaccnt === myAccount.name)
       .map(a => a.id)
+    // todo: .filter( a => (a.paymentaccnt === myAccount.name || a.account4sale === myAccount.name)) ?
+
 
     const dislikes = [] // todo: there is no such table with all votes in the contract
     // (await myEosjs.getTableRows('', 'vote')).rows.map( a => a.id)
