@@ -24,14 +24,17 @@ const makeRoute = <T extends { [K in keyof T]?: string }>(pattern: string): NavR
     {
       match: matchParams,
       pattern,
-      isType: (action: any): action is LocationAction<T> =>
+      isType: (action: any, isExact: boolean = true): action is LocationAction<T> =>
         action.type.includes(LOCATION_CHANGE) &&
         action.payload &&
         action.payload.location &&
         action.payload.location.pathname &&
-        trace()(matchParams)(action.payload.location.pathname) !== null &&
-        trace()(matchParams)(action.payload.location.pathname) !== undefined &&
-        matchParams(action.payload.location.pathname) && matchParams(action.payload.location.pathname).isExact === true,
+        action.payload.location.pathname !== null &&
+        action.payload.location.pathname !== undefined &&
+        matchParams(action.payload.location.pathname) &&
+        (
+          isExact ? matchParams(action.payload.location.pathname).isExact === true : true
+        ),
     },
   )
 }
@@ -43,7 +46,7 @@ export type NavRoute<T> =
   & {
   pattern: string
   match: (path: string, options?: match<T>) => match<T> | null
-  isType: (value: any) => value is LocationAction<T>
+  isType: (value: any, isExact?: boolean) => value is LocationAction<T>
 }
 
 
@@ -58,9 +61,9 @@ export type LocationAction<T> = {
   }
 }
 
-export const isLocation = <T>(route?: NavRoute<T>) => (action: any): action is LocationAction<T> =>
+export const isLocation = <T>(route?: NavRoute<T>, isExact = true) => (action: any): action is LocationAction<T> =>
   route
-    ? route.isType(action)
+    ? route.isType(action, isExact)
     : action.type.includes(LOCATION_CHANGE)
 
 export const push = <T>(route: NavRoute<T>) => (params: T = {} as any as T) => ({
@@ -77,6 +80,7 @@ export const push = <T>(route: NavRoute<T>) => (params: T = {} as any as T) => (
 })
 
 export const nav = {
+  auction:  makeRoute('/auction'),
   auctionHome: makeRoute('/auction/home'),
   auctionBuyName: makeRoute<{fullName?: string}>('/auction/buyName/:fullName'),
   auctionSellName: makeRoute('/auction/sellName'),

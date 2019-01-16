@@ -30,8 +30,11 @@ const reducer = combineReducers({
   snackBar: snackBarDuck.reducer,
 })
 
+export type UIState = ReturnType<typeof reducer>
+
 
 function* saga() {
+
   yield fork(snackBarDuck.saga)
 }
 

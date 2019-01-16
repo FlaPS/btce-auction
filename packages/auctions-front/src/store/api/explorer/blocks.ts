@@ -5,20 +5,21 @@ export const blocksApi = {
     getAll: () => handleResponse<BlockRow[]>(http.get('blocks')),
 }
 
+type Date = string
 
 export interface Authorization {
-  actor: string;
-  permission: string;
+  actor: string
+  permission: string
 }
 
 export interface Data {
-  from: string;
-  to: string;
-  quantity: string;
-  memo: string;
-  account: string;
-  protection?: number;
-  referrer: string;
+  from: string
+  to: string
+  quantity: string
+  memo: string
+  account: string
+  protection?: number
+  referrer: string
 }
 
 export interface Action {

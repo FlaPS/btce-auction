@@ -7,13 +7,16 @@ import * as R from 'ramda'
 import { Renderable, renderChildren } from '@sha/react-fp'
 import { Spinner } from '../elements/Spinner'
 import { PaginationExtended } from './PaginationExtended'
+import { isArray } from '@sha/utils'
+import { Pagination } from './Pagination'
 
 
 const Layout = styled.div`
   .footer {
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
     justify-content: space-between;
+    align-items: center;
     min-height: 5.6em;
     padding-left: 2em;
     padding-right: 2em;
@@ -34,6 +37,7 @@ export type TableProps<T> = {
   emptyContent?: Renderable<TableProps<T>>
   isLoading?: boolean
   maxRowsPerPage?: number
+  footerChildren: Renderable[]
 }
 
 export const TableContext = React.createContext({
@@ -63,6 +67,7 @@ export const Table = <T>({
    expandedRowRender,
    paginationExtended = false,
    paginationConfig = defaultPaginationConfig,
+                           footerChildren = [],
    ...props }: TableProps<T>) => {
 
   /// sorting
@@ -95,7 +100,7 @@ export const Table = <T>({
     React.createElement(
         'div',
         {className: 'footer', key: 'footer'},
-       /* paginationExtended
+        paginationExtended
           ? React.createElement(
             PaginationExtended,
             {
@@ -108,11 +113,22 @@ export const Table = <T>({
               maxPagesToShow: paginationConfig.maxPagesToShow,
             },
           )
-          : |*/React.createElement('div'),
-
+          : footerChildren.concat(
+              React.createElement(
+                Pagination,
+                {
+                  key: 'pagination',
+                  rowsPerPage,
+                  value: startRow,
+                  onValueChange: setSelectedRow,
+                  totalRows: list.length,
+                  maxPagesToShow: paginationConfig.maxPagesToShow,
+                },
+              ),
+            ),
     )
 
-  //list = list.splice(startRow, rowsPerPage)
+  list = R.slice(startRow, startRow + rowsPerPage, list)
 
   // Expanded keys
   const [expandedKeys, setExpandedKeys] = React.useState([] as any as  any[])
@@ -132,12 +148,12 @@ export const Table = <T>({
   const renderRow = (record, index) =>
     React.createElement(TableRow, { record, index, columns, key: record[rowKey] || index})
 
-  const rows = isLoading
+  let rows = isLoading
     ? React.createElement(Spinner, {key: 'spinner'})
     : (list && list.length)
                 ? list.map(renderRow)
                 : renderChildren(emptyContent)
-
+  rows = isArray(rows) ? rows : [rows]
   return (
     React.createElement(
       TableContext.Provider,

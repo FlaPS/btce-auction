@@ -7,9 +7,14 @@ import { action } from '@storybook/addon-actions'
 
 const log = console.info
 
+export type AsyncWorkerOptions = {
+  requireScatter?: boolean
+  useGlobalBusy?: boolean
+}
+
 export function* asyncWorker<P, S, E>(actionCreators: AsyncActionCreators<P, S, E>,
                                       method: (p?: any) => Promise<any>,
-                                      requireScatter: boolean = false,
+                                      requireScatter = false,
 ) {
   function* callApi(action: FactoryAnyAction) {
 
@@ -39,11 +44,11 @@ export function* asyncWorker<P, S, E>(actionCreators: AsyncActionCreators<P, S, 
       }
     }
 
+    if (requireScatter) {
+      const busyAction = JSON.stringify(action)
 
-    const busyAction = JSON.stringify(action)
-    if( busyAction == null)
-      debugger
-    yield put(uiDuck.actions.busy(busyAction))
+      yield put(uiDuck.actions.busy(busyAction))
+    }
 
     try {
       const response: APIResponse<any> = yield call(method, action.payload)
@@ -74,7 +79,8 @@ export function* asyncWorker<P, S, E>(actionCreators: AsyncActionCreators<P, S, 
       )
     }
 
-    yield put(uiDuck.actions.unbusy(JSON.stringify(action)))
+    if (requireScatter)
+      yield put(uiDuck.actions.unbusy(JSON.stringify(action)))
   }
 
   if (!actionCreators.started)

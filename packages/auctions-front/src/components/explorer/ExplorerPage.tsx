@@ -7,11 +7,13 @@ import { ExplorerTabs } from './ExplorerTabs'
 import { useMappedState } from '../../hooks'
 import { HistoryContext } from '../../contexts'
 import { ConnectedRouter } from 'connected-react-router'
+import { LiveFeedDataPane } from './LiveFeedDataPane'
 
 const routes = [
   {
     nav: nav.explorer.liveFeed,
     label: 'EOS live feed',
+    Component: LiveFeedDataPane,
   },
   {
     nav: nav.explorer.producers,
@@ -68,8 +70,8 @@ const Layout = styled.div`
   }
   .tables {
     width: 966px;
-    height: 488px;
-    opacity: 0.75;
+    height: 342px;
+
     border-radius: 8px;
     background-color: #212121;
     position: absolute;

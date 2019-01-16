@@ -14,14 +14,9 @@ import { connect } from 'react-redux'
 import { EmptyRows } from '../../table/EmptyRows'
 import { compose, constant } from 'lazy-compose'
 import { HistoryContext, useSubscribe } from '../../../contexts'
+import { LinkCell } from '../../table/TableCell'
 
-const NameCell = styled.div`
-  cursor: pointer;
-  a {
-    font-size: 2.0em;
-    color: #FFAE00;
-  }
-`
+
 
 const columns: ColumnProps<AuctionRow> = [
   {
@@ -29,11 +24,11 @@ const columns: ColumnProps<AuctionRow> = [
     dataIndex: 'name',
     width: '18em',
     render: (value, record) =>
-      <NameCell>
+      <LinkCell>
         <a onClick={() => history.push(nav.auctionBuyName({fullName: record.name + '_' + record.suffix }))}>
           {record.name}
         </a>
-      </NameCell>,
+      </LinkCell>,
   },
   {
     title: 'suffix',

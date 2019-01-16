@@ -25,7 +25,9 @@ const Layout = styled.div`
     margin-right: -0.1em
     label {
       pointer-events: none;
-      font-size: 1.2em;
+      font-size: 1.4em;
+      font-weight: 900;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
     }
   }

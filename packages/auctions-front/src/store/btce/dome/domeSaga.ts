@@ -9,12 +9,12 @@ import { dispatchOnRoute } from '../dispatchOnRoute'
 import { routeWorker } from '../routeWorker'
 import { checkScatterSaga } from '../scatter/checkScatterSaga'
 import { mapActionSaga } from '../mapActionSaga'
-import { scatterDuck } from '../scatter/scatterDuck'
 import { snackBarDuck } from '../ui/snackBarDuck'
 
 const log = console.log
 
 export function* domeSaga(config: APIConfig) {
+  yield fork(dispatchOnRoute, nav.auction, domeDuck.actions.fetchRecentAuctions.started)
   yield takeLatest(domeDuck.actions.placeBid.done.isType, placeBidRedirect)
   yield takeLatest(domeDuck.actions.submitSell.done.isType, submitSellRedirect)
 
@@ -39,6 +39,7 @@ export function* domeSaga(config: APIConfig) {
         type: 'success',
       }),
   )
+
   // Bid fail
   yield fork(
     mapActionSaga,
@@ -51,8 +52,6 @@ export function* domeSaga(config: APIConfig) {
       }),
   )
 
-
-
   // Place a sell success
   yield fork(
     mapActionSaga,
@@ -62,6 +61,7 @@ export function* domeSaga(config: APIConfig) {
         type: 'success',
       }),
   )
+
   //  Place a sell error
   yield fork(
     mapActionSaga,
@@ -84,6 +84,7 @@ export function* domeSaga(config: APIConfig) {
         type: 'success',
       }),
   )
+
   // Accept sell error
   yield fork(
     mapActionSaga,
@@ -105,6 +106,7 @@ export function* domeSaga(config: APIConfig) {
         type: 'success',
       }),
   )
+
   // cancel sell error
   yield fork(
     mapActionSaga,
@@ -117,14 +119,8 @@ export function* domeSaga(config: APIConfig) {
       }),
   )
 
-
-
-
-
-
-
-  // yield fork(routeWorker, nav.auctionMyAuctionsBids, checkScatterSaga)
-  // yield fork(routeWorker, nav.auctionMyAuctionsSells, checkScatterSaga)
+  yield fork(routeWorker, nav.auctionMyAuctionsBids, checkScatterSaga)
+  yield fork(routeWorker, nav.auctionMyAuctionsSells, checkScatterSaga)
 }
 
 function* placeBidRedirect(action: FactoryAction<PlaceBidModel>) {

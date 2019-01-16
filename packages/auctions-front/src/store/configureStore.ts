@@ -16,10 +16,22 @@ const configureFrontendStore = (
   mode: APIMode = 'confirm',
 ) => {
 
-  const store = createStore(createRootReducer(history), initialState, getFrontEndMiddlewares(history))
+  const store = createStore(createRootReducer(history), initialState, getFrontEndMiddleware(history))
 
   store['runSaga'] = sagaMiddleware.run
   store['runSaga'](btceSaga, {mode})
+  const dispatch = store.dispatch
+  let prevRoute = '?'
+  store.dispatch = (action) => {
+    if (action.type === '@@router/LOCATION_CHANGE')  {
+      if ( prevRoute !== action.payload.location.pathname) {
+        prevRoute = action.payload.location.pathname
+        dispatch(action)
+      }
+    } else {
+      dispatch(action)
+    }
+  }
 
   return store as typeof store & { runSaga: Function, history: any }
 }
@@ -27,7 +39,7 @@ const configureFrontendStore = (
 const sagaMiddleware = createSagaMiddleware()
 
 
-const getFrontEndMiddlewares = (history: any) =>
+const getFrontEndMiddleware = (history: any) =>
   isFrontend() && window[REDUX_DEV_TOOLS]
     ?
     compose(
