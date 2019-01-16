@@ -248,7 +248,6 @@ const _getAuctions = async (auctionsLowerBound = '') => {
   })
 }
 
-
 const populate = async () => {
   try {
     const myEosjs = new Eos()

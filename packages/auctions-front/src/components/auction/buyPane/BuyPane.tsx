@@ -66,10 +66,10 @@ const BuyPaneRaw = ({
 
   const auctionId = auction ? auction.id : ''
 
-  const canBuyInstant = auction && bidAmount === auction.ask
+  const canBuyInstant = auction && (Number(bidAmount) === Number(auction.ask))
 
 
-  const doPlaceBid = React.useCallback(() => {
+  const doPlaceBid = () => {
       const payload = { bidAmount, auctionId, nameToBuy: EOSAccountName }
 
       const creator = bidAmount === auction.ask
@@ -77,9 +77,7 @@ const BuyPaneRaw = ({
         : domeDuck.actions.placeBid.started
 
       dispatch(creator(payload))
-    },
-    [bidAmount, EOSAccountName, auction],
-  )
+    }
 
   return (
     <div className='main-tab__wrap' {...props}>
