@@ -1,12 +1,15 @@
 import * as random from '../../../../../../random/src'
-import { DAY_MILIS, sleep } from '../../../../../../utils/src'
+import { DAY_MILIS, sleep, now} from '../../../../../../utils/src'
 import { times } from 'ramda'
-import { AuctionVO } from '..'
+import { AuctionVO, ClosedAuctionVO } from '..'
 import { APIConfig, APIResponse } from '../../APITypes'
-import { MyState, PlaceBidModel, SellModel } from '../../../btce/dome/domeDuck'
+import { MyState, BidModel, SellModel } from '../../../btce/dome/domeDuck'
 import { ID } from '../../../btce/baseTypes'
 
 import { faker, generateGuid, generateUint64Guid } from '../../../../../../random/src'
+import { mockResponse } from '../../mockRecponse'
+import { mockScatterAccountName } from '../../scatter/mockImpl'
+
 
 const defaultTrueResponse = async () => {
   await sleep(Math.random() + 500)
@@ -32,11 +35,19 @@ export default (config: APIConfig) => ({
     }
   },
 
-  placeBid: async (value: PlaceBidModel): Promise<APIResponse<boolean>> =>
+  placeBid: async (value: BidModel): Promise<APIResponse<boolean>> =>
     await defaultTrueResponse(),
 
-  instantBuy: async (value: PlaceBidModel): Promise<APIResponse<boolean>> =>
-    await defaultTrueResponse(),
+  buyNow: async (value: BidModel): Promise<APIResponse<ClosedAuctionVO>> => {
+    await sleep(Math.random() * 500 )
+    const result = {
+      id: value.auctionId,
+      closedAt: now(),
+      buyer: mockScatterAccountName,
+      payedAmount: value.bidAmount,
+    }
+    return {result}
+  },
 
   submitSell: async (value: SellModel): Promise<APIResponse<boolean>> =>
     await defaultTrueResponse(),

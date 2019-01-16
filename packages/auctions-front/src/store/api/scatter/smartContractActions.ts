@@ -13,6 +13,7 @@ export const smartContractActions = {
    * User opens new dome
    */
   sell: factory<{
+    guid: any,
     account4sale: Name
     saleprice: Asset
     paymentaccnt: Name

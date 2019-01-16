@@ -14,9 +14,7 @@ import { connect } from 'react-redux'
 import { EmptyRows } from '../../table/EmptyRows'
 import { compose, constant } from 'lazy-compose'
 import { HistoryContext, useSubscribe } from '../../../contexts'
-import { LinkCell } from '../../table/TableCell'
-
-
+import { LinkCellLayout } from '../../table/LinkCell'
 
 const columns: ColumnProps<AuctionRow> = [
   {
@@ -24,11 +22,11 @@ const columns: ColumnProps<AuctionRow> = [
     dataIndex: 'name',
     width: '18em',
     render: (value, record) =>
-      <LinkCell>
+      <LinkCellLayout>
         <a onClick={() => history.push(nav.auctionBuyName({fullName: record.name + '_' + record.suffix }))}>
           {record.name}
         </a>
-      </LinkCell>,
+      </LinkCellLayout>,
   },
   {
     title: 'suffix',
@@ -54,10 +52,10 @@ const columns: ColumnProps<AuctionRow> = [
       (record.bestBid / record.ask * 100).toFixed(2) + '%',
   },
   {
-    title: 'time remaining',
-    dataIndex: 'timeRemaining',
+    title: 'status',
+    dataIndex: 'isSold',
     width: '16em',
-    mapValue: value => moment(value).format('d') + ' days',
+    mapValue: (value) => value ? 'sold' : 'trading',
   },
   {
     title: 'dislikes',

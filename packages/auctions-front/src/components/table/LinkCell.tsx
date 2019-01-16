@@ -3,16 +3,19 @@ import { history } from '../../history'
 import { nav } from '../../store'
 import React from 'react'
 
-const Layout = styled.div`
+export const LinkCellLayout = styled.div`
   cursor: pointer;
   span {  
     font-size: 1.6em;
     color: #FFAE00;
   }
-  
+   a {  
+    font-size: 1.6em;
+    color: #FFAE00;
+  }
 `
 
 export const LinkCell = (value, record, index, column) =>
-  <Layout>
+  <LinkCellLayout>
     <span>{value}</span>
-  </Layout>
+  </LinkCellLayout>

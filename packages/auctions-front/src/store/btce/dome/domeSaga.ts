@@ -1,6 +1,6 @@
 import { fork, put, takeLatest } from 'redux-saga/effects'
 import { FactoryAction } from '@sha/fsa/src'
-import { domeDuck, PlaceBidModel, SellModel } from './domeDuck'
+import { domeDuck, BidModel, SellModel } from './domeDuck'
 import { nav, push } from '../../nav'
 import { auctionApi } from '../../api/auction'
 import { APIConfig } from '../../api/APITypes'
@@ -16,6 +16,7 @@ const log = console.log
 export function* domeSaga(config: APIConfig) {
   yield fork(dispatchOnRoute, nav.auction, domeDuck.actions.fetchRecentAuctions.started)
   yield takeLatest(domeDuck.actions.placeBid.done.isType, placeBidRedirect)
+  yield takeLatest(domeDuck.actions.buyNow.done.isType, placeBidRedirect)
   yield takeLatest(domeDuck.actions.submitSell.done.isType, submitSellRedirect)
 
   const api = auctionApi(config)
@@ -27,7 +28,7 @@ export function* domeSaga(config: APIConfig) {
   yield fork(asyncWorker, domeDuck.actions.postDislike, api.vote, true)
   yield fork(asyncWorker, domeDuck.actions.placeBid, api.placeBid, true)
   yield fork(asyncWorker, domeDuck.actions.submitSell, api.submitSell, true)
-
+  yield fork(asyncWorker, domeDuck.actions.buyNow, api.buyNow, true)
   const actions = domeDuck.actions
 
   // Bid success
@@ -123,7 +124,7 @@ export function* domeSaga(config: APIConfig) {
   yield fork(routeWorker, nav.auctionMyAuctionsSells, checkScatterSaga)
 }
 
-function* placeBidRedirect(action: FactoryAction<PlaceBidModel>) {
+function* placeBidRedirect(action: FactoryAction<BidModel>) {
   yield put(push(nav.auctionMyAuctionsBids)())
 }
 

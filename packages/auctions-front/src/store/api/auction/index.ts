@@ -18,12 +18,28 @@ type ID = string
  */
 type Date = number
 
+export type ClosedAuctionVO = {
+  id: ID
+
+  closedAt: Date
+
+  buyer: string
+
+  payedAmount: number
+}
+
 export type AuctionVO = {
   /**
    * I need a unique Identifier to forward users to related pages.
    * I.E. certain page of dome (just name & suffix info is not enoght)
    */
   id: ID
+
+  closedAt?: Date
+
+  buyer?: string
+
+  payedAmount?: number
 
   /**
    *  Name to sell, min - 1, max 12

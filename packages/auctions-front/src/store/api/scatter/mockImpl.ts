@@ -1,7 +1,9 @@
-import {ScatterActionResponse, ScatterAttachResponse, ScattetDetachResponse } from './types'
+import {ScatterActionResponse, ScatterAttachResponse, ScatterDetachResponse } from './types'
 import { sleep } from '@sha/utils'
 import { mapSmartContractActionToStruct, SmartContractAction } from './smartContractActions'
 import { APIConfig } from '../APITypes'
+
+export const mockScatterAccountName = 'myname.suffix'
 
 export default (config: APIConfig = {mode: 'mock'}) =>
   ({
@@ -10,12 +12,14 @@ export default (config: APIConfig = {mode: 'mock'}) =>
       await sleep(Math.random() * 1000)
       return {
         result: {
-          account: 'myname.suffix',
+          account: mockScatterAccountName,
+          permissions: [],
+          balanceEOS: 1249.87,
         },
       }
     },
 
-    detach: async (): Promise<ScattetDetachResponse> => {
+    detach: async (): Promise<ScatterDetachResponse> => {
       await sleep(Math.random() * 1000)
       return {
         result: true,

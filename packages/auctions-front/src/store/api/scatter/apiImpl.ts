@@ -1,13 +1,10 @@
 import { APIConfig } from '../APITypes'
 import ScatterJS from 'scatterjs-core'
 import ScatterEOS from 'scatterjs-plugin-eosjs'
-import eosjs from 'eosjs'
-import { ScatterAttachResponse, ScattetDetachResponse } from '../scatter/types'
+import { ScatterAttachResponse, ScatterDetachResponse } from '../scatter/types'
 import { Eos } from '../../../utils/eos'
-import my from '../../btce/dome/my'
 
 export default (config: APIConfig) => ({
-
 
   attach: async (): Promise<ScatterAttachResponse> => {
     console.log('attaching scatter')
@@ -49,7 +46,7 @@ export default (config: APIConfig) => ({
     }
   },
 
-  detach: async (): Promise<ScattetDetachResponse> => {
+  detach: async (): Promise<ScatterDetachResponse> => {
 
     await ScatterJS.scatter.forgetIdentity()
     return {

@@ -5,7 +5,7 @@ import { FrontState } from '../../reducer'
 
 import { dislikesDuck } from './dislikesDuck'
 import { ID } from '../baseTypes'
-import { AuctionVO } from '../../api/auction'
+import { AuctionVO, ClosedAuctionVO } from '../../api/auction'
 import { generateGuid, generateUint64Guid } from '@sha/random'
 
 const factory = actionCreatorFactory('auction')
@@ -13,12 +13,13 @@ const factory = actionCreatorFactory('auction')
 const actions = {
   fetchRecentAuctions: factory.async<undefined, AuctionVO[]>('fetchRecentAuctions'),
   fetchMyState: factory.async<undefined, MyState>('fetchMyState'),
-  placeBid: factory.async<PlaceBidModel>('placeBid'),
-  instantBuy: factory.async<PlaceBidModel>('instantBuy'),
+  placeBid: factory.async<BidModel>('placeBid'),
   submitSell: factory.async<SellModel>('sell'),
   acceptSell: factory.async<{auctionId: string, name: string}>('accept'),
   cancelSell: factory.async<{auctionId: string, name: string}>('cancel'),
   postDislike: factory.async<{auctionId: string, name: string}>('postDislike'),
+  buyNow: factory.async<BidModel, ClosedAuctionVO>('buyNow'),
+  payBid: factory.async<BidModel, ClosedAuctionVO>('payBid'),
 }
 
 const selectAuctionRows = (state: FrontState) => {
@@ -33,6 +34,7 @@ const selectAuctionRows = (state: FrontState) => {
         length: auction.name.length,
         name,
         suffix,
+        isSold: auction.closedAt !== undefined,
         fullName: name + (suffix ? ('.' + suffix) : ''),
         isDislikedByMe: myDislikes.includes(auction.id),
       }
@@ -48,6 +50,7 @@ export type AuctionRow =
     length: number
     suffix: string
     isDislikedByMe?: boolean
+    isSold: boolean,
   }
 
 
@@ -69,9 +72,14 @@ export const defaultPlaceBidModel = () => ({
   nameToBuy: '',
 })
 
+export type InstantBuyModel = {
+  from: string,
+  to: string,
+  quantity: string,
+  memo: string
+}
 
-
-export type PlaceBidModel = {
+export type BidModel = {
   bidAmount: number // decimal number with two digits after point
   auctionId: string // Auction ID
   nameToBuy: string
@@ -79,7 +87,7 @@ export type PlaceBidModel = {
 
 export type MyState = {
   dislikes: string[]
-  bids: PlaceBidModel[]
+  bids: BidModel[]
   sells: string[]
 }
 
@@ -143,6 +151,20 @@ const reducer = (state: AuctionState = defaultAuctionState, action: FactoryAnyAc
     // add new bud to my bids
     state = over(lensPath(['my', 'value', 'bids']), prepend({auctionId, bidAmount: params.bidAmount}), state)
 
+  }
+
+  if (actions.buyNow.done.isType(action) || actions.payBid.done.isType(action) ) {
+    const result = action.payload.result
+    const prevAuction = state.auctions.value.find( a => a.id === result.id)
+    const index = state.auctions.value.indexOf(prevAuction)
+    const newAuction: AuctionVO = {...prevAuction, bestBid: result.payedAmount, closedAt: result.closedAt,  buyer: result.buyer}
+    const auctionId = newAuction.id
+
+    // add new auction to the local state
+    state = over(lensPath(['auctions', 'value']),  update(index, newAuction), state)
+
+    // add new bud to my bids
+    state = over(lensPath(['my', 'value', 'bids']), prepend({auctionId, bidAmount: result.payedAmount}), state)
   }
 
   if (actions.postDislike.done.isType(action)) {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { DivProps } from '@sha/react-fp'
-import { domeDuck, AuctionRow, PlaceBidModel, AuctionState } from '../../../store/btce/dome/domeDuck'
+import { domeDuck, AuctionRow, BidModel, AuctionState } from '../../../store/btce/dome/domeDuck'
 import { FrontState } from '../../../store/reducer'
 import StringInput from '../../inputs/StringInput'
 import NumberInput from '../../inputs/NumberInput'
@@ -13,7 +13,7 @@ import { ScatterState } from '../../../store/btce/scatter/scatterDuck'
 const isValid = (value: any) =>
   value !== undefined && String(value).trim().length > 0
 
-const isStateValid = (state: PlaceBidModel) =>
+const isStateValid = (state: BidModel) =>
   isValid(state.bidAmount) &&
   isValid(state.auctionId)
 
@@ -55,20 +55,30 @@ const BuyPaneRaw = ({
   const accoutIsValid = auction !== undefined
 
   const bidIsValid =
-    bidAmount === Number(bidAmountString) &&
-    auction &&
-    bidAmount <= auction.ask &&
-    (bidAmount >= (auction.bestBid || 0) + 0.1)
+    bidAmount === Number(bidAmountString)
+    // && // todo: uncomment
+    // auction &&
+    // bidAmount <= auction.ask &&
+    // (bidAmount >= (auction.bestBid || 0) + 0.1)
     // && scatter.freeEOS + 1 >= bidAmount
 
   const stateIsValid = accoutIsValid && bidIsValid
 
   const auctionId = auction ? auction.id : ''
 
+  const canBuyInstant = auction && bidAmount === auction.ask
 
-  const doPlaceBid = React.useCallback(() =>
-      dispatch(domeDuck.actions.placeBid.started({bidAmount, auctionId, nameToBuy: EOSAccountName})),
-    [bidAmount, EOSAccountName],
+
+  const doPlaceBid = React.useCallback(() => {
+      const payload = { bidAmount, auctionId, nameToBuy: EOSAccountName }
+
+      const creator = bidAmount === auction.ask
+        ? domeDuck.actions.buyNow.started
+        : domeDuck.actions.placeBid.started
+
+      dispatch(creator(payload))
+    },
+    [bidAmount, EOSAccountName, auction],
   )
 
   return (
@@ -119,8 +129,12 @@ const BuyPaneRaw = ({
         </div>
         <div className='form__item-wrap'>
           <div className='form__item' style={stateIsValid ? {} : {pointerEvents: 'none'}}>
-            <button className={'form__btn ' + (!stateIsValid ? 'disabled-button' : '')} disabled={!stateIsValid} onClick={doPlaceBid}>
-              <span className='form__btn-text'>Submit Your Bid</span>
+            <button
+              className={'form__btn ' + (!stateIsValid ? 'disabled-button' : '')}
+              disabled={!stateIsValid}
+              onClick={doPlaceBid}
+            >
+              <span className='form__btn-text'>{canBuyInstant ? 'Buy Now' : 'Submit Your Bid'}</span>
             </button>
           </div>
         </div>
