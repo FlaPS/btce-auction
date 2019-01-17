@@ -3,9 +3,11 @@ import ScatterJS from 'scatterjs-core'
 import eosjs from 'eosjs'
 import { ScatterAttachResponse } from '../../scatter/types'
 import { Eos } from '../../../../utils/eos'
-import { AuctionVO } from '..'
+import { AuctionVO, ClosedAuctionVO } from '..'
 import { MyState, BidModel, SellModel } from '../../../btce/dome/domeDuck'
 import { generateUint64Guid } from '@sha/random'
+import { now } from '@sha/utils'
+import { mockScatterAccountName } from '../../scatter/mockImpl'
 
 export default (config: APIConfig) => ({
 
@@ -52,10 +54,8 @@ export default (config: APIConfig) => ({
       const buyer = _getAttachedAccount()
 
       // todo: also search in the bids table
-      // todo: search by the auction guid?
       // const myEosJs = new Eos()
-      // const priceForTheBuyer = (await myEosJs.getTableRows(buyer, 'accounts', account.name)).saleprice
-      // console.log('priceForTheBuyer:', priceForTheBuyer, 'ask:', value.ask)
+      // const priceForTheBuyer = (await myEosJs.getTableRows(buyer, 'accounts', giud)).saleprice
 
       // todo: get them from the value.newKeys
       const newKeys = {
@@ -64,8 +64,7 @@ export default (config: APIConfig) => ({
       }
 
       // if (value.ask === priceForTheBuyer) {
-      const buyResult = _buyInstantAction(eosScatter, value, buyer, newKeys)
-      console.log('buy result =', buyResult)
+      const buyResult = await _buyInstantAction(eosScatter, value, buyer, newKeys)
       // }
 
       return { result: true }
@@ -166,7 +165,7 @@ const _sellAction = async (eosScatter, value) => {
 const _buyInstantAction = async (eosScatter, value: BidModel, buyer, newKeys) => {
   const eosioToken = await eosScatter.contract('eosio.token')
   const buyResult = await eosioToken.transfer({
-      from: buyer,
+      from: buyer.name,
       to: Eos.contractAccount,
       quantity: value.bidAmount + '.0000 EOS', // todo: add mask in the frontend
       memo: `sp:${value.auctionId},${newKeys.owner},${newKeys.active}`,
@@ -243,6 +242,7 @@ const _getAuctions = async (auctionsLowerBound = '') => {
         paymentaccnt: row.paymentaccnt,
         ask: row.saleprice,
         dislikes: extrasTable.rows[index].numberofvotes,
+        publishedOn: row.created_at, // todo: it's a unix format time I'm using --convert it
         message: extrasTable.rows[index].message,
       }
   })
