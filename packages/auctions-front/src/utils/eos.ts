@@ -8,7 +8,7 @@ export class Eos {
 
   private readonly config: any
   public api: any
-  public static contractAccount = 'nameswapsab1'
+  public static contractAccount = 'nameswapsac1'
   public auctionsPerPage = 50
   public scatter
 
