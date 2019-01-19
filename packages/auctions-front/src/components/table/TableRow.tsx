@@ -30,7 +30,7 @@ export const TableRow = ({columns, index, record}: {columns: ColumnProps<any, an
   const isExpanded = tableApi.expandedKeys.includes(rowKey)
 
   return [
-    <Layout style={{backgroundColor: isExpanded ?  '#000000' : 'rgba(0,0,0,0)'}} key={'row' + index}>
+    <Layout style={{backgroundColor: isExpanded ?  '#000000' : '#1E1E1E'}} key={'row' + index}>
       {
         // @ts-ignore
         columns.map( (col, colIndex) =>

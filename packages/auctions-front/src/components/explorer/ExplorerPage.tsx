@@ -7,7 +7,9 @@ import { ExplorerTabs } from './ExplorerTabs'
 import { useMappedState } from '../../hooks'
 import { HistoryContext } from '../../contexts'
 import { ConnectedRouter } from 'connected-react-router'
-import { LiveFeedDataPane } from './LiveFeedDataPane'
+import { LiveFeedDataPane } from './liveFeed/LiveFeedDataPane'
+import { ProxiesDataPane } from './proxies/ProxiesDataPane'
+import { ProducersDataPane } from './producers/ProducersDataPane'
 
 const routes = [
   {
@@ -18,30 +20,37 @@ const routes = [
   {
     nav: nav.explorer.producers,
     label: 'Block producers',
+    Component: ProducersDataPane,
   },
   {
     nav: nav.explorer.proxies,
     label: 'Proxies',
+    Component: ProxiesDataPane,
   },
   {
     nav: nav.explorer.smartContracts,
     label: 'Smart contracts',
+    Component: LiveFeedDataPane,
   },
   {
     nav: nav.explorer.accounts,
     label: 'accounts/black list',
+    Component: LiveFeedDataPane,
   },
   {
     nav: nav.explorer.ram,
     label: 'RAM',
+    Component: LiveFeedDataPane,
   },
   {
     nav: nav.explorer.bids,
     label: 'Account bids',
+    Component: LiveFeedDataPane,
   },
   {
     nav: nav.explorer.tokens,
     label: 'Tokens',
+    Component: LiveFeedDataPane,
   },
 ]
 

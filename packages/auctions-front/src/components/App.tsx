@@ -47,7 +47,7 @@ const reactRoutes =
 const Layout = styled.div`
     .content {
        width: calc(100%);
-       min-width: 81em;
+       min-width: 100em;
     }
     display: flex;
     flex-direction: row;

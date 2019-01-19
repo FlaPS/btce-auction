@@ -4,7 +4,7 @@
 }
 
 .sidebar__container {
-    /* max-width: 373px; */
+    min-width: 38em;
     margin-left: auto;
     width: 100%;
     min-height: 100vh;
@@ -174,9 +174,18 @@
 }
 
 .scatter__detach {
+    cursor: pointer;
     border-left: 1px solid #616161;
     padding-left: 1em;
     color: #616161;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.scatter__attach {
+    cursor: pointer;
+    padding-left: 1em;
+    color: #FFAE00;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -218,7 +227,7 @@
 }
 
 .scatter__download {
-    margin-top: 1.5em;
+    margin-top: 0em;
     margin-bottom: 0.5em;
     display: inline-block;
     color: #FFAE00;
@@ -230,6 +239,7 @@
 
 .sidebar__content_block-body {
     max-width: 100%;
+    min-height: 5.4em;
     padding: 2em 0.8em 1em;
     text-align: center;
 }
@@ -250,9 +260,11 @@
 }
 
 .sidebar__account-name {
+    min-width: fit-content;
     font-size: 1.6em;
     color: #fff;
     max-width: 50%;
+    padding-right: 0.3em;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -278,6 +290,7 @@
 }
 
 .sidebar__balance-title {
+    text-align: center;
     font-family: 'Muller';
     font-size: 1.6em;
     color: #fff;
@@ -296,7 +309,7 @@
 }
 
 .sidebar__balance-coin {
-    color: #FFAE00;
+    color: white;
     font-size: 1.6em;
     max-width: 100%;
     overflow: hidden;
@@ -305,9 +318,27 @@
 }
 
 .sidebar__balance-value {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+
+.sidebar__balance-value-us {
     font-size: 1.6em;
     margin-top: 0.4em;
     color: #616161;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.sidebar__balance-value-eos {
+    font-size: 1.6em;
+    margin-top: 0.4em;
+    color:  #FFAE00;
     max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
@@ -377,9 +408,11 @@
     position: absolute;
     height: calc(100% - 4px);
     max-width: calc(100% - 4px);
+    width: 0px;
     background-color: #FFAE00;
     top: 2px;
     left: 2px;
+    transition: all 0.2s ease-out;
 }
 
 .sidebar__slider-title {
@@ -399,6 +432,7 @@
 }
 
 .sidebar__content_block-footer {
+    margin-top: 1em;
     padding: 0.8em 1em;
     border-top: 1px solid #2B2B2B;
     background-color: #131313;

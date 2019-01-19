@@ -7,7 +7,7 @@ import { MyState, BidModel, SellModel } from '../../../btce/dome/domeDuck'
 import { ID } from '../../../btce/baseTypes'
 
 import { faker, generateGuid, generateUint64Guid } from '../../../../../../random/src'
-import { mockResponse } from '../../mockRecponse'
+import { mockResponse } from '../../mockResponse'
 import { mockScatterAccountName } from '../../scatter/mockImpl'
 
 

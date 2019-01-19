@@ -3,7 +3,7 @@ import { sleep } from '@sha/utils'
 import { mapSmartContractActionToStruct, SmartContractAction } from './smartContractActions'
 import { APIConfig } from '../APITypes'
 
-export const mockScatterAccountName = 'myname.suffix'
+export const mockScatterAccountName = 'intratraders'
 
 export default (config: APIConfig = {mode: 'mock'}) =>
   ({
@@ -13,8 +13,7 @@ export default (config: APIConfig = {mode: 'mock'}) =>
       return {
         result: {
           account: mockScatterAccountName,
-          permissions: [],
-          balanceEOS: 1249.87,
+          permissions: []
         },
       }
     },

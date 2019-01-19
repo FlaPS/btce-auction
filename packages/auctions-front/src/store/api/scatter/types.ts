@@ -10,9 +10,8 @@ export type ScatterDetachResponse = ScatterActionResponse
 /**
  * Scatter attached
  */
-export type ScatterAttachResponse = APIResponse<{
+export type ScatterAttachResponse = {
     account: string
     permissions: Array<any>
-    balanceEOS: number
-}>
+}
 

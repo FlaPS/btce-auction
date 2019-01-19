@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // Target latest version of ECMAScript.
-    "target": "es5",
+    "target": "es2018",
     "module": "esnext",
     // Search under node_modules for non-relative imports.
     "moduleResolution": "node",
@@ -17,13 +17,14 @@
      "esModuleInterop": true,
      "experimentalDecorators": true,
      
-    "lib": ["es6", "dom", "es2017.object", "es2017"],
+    "lib": ["es6", "dom", "es2017.object", "es2017", "es2015.generator", "esnext.bigint"],
     "sourceMap": true,
 
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": false,
     "strictNullChecks": false,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+
   }
 }

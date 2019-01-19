@@ -27,6 +27,7 @@ const StringInput = React.forwardRef(
     <HTMLInput
       {...props}
       ref={forwardedRef}
+      className={'form__input'}
       onChange={React.useCallback(
         (event?: ChangeEvent<HTMLInputElement>) => {
           if (onChange) onChange(event)

@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from 'react'
 import styled from '../../styles'
 import { InputProps } from '../inputs/helpers'
 import { Gold12, Gold13, Grey12, Grey13 } from '../../styles/Spans'
-import NumberInput from '../inputs/NumberInput'
+import {NumberInput} from '../inputs/NumberInput'
 import {clamp} from 'ramda'
 import useWithValue from '../../hooks/useWithValue'
 

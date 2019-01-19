@@ -7,32 +7,34 @@ export const producersApi = {
 
 
 export interface Branding {
-  logo_256: string;
-  logo_1024: string;
-  logo_svg: string;
+  logo_256: string
+  logo_1024: string
+  logo_svg: string
 }
 
 export interface Social {
-  telegram: string;
+  telegram: string
 }
 
 export interface Location {
-  name: string;
-  country: string;
-  latitude: number;
-  longitude: number;
+  name: string
+  country: string
+  latitude: number
+  longitude: number
 }
 
 export interface ProducerRow {
-  owner: string;
-  total_votes: string;
-  producer_key: string;
-  is_active: number;
-  url: string;
-  unpaid_blocks: number;
-  last_claim_time: string;
-  branding: Branding;
-  social: Social;
-  location: Location;
+  rank: number
+  name: string
+  owner: string
+  total_votes: string
+  producer_key: string
+  is_active: number
+  url: string
+  unpaid_blocks: number
+  last_claim_time: string
+  branding: Branding
+  social: Social
+  location: Location
 }
 

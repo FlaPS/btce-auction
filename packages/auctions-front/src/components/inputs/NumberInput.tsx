@@ -1,7 +1,8 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, useCallback } from 'react'
 import { HTMLInput, HTMLInputProps } from '@sha/react-fp'
 import { InputProps } from './helpers'
 import { styled } from '../../styles'
+import { useWithValue } from '../../hooks'
 
 const StyledInput = styled.input`
     color: #FFFFFF;
@@ -13,35 +14,53 @@ const StyledInput = styled.input`
     border-radius: 3px;
     transition: border .4s ease;
 
-    
     &:hover {
         border: 1px solid #616161;
     }
 `
 
-const NumberInput = React.forwardRef(
+const NumberInputRaw = React.forwardRef(
   (
-    {onChange, onValueChange, ...props}: NumberInputProps,
+    {onChange, onValueChange, value, fixedDigits = 0, ...props}: NumberInputProps,
     forwardedRef: React.Ref<HTMLInputProps>,
-  ) => (
-    <StyledInput
-      {...props}
-      ref={forwardedRef}
-      onChange={React.useCallback(
-        (event?: ChangeEvent<HTMLInputElement>) => {
-          if (onChange) onChange(event)
-          if (onValueChange) onValueChange(event.target.value)
-        },
-        [onChange, onValueChange],
-      )}
-    />
-),
+  ) => {
+
+    const onChangeCallBack = React.useCallback(
+      (event?: ChangeEvent<HTMLInputElement>) => {
+        if (onChange) onChange(event)
+        if (onValueChange) onValueChange(event.target.value)
+      },
+      [onChange, onValueChange],
+    )
+/*
+    const isValidNumber = !isNaN(Number(value))
+
+    if (isValidNumber) {
+      const part = Number(value) % 1
+      if (!String(value).endsWith('.') || String(part).length < fixedDigits + 2)
+        value = Number(value).toFixed(fixedDigits)
+    }
+*/
+    return (
+      <StyledInput
+        {...props}
+        value={value}
+        ref={forwardedRef}
+        onChange={onChangeCallBack}
+      />
+    )
+  },
 )
 
-export type NumberInputProps =  HTMLInputProps & InputProps<number>
+export type NumberInputProps =  HTMLInputProps & InputProps<string | number> & {
+  fixedDigits?: number
+  error?: string
+}
 
 export {
   HTMLInputProps
 }
+export const NumberInput = useWithValue(0)(NumberInputRaw)
 
-export default NumberInput as any as React.ComponentType<NumberInputProps>
+
+export default NumberInput

@@ -91,10 +91,11 @@ export const Table = <T>({
 
 
   // pagination
-  const [startRow, setSelectedRow] = React.useState(0)
+  let [startRow, setSelectedRow] = React.useState(0)
+
   const [rowsPerPage, setRowsPerPage] = React.useState(paginationConfig.maxRowsOptions[0])
-
-
+  if (startRow >= list.length )
+    startRow = list.length - rowsPerPage
 
   const footer =
     React.createElement(
@@ -102,18 +103,18 @@ export const Table = <T>({
         {className: 'footer', key: 'footer'},
         paginationExtended
           ? React.createElement(
-            PaginationExtended,
-            {
-              rowsPerPageOptions: paginationConfig.maxRowsOptions,
-              rowsPerPage,
-              value: startRow,
-              onValueChange: setSelectedRow,
-              onRowsPerPageChange: setRowsPerPage,
-              totalRows: list.length,
-              maxPagesToShow: paginationConfig.maxPagesToShow,
-            },
-          )
-          : footerChildren.concat(
+              PaginationExtended,
+              {
+                rowsPerPageOptions: paginationConfig.maxRowsOptions,
+                rowsPerPage,
+                value: startRow,
+                onValueChange: setSelectedRow,
+                onRowsPerPageChange: setRowsPerPage,
+                totalRows: list.length,
+                maxPagesToShow: paginationConfig.maxPagesToShow,
+              },
+            )
+          : [
               React.createElement(
                 Pagination,
                 {
@@ -125,7 +126,8 @@ export const Table = <T>({
                   maxPagesToShow: paginationConfig.maxPagesToShow,
                 },
               ),
-            ),
+              ...footerChildren,
+            ],
     )
 
   list = R.slice(startRow, startRow + rowsPerPage, list)
@@ -153,6 +155,7 @@ export const Table = <T>({
     : (list && list.length)
                 ? list.map(renderRow)
                 : renderChildren(emptyContent)
+
   rows = isArray(rows) ? rows : [rows]
   return (
     React.createElement(

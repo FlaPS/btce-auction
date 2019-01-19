@@ -9,6 +9,7 @@ import { useWithValue } from '../../hooks'
 const Layout = styled.div`
   font-family: 'Brandon Grotesque';
   display: flex;
+  margin-left: 2em;
 
   *:hover {
     color: ${colors.accent};

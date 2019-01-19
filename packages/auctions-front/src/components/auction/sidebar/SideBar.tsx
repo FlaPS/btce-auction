@@ -7,7 +7,7 @@ export const SideBar = ({className = '', ...props}: DivProps) => {
 
   return (
     <div className={'sidebar__container ' + className} {...props}>
-      <div className='sidebar__head' style={{display: 'none'}}>
+      <div className='sidebar__head'>
         <img className='sidebar__avatar' src='/assets/ava.jpg' alt=''/>
         <div className='sidebar__name-wrap'>
           <div className='sidebar__name'>MICHAIL VAKHRIN</div>

@@ -254,12 +254,14 @@ export function actionCreatorFactory(
           status: 'started',
           params: payload,
         }))
-        .case(done, (state, payload) => ({
-          value: payload.result,
-          error: undefined,
-          status: 'done',
-          params: payload.params,
-        }))
+        .case(done, (state, payload) => {
+          return {
+            value: payload.result,
+            error: undefined,
+            status: 'done',
+            params: payload.params,
+          }
+        })
         .case(failed, (state, payload) => ({
           value: undefined,
           error: payload.error,

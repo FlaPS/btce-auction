@@ -73,7 +73,6 @@ const Layout = styled.div`
     flex-direction: column;
     margin-right: 0.4em;
     margin-top: 0.4em;
-    border: 1px solid #2B2B2B;
     box-sizing: border-box;
     border-radius: 6px;
   }

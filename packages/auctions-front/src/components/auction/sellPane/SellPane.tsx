@@ -11,7 +11,8 @@ const isStateValid = (state: SellModel) =>
   isValid(state.ask) &&
   Number(state.ask) >= 1 &&
   isValid(state.name) &&
-  isValid(state.receivingAccount)
+  isValid(state.receivingAccount) &&
+  state.name !== state.receivingAccount
 
 export const SellPane = (props: DivProps) => {
 
@@ -186,7 +187,7 @@ export const SellPane = (props: DivProps) => {
               </div>
             </div>
             <div className='main-tab__block-info'>
-              <div className='main-tab__block-info_text'>{state.name}</div>
+              <div className='main-tab__block-info_text'>{state.name || 'example.name'}</div>
             </div>
           </div>
         </div>

@@ -3,18 +3,20 @@ import { ColumnProps } from './ColumnProps'
 import { styled } from '../../styles'
 import { LinkCell } from './LinkCell'
 
-const DefaultLayout = styled.div`
+export const DefaultCellLayout = styled.div`
   color: #E9DBC4;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   span {
+    line-height: 1.6em;
     font-size: 1.6em;
   }
 `
 
 
 const defaultRender = (value: any, record: any, index: number) =>
-  React.createElement(DefaultLayout, {},
+  React.createElement(DefaultCellLayout, {},
     React.createElement('span', {key: 'span'},
       (typeof value === 'string' || typeof value === 'number')
         ? value

@@ -61,4 +61,4 @@ const FooterTabsRaw = ({value, onValueChange, data, ...props}: InputProps<number
       )}
   </Layout>
 
-export const FooterTabs = useWithValue(0)(FooterTabsRaw)
+export const FooterTabs = FooterTabsRaw

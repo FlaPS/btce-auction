@@ -42,6 +42,7 @@ const Layout = styled.div`
   }
   
   .active {
+      z-index: 10;
       height: 5.1em;
       border-radius: 0.8em 0.8em 0 0;
       background-color: #191919;
@@ -68,4 +69,4 @@ const ExplorerTabsRaw = ({value, onValueChange, data, ...props}: InputProps<numb
       )}
   </Layout>
 
-export const ExplorerTabs = useWithValue(0)(ExplorerTabsRaw)
+export const ExplorerTabs = (ExplorerTabsRaw)

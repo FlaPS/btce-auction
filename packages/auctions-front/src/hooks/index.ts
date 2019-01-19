@@ -6,6 +6,7 @@ export {default as useWithReducer} from './useWithReducer'
 export {default as useWithValue} from './useWithValue'
 export {default as useWindowSize} from './useWindowSize'
 export {default as useGLobalKeyDown} from './useGlobalKeyDown'
+export {default as useAsyncState} from './useAsyncState'
 
 import { WithReducerProps } from './useWithReducer'
 

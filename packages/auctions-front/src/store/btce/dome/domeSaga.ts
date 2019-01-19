@@ -10,6 +10,8 @@ import { routeWorker } from '../routeWorker'
 import { checkScatterSaga } from '../scatter/checkScatterSaga'
 import { mapActionSaga } from '../mapActionSaga'
 import { snackBarDuck } from '../ui/snackBarDuck'
+import { scatterDuck } from '../scatter/scatterDuck'
+import { accountApi } from '../../api/explorer/accounts'
 
 const log = console.log
 
@@ -21,7 +23,7 @@ export function* domeSaga(config: APIConfig) {
 
   const api = auctionApi(config)
 
-  yield fork(asyncWorker, domeDuck.actions.fetchRecentAuctions, api.fetchRecentAuctions, true)
+  yield fork(asyncWorker, domeDuck.actions.fetchRecentAuctions, api.fetchRecentAuctions, false)
   yield fork(asyncWorker, domeDuck.actions.fetchMyState, api.fetchMyState, true)
   yield fork(asyncWorker, domeDuck.actions.cancelSell,  api.cancel, true)
   yield fork(asyncWorker, domeDuck.actions.acceptSell, api.accept, true)
@@ -29,7 +31,18 @@ export function* domeSaga(config: APIConfig) {
   yield fork(asyncWorker, domeDuck.actions.placeBid, api.placeBid, true)
   yield fork(asyncWorker, domeDuck.actions.submitSell, api.submitSell, true)
   yield fork(asyncWorker, domeDuck.actions.buyNow, api.buyNow, true)
+
+  yield fork(asyncWorker, domeDuck.actions.getMyAccount, accountApi.getAccountInfo, true)
+  yield fork(asyncWorker, domeDuck.actions.getCheckAccount, accountApi.getAccountInfo, false)
   const actions = domeDuck.actions
+
+
+  // Scatter attached ? Fetch my account state
+  yield fork(
+    mapActionSaga,
+    scatterDuck.actions.attach.done.isType, (action: ReturnType<typeof scatterDuck.actions.attach.done>) =>
+      domeDuck.actions.getMyAccount.started(action.payload.result.account),
+  )
 
   // Bid success
   yield fork(
@@ -74,7 +87,6 @@ export function* domeSaga(config: APIConfig) {
         action: actions.submitSell.started(action.payload.params),
       }),
   )
-
 
   // Accept sell
   yield fork(

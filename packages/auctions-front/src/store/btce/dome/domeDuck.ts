@@ -1,12 +1,14 @@
 import { actionCreatorFactory, AsyncState, FactoryAnyAction } from '@sha/fsa/src'
 import { now } from '@sha/utils/src'
-import { add, compose, equals, lensIndex, lensPath, over, reject, update, assocPath, prepend, append } from 'ramda'
+import { add, compose, equals, lensIndex, lensPath, over, reject, update, assocPath, prepend, append , assocPath} from 'ramda'
 import { FrontState } from '../../reducer'
 
 import { dislikesDuck } from './dislikesDuck'
 import { ID } from '../baseTypes'
 import { AuctionVO, ClosedAuctionVO } from '../../api/auction'
 import { generateGuid, generateUint64Guid } from '@sha/random'
+import { AccountInfoVO } from '../../api/explorer/accounts'
+import { mapSmartContractActionToStruct } from '../../api/scatter/smartContractActions'
 
 const factory = actionCreatorFactory('auction')
 
@@ -20,6 +22,8 @@ const actions = {
   postDislike: factory.async<{auctionId: string, name: string}>('postDislike'),
   buyNow: factory.async<BidModel, ClosedAuctionVO>('buyNow'),
   payBid: factory.async<BidModel, ClosedAuctionVO>('payBid'),
+  getMyAccount: factory.async<string, AccountInfoVO>('getMyAccount'),
+  getCheckAccount: factory.async<string, AccountInfoVO>('getCheckAccount'),
 }
 
 const selectAuctionRows = (state: FrontState) => {
@@ -102,7 +106,12 @@ const defaultAuctionState = {
       dislikes: [],
     },
   }  as AsyncState<MyState>,
-
+  myAccount: {
+    value: {} as AccountInfoVO,
+  } as AsyncState<AccountInfoVO>,
+  checkAccount: {
+    value: {} as AccountInfoVO,
+  } as AsyncState<AccountInfoVO>,
 }
 
 export type AuctionState = typeof defaultAuctionState
@@ -111,11 +120,18 @@ const reducer = (state: AuctionState = defaultAuctionState, action: FactoryAnyAc
 
   const auctions =  actions.fetchRecentAuctions.asyncReducer(state.auctions, action)
   const my = actions.fetchMyState.asyncReducer(state.my, action)
+  const myAccount = actions.getMyAccount.asyncReducer(state.myAccount, action)
+  const checkAccount = actions.getCheckAccount.asyncReducer(state.checkAccount, action)
 
-  if (auctions !== state.auctions || my !== state.my)
+  if (auctions !== state.auctions ||
+      my !== state.my ||
+      myAccount !== state.myAccount ||
+      checkAccount !== state.checkAccount)
     state = {
       auctions,
       my,
+      myAccount,
+      checkAccount,
     }
 
   if (actions.submitSell.done.isType(action)) {
@@ -148,9 +164,8 @@ const reducer = (state: AuctionState = defaultAuctionState, action: FactoryAnyAc
     // add new auction to the local state
     state = over(lensPath(['auctions', 'value']),  update(index, newAuction), state)
 
-    // add new bud to my bids
+    // add new bid to my bids
     state = over(lensPath(['my', 'value', 'bids']), prepend({auctionId, bidAmount: params.bidAmount}), state)
-
   }
 
   if (actions.buyNow.done.isType(action) || actions.payBid.done.isType(action) ) {
@@ -171,9 +186,10 @@ const reducer = (state: AuctionState = defaultAuctionState, action: FactoryAnyAc
     const auctionID = action.payload.params
     const index = auctions.value.findIndex(a => a.id === auctionID )
     const lens = compose(lensPath(['auctions', 'value']),  lensIndex(index), lensPath(['dislikes']))
-
+    const oldDislikes = auctions.value[index].dislikes || 0
+    const newDislikes = oldDislikes + 1
     // increment dislikes of an auction
-    state = over(lens, add(1), state)
+    state = assocPath(['autions', 'value', index, 'dislikes'])(newDislikes, state)
 
     state = over(lensPath(['my', 'value', 'dislikes']), append(auctionID), state)
   }

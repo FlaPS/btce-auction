@@ -4,7 +4,7 @@ import { ExtractProps } from '@sha/react-fp'
 
 const Layout = styled.div`
   width: 100%;
-  min-height: 30em;
+  min-height: 25em;
   display: flex;
   justify-content: center;
   align-items: center;

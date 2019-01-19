@@ -68,4 +68,4 @@ const MyAuctionsTabsRaw = ({value, onValueChange, data, ...props}: InputProps<nu
       )}
   </Layout>
 
-export const MyAuctionsTabs = useWithValue(0)(MyAuctionsTabsRaw)
+export const MyAuctionsTabs = MyAuctionsTabsRaw

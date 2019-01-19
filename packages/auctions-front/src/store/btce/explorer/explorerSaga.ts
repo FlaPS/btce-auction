@@ -6,6 +6,7 @@ import { blocksApi } from '../../api/explorer/blocks'
 import { transactionsApi } from '../../api/explorer/transactions'
 import { producersApi } from '../../api/explorer/producers'
 import { asyncWorker } from '../asyncWorker'
+import { proxiesApi } from '../../api/explorer/proxies'
 
 const routesAndActions = [
   [
@@ -22,6 +23,11 @@ const routesAndActions = [
     nav.explorer.producers,
     explorerDuck.actions.fetchProducers,
     producersApi.getAll,
+  ],
+  [
+    nav.explorer.proxies,
+    explorerDuck.actions.fetchProxies,
+    proxiesApi.getAll,
   ],
 ]
 
