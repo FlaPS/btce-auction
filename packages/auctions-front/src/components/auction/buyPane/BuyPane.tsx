@@ -66,7 +66,8 @@ const BuyPaneRaw = ({
 
   const auctionId = auction ? auction.id : ''
 
-  const canBuyInstant = auction && (Number(bidAmount) === Number(auction.ask))
+  const canBuyInstant = true
+    // auction && (Number(bidAmount) === Number(auction.ask))
 
   const doPlaceBid = () => {
       const payload = { bidAmount, auctionId, nameToBuy: EOSAccountName }
